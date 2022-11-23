@@ -19,7 +19,7 @@ Algorithms and data structures in C
 
 ## Algorithms
 
-* [Sorting]()
+* [Sorting](https://github.com/pl3onasm/Algorithms-and-data-structures/tree/main/algorithms/sorting)
 * Searching
 * Divide and conquer
 * Dynamic programming
