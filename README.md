@@ -29,7 +29,7 @@ Algorithms and data structures in C
 
 ## Notes
 
-The intention is to implement all the data structures and algorithms in C, along with explanations and examples.  
+The intention is to implement a number of data structures and algorithms in C, along with explanations and examples.  
 
 ## References
 
