@@ -1,23 +1,4 @@
-# Algorithms-and-data-structures
-
-Algorithms and data structures in C
-
-## Data structures
-
-* Stack
-* Queue
-* Linked list
-* Doubly linked list
-* Binary tree
-* Binary search tree
-* Red black tree
-* Order-statistic tree
-* Heap
-* Trie
-* Hash table
-* Graph
-
-## Algorithms
+# Algorithms in C
 
 * [Sorting](https://github.com/pl3onasm/Algorithms-and-data-structures/tree/main/algorithms/sorting)
 * Searching
@@ -29,7 +10,7 @@ Algorithms and data structures in C
 
 ## Notes
 
-The intention is to implement a number of data structures and algorithms in C, along with explanations and examples.  
+The intention is to implement a number of algorithms in C.  
 
 ## References
 
