@@ -2,7 +2,7 @@
 
 * Counting in linear time:
   * [Counting sort](https://github.com/pl3onasm/Algorithms-and-data-structures/tree/main/algorithms/sorting/counting-sort)
-  * [Radix sort]
+  * [Radix sort](https://github.com/pl3onasm/Algorithms-and-data-structures/tree/main/algorithms/sorting/radix-sort)
 
 * Counting in expected linear time:
   * [Bucket sort](https://github.com/pl3onasm/Algorithms-and-data-structures/tree/main/algorithms/sorting/bucket-sort)
