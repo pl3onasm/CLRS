@@ -11,7 +11,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include <float.h>
-#include <time.h>
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
