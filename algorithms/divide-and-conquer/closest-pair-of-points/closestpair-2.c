@@ -114,7 +114,8 @@ pair findClosestPair(point *xpoints, point *ypoints, int ysize, int n) {
   
   // make y-sorted subarrays based on which side of 
   // the median the points are on
-  int yl = 0, yr = 0, median = xpoints[n / 2].x;
+  int yl = 0, yr = 0, mid = n / 2;
+  int median = xpoints[mid].x;
   for (int i = 0; i < ysize; ++i) {
     if (ypoints[i].x < median) 
       ylpoints[yl++] = ypoints[i];
@@ -122,9 +123,9 @@ pair findClosestPair(point *xpoints, point *ypoints, int ysize, int n) {
       yrpoints[yr++] = ypoints[i];
   }
   // left half
-  pair1 = findClosestPair(xpoints, ylpoints, yl, n/2);   
+  pair1 = findClosestPair(xpoints, ylpoints, yl, mid);   
   // right half       
-  pair2 = findClosestPair(xpoints + n/2, yrpoints, yr, n - n/2); 
+  pair2 = findClosestPair(xpoints + mid, yrpoints, yr, n - mid); 
   double min = MIN(pair1.dist, pair2.dist); 
   free (yrpoints); free (ylpoints);
   
