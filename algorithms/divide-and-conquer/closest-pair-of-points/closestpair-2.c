@@ -36,13 +36,14 @@ void *safeCalloc (int n, int size) {
   return ptr;
 }
 
+// compares two points by x-coordinate
 int xcompare(const void *a, const void *b) {
     point *p1 = (point*) a;
     point *p2 = (point*) b;
     return p1->x - p2->x;
 }
 
-// compare two points by y-coordinate
+// compares two points by y-coordinate
 int ycompare(const void *a, const void *b) {
     point *p1 = (point*) a;
     point *p2 = (point*) b;
@@ -126,10 +127,10 @@ pair findClosestPair(point *xpoints, point *ypoints, int ysize, int n) {
   pair1 = findClosestPair(xpoints, ylpoints, yl, mid);   
   // right half       
   pair2 = findClosestPair(xpoints + mid, yrpoints, yr, n - mid); 
-  double min = MIN(pair1.dist, pair2.dist); 
   free (yrpoints); free (ylpoints);
   
   // conquer
+  double min = MIN(pair1.dist, pair2.dist); 
   pair pair3 = findClosestPairInStrip(ypoints, ysize, median, min);
 
   // return the closest pair
