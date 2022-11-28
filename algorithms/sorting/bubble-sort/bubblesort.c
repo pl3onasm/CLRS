@@ -6,17 +6,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void *safeMalloc (int n) {
-  /* allocates n bytes of memory and checks whether the allocation
-     was successful */
-  void *ptr = malloc(n);
-  if (ptr == NULL) {
-    printf("Error: malloc(%d) failed. Out of memory?\n", n);
-    exit(EXIT_FAILURE);
-  }
-  return ptr;
-}
-
 void printArray (int *arr, int n) {
   // prints an array of size n
   printf("[");
