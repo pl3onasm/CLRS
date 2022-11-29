@@ -1,4 +1,4 @@
-/* file: closestpair2.c
+/* file: closestpair-2.c
 * author: David De Potter
 * description: closest pair of points using divide and conquer
 * This version is in O(nlogn), which is achieved by presorting

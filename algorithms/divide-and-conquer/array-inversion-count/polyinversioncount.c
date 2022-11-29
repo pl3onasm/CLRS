@@ -1,7 +1,18 @@
-/* file: polymergesort.c
-* author: David De Potter
-* description: polymorphic merge sort, can be used to sort any 
-* type of data, including structs
+/* file: polyinversioncount.c
+   author: David De Potter
+   description: 
+   We want to find the number of inversions in an array, which
+   may contain any data type. For this we use the polymorphic
+   version of mergesort. 
+   The idea of the polymorhic version is to use a function 
+   pointer to a comparison function, which is then passed to
+   the inversion count function so as to be able to compare 
+   elements.
+   This way, we can use the same inversion count function for 
+   any data type, as long as there is a comparison function 
+   for that data type. 
+   This approach gives a solution in O(nlogn), since it's 
+   essentially just mergesort with a counter.
 */
 
 #include <stdlib.h>
@@ -40,29 +51,40 @@ int compStr (const void *a, const void *b) {
   return strcmp(*(char**)a, *(char**)b);
 }
 
-void merge(void *arr, int left, int mid, int right, int width, 
+int merge(void *arr, int left, int mid, int right, int width, 
 int (*comp)(const void*, const void*)) {
   void *temp = safeMalloc((right - left + 1) * width);
-  int l = left, r = mid + 1, t = 0;   
+  int l = left, r = mid + 1, t = 0, count = 0;
   while (l <= mid && r <= right) {
-    if (comp((char*)arr + l*width, (char*)arr + r*width) < 0) 
+    if (comp((char*)arr + l*width, (char*)arr + r*width) <= 0) {
+      // no inversions in this case
       memcpy((char*)temp + (t++)*width, (char*)arr + (l++)*width, width);
-    else memcpy((char*)temp + (t++)*width, (char*)arr + (r++)*width, width);
+    } else {
+      // total number of inversions to add is the number of
+      // elements currently left in the left half
+      memcpy((char*)temp + (t++)*width, (char*)arr + (r++)*width, width);
+      count += mid - l + 1;
+    }  
   }
   memcpy((char*)temp + t*width, (char*)arr + l*width, (mid - l + 1)*width);
   memcpy((char*)temp + t*width, (char*)arr + r*width, (right - r + 1)*width);
   memcpy((char*)arr + left*width, temp, (right - left + 1)*width);
   free(temp);
+  return count;
 }
 
-void mergeSort(void *arr, int left, int right, int width, 
+int inversionCount(void *arr, int left, int right, int width, 
 int (*comp)(const void*, const void*)) { 
+  /* using polymorphic merge sort with a counter keeping the
+     number of inversions */
+  int count = 0;
   if (left < right) {
     int mid = left + (right - left)/2;
-    mergeSort(arr, left, mid, width, comp);
-    mergeSort(arr, mid + 1, right, width, comp);
-    merge(arr, left, mid, right, width, comp);
+    count += inversionCount(arr, left, mid, width, comp);
+    count += inversionCount(arr, mid + 1, right, width, comp);
+    count += merge(arr, left, mid, right, width, comp);
   }
+  return count;
 }
 
 int main (int argc, char *argv[]){
@@ -73,15 +95,13 @@ int main (int argc, char *argv[]){
                         "David", "Richard", "Charles", "Joseph", 
                         "Thomas", "John", "Daniel", "Matthew", 
                         "Anthony", "Jonathan", "Mark", "Paul"};
-  printf("Unsorted:\n");
+  printf("Example 1:\n");
   printArray(intExample, 20, 'i');
-  mergeSort(intExample, 0, 19, sizeof(int), compInt);
-  printf("Sorted:\n");
-  printArray(intExample, 20, 'i');
-  printf("Unsorted:\n");
+  printf("Number of inversions: ");
+  printf("%d\n", inversionCount(intExample, 0, 19, sizeof(int), compInt));
+  printf("\nExample 2:\n");
   printArray(strExample, 20, 's');
-  mergeSort(strExample, 0, 19, sizeof(char*), compStr);
-  printf("Sorted:\n");
-  printArray(strExample, 20, 's');
+  printf("Number of inversions: ");
+  printf("%d\n", inversionCount(strExample, 0, 19, sizeof(char*), compStr));
   return 0;
 }

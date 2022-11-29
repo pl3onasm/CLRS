@@ -29,13 +29,13 @@ void printArray (int *arr, int n) {
 
 void merge(int *arr, int left, int mid, int right) {
   int *temp = safeMalloc((right - left + 1)*sizeof(int));
-  int i = left, j = mid + 1, t = 0;   
-  while (i <= mid && j <= right) {
-    if (arr[i] < arr[j]) temp[t++] = arr[i++];
-    else temp[t++] = arr[j++];
+  int l = left, r = mid + 1, t = 0;   
+  while (l <= mid && r <= right) {
+    if (arr[l] < arr[r]) temp[t++] = arr[l++];
+    else temp[t++] = arr[r++];
   }
-  while (i <= mid) temp[t++] = arr[i++];
-  while (j <= right) temp[t++] = arr[j++];
+  while (l <= mid) temp[t++] = arr[l++];
+  while (r <= right) temp[t++] = arr[r++];
   for (int i = left; i <= right; i++) arr[i] = temp[i - left];
   free(temp);
 }
