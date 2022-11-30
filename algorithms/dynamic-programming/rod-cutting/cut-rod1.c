@@ -24,7 +24,7 @@ int cut_rod(int prices[], int n) {
 int main (int argc, char *argv[]) {
   int prices[] = {0, 1, 5, 8, 9, 10, 17, 17, 
                   20, 24, 30, 32, 35, 39, 43, 
-                  43, 45, 49, 50, 54, 57,}; 
+                  43, 45, 49, 50, 54, 57}; 
 
   printf("The maximum revenue is %d for a rod of length"
         " %d, and %d for a rod of length %d.\n", 
