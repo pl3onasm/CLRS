@@ -1,13 +1,12 @@
 /* file: cut-rod4.c
 * author: David De Potter
-* description: extended version
+* description: extended version to also print 
+* the optimal solution.
 * The time complexity is in O(n²).
 */ 
 
 #include <stdio.h>
 #include <stdlib.h>
-
-#define MAX(a,b) ((a)>(b)?(a):(b));
 
 int cut_rod (int prices[], int n, int revenues[], int solutions[]) {
   if (revenues[n] >= 0)  // return the stored value 
@@ -19,7 +18,6 @@ int cut_rod (int prices[], int n, int revenues[], int solutions[]) {
         q = prices[i] + revenues[j-i];
         solutions[j] = i;  // best cut so far for rod of length j
       }
-      q = MAX(q, prices[i] + revenues[j - i]);  
     }
     revenues[j] = q;  // store the computed value
   }
@@ -31,7 +29,9 @@ void print_solution (int n, int solutions[], int revenues[], int prices[]) {
     cut_rod (prices, n, revenues, solutions);
   }
   while (n > 0) {
-    printf("%d ", solutions[n]);
+    printf("%d", solutions[n]);
+    if (n - solutions[n] > 0)
+      printf(", ");
     n = n - solutions[n];    // subtract the length of the cut
   }
   printf("\n");
