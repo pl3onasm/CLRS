@@ -15,8 +15,8 @@ int cut_rod (int prices[], int n, int revenues[], int solutions[]) {
     int q = -1;
     for (int i = 1; i <= j; i++) {  // i is the length of the first cut
       if (q < prices[i] + revenues[j-i]) {
-        q = prices[i] + revenues[j-i];
-        solutions[j] = i;  // best cut so far for rod of length j
+        q = prices[i] + revenues[j-i];  // update the maximum revenue
+        solutions[j] = i;   // best cut so far for rod of length j
       }
     }
     revenues[j] = q;  // store the computed value
