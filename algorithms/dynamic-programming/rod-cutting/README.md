@@ -2,17 +2,23 @@
 
 ## Problem
 
-Given a rod of length $n$ inches and a table of prices $p_i$ for $i = 1, 2, ..., n$, determine the maximum revenue $r_n$ obtainable by cutting up the rod and selling the pieces. Note that if the price $p_n$ for a rod of length $n$ is large enough, an optimal solution may require no cutting at all.
+Given a rod of length $n$ inches and a table of prices $p_i$ for rod lengths $i = 1, 2, ..., n$, determine the maximum revenue $r_n$ obtainable by cutting up the rod and selling the pieces. Note that if the price $p_n$ for a rod of length $n$ is large enough, an optimal solution may require no cutting at all.
 
-## Recursive Solution
+The idea is to cut the rod into two pieces, and then solve the problem for each of the two pieces. The optimal solution for the original rod is then the sum of the optimal solutions for the two pieces.
+More concretely, the optimal solution for a rod of length $n$ is the maximum of the following two values:
 
-The recursive solution is straightforward. We can cut the rod into two pieces: one of length $i$ and the other of length $n - i$. The revenue is then $p_i + r_{n-i}$. We can find the maximum revenue by trying all possible values of $i$ and taking the maximum, thereby ignoring the fact that the same subproblem may be encountered multiple times during the recursive calls. The running time of this approach is in $O(2^n)$.
+1. The price $p_n$ for a rod of length $n$.  
+2. The sum of the optimal solutions for the two pieces of lengths $i$ and $n - i$ obtained by cutting the rod into two pieces at each possible position $1 \leq i \leq n-1$.  
+
+## Brute Force Solution
+
+This approach finds the maximum revenue by trying all possible values for $i$ and keeping track of the maximum revenue, whilst ignoring the fact that the same subproblem (finding optimal cuts for a smaller rod length) may be encountered multiple times during the recursive calls and is thus recomputed over and over again. The running time of this approach is in $O(2^n)$.
 
 Implementation: [Naive recursive solution](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/rod-cutting/cut-rod1.c)
 
 ## Top-down Approach with Memoization
 
-The recursive solution has overlapping subproblems. We can use memoization to store the results of subproblems and thus avoid recomputing them. This way, we can solve the problem in $O(n^2)$ time.
+The problem clearly contains overlapping subproblems: to compute the optimal solution for rods of different lengths, we repeatedly need the optimal solutions for smaller rod lengths. The previous approach can be repaired by storing the optimal solution for each rod length in a table and using this table to avoid recomputing the same subresult over and over again. This approach is called *memoization*. The running time of this approach is in $O(n^2)$.
 
 Implementation: [Memoized solution](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/rod-cutting/cut-rod2.c)
 
