@@ -115,8 +115,9 @@ pair findClosestPair(point *points, int n) {
   int mid = n / 2;
   pair1 = findClosestPair(points, mid);           // left half
   pair2 = findClosestPair(points + mid, n - mid); // right half
-  double min = MIN(pair1.dist, pair2.dist); 
+  
   // conquer
+  double min = MIN(pair1.dist, pair2.dist); 
   pair pair3 = findClosestPairInStrip(points, n, min);
 
   // return the closest pair

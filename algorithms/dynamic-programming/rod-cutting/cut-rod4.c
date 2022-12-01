@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int cut_rod (int prices[], int n, int revenues[], int solutions[]) {
+int cut_rod (int prices[], int n, int revenues[], int cuts[]) {
   if (revenues[n] >= 0)  // return the stored value 
     return revenues[n];
   for (int j = 1; j <= n; j++) {
@@ -16,7 +16,7 @@ int cut_rod (int prices[], int n, int revenues[], int solutions[]) {
     for (int i = 1; i <= j; i++) {  // i is the length of the first cut
       if (q < prices[i] + revenues[j-i]) {
         q = prices[i] + revenues[j-i];  // update the maximum revenue
-        solutions[j] = i;   // best cut so far for rod of length j
+        cuts[j] = i;   // best cut so far for rod of length j
       }
     }
     revenues[j] = q;  // store the computed value
@@ -44,19 +44,19 @@ int main (int argc, char *argv[]) {
                   65, 68, 70, 74, 80, 81, 84, 
                   85, 87, 91, 95, 99, 101, 104, 
                   107, 112, 115, 116, 119}; 
-  int revenues[40], solutions[40];
+  int revenues[40], cuts[40];
   for (int i = 0; i < 40; i++) {
     revenues[i] = -1;
-    solutions[i] = -1;
+    cuts[i] = -1;
   }
   revenues[0] = 0;
   
   printf("The maximum revenue is %d for a rod of length"
-        " %d.\nThe optimal cut(s): ", 
-        cut_rod(prices, 7, revenues, solutions), 7); 
-  print_solution (7, solutions, revenues, prices);
+        " %d.\nThe optimal cuts are: ", 
+        cut_rod(prices, 7, revenues, cuts), 7); 
+  print_solution (7, cuts, revenues, prices);
 
   printf("\nThe optimal cuts for a rod of length %d are: ", 37);
-  print_solution (37, solutions, revenues, prices);
+  print_solution (37, cuts, revenues, prices);
   return 0;
 }
