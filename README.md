@@ -11,6 +11,7 @@
 ## Notes
 
 The intention is to implement a number of algorithms in C.  
+Solutions to the exercises in the textbook *Introduction to Algorithms* by Thomas H. Cormen, et al. can be found [here](https://walkccc.me/CLRS/).
 
 ## References
 
