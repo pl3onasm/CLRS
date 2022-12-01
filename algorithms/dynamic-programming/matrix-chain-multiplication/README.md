@@ -31,7 +31,8 @@ Implementation: [Matrix Chain Multiplication - Brute Force](https://github.com/p
 
 ## Top-Down Approach with Memoization
 
-This approach seeks to maintain the top-down strategy of the brute force solution, while making use of memoization by maintaining a table with subproblem solutions in order to avoid recomputing the same subproblems over and over again. This strategy improves the running time to $O(n^3)$.
+This approach seeks to maintain the top-down strategy of the brute force solution, while making use of memoization by maintaining a table with subproblem solutions in order to avoid recomputing the same subproblems over and over again. This strategy improves the running time to $O(n^3)$.  
+
 Implementation: [Matrix Chain Multiplication - Top down](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/matrix-chain-multiplication/mcm-2.c)
 
 ## Bottom-up Approach
