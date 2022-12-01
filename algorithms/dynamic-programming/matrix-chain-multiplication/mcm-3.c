@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
 void computeMinCosts (int dims[], int minCosts[][6], int splitPoints[][6], int n) {
   /* computes the minimum costs and optimal split points for all subproblems */
@@ -20,7 +21,7 @@ void computeMinCosts (int dims[], int minCosts[][6], int splitPoints[][6], int n
   for (int l = 2; l <= n; l++) {    // fills table in order of increasing chain length l
     for (int i = 0; i < n - l + 1; i++) {   // chain starts at i
       int j = i + l - 1;                    // chain ends at j    
-      minCosts[i][j] = 1000000;
+      minCosts[i][j] = INT_MAX;             // initialize minCosts[i][j] to infinity
       for (int k = i; k < j; k++) { // try all possible split points k
         int q = minCosts[i][k] + minCosts[k + 1][j] + 
                 dims[i] * dims[k+1] * dims[j+1];
