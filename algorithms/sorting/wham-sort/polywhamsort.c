@@ -1,6 +1,9 @@
 /* file: whamsort.c
 * author: David De Potter
-* description: polymorhic WHAM sort
+* description: polymorphic WHAM sort
+* This version can be used to sort any type of data, as long as the 
+* comparison operator < is defined for that type by means of an
+* appropriate compare function.
 */
 
 #include <stdio.h>
