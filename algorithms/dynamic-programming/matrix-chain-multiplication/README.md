@@ -19,7 +19,7 @@ void matrixProduct(int A[], int B[], int P[], int a, int b, int p){
 }
 ```
 
-The running time is dominated by the innermost loop, which is executed $p \sdot r \sdot q$ times. If we need to multiply $n$ matrices, then the total number becomes $p_1 \sdot q_1 \sdot r_1 + p_2 \sdot q_2 \sdot r_2 + \dots + p_n \sdot q_n \sdot r_n$. How can we minimize this number?
+The running time is dominated by the innermost loop, which is executed $p \cdot r \cdot q$ times. If we need to multiply $n$ matrices, then the total number becomes $p_1\cdot q_1 \cdot r_1 + p_2 \cdot q_2 \cdot r_2 + \dots + p_n \cdot q_n \cdot r_n$. How can we minimize this number?
 
 The overall idea is similar to the one used in the rod cutting problem: while in rod cutting we tried to find the optimal cuts for a rod of length $n$ in order to maximize the total revenue, here we try to find the optimal spots to split the chain of matrices into subchains so as to minimize the number of scalar multiplications needed to compute the product of the entire chain. The optimal solution for a chain of length $n$ is then the optimal solution for a chain of length $k$ followed by the optimal solution for a chain of length $n-k$, where $ 1 \leq k \leq n-1$ is the optimal split point, and the cost is then the sum of the costs of the two subchains plus the cost of multiplying the two subchains together. To find the optimal split point, i.e. the one that minimizes the total cost, we need to try all possible values of $k$ and keep track of the minimum cost.
 
