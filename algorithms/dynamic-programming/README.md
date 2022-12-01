@@ -1,11 +1,11 @@
 # Dynamic Programming
 
-Two main properties should be satisfied in order to apply dynamic programming:
+Dynamic programming is most suited for optimization problems. Such a problem should have two main proerties in order to apply dynamic programming:
 
 1. <ins>Optimal substructure</ins>  
-   The optimal solution to a problem consists of optimal solutions to its subproblems.
+   The optimal solution to a problem consists of optimal solutions to its subproblems. Mind that the subproblems should be *independent* of each other, i.e. the optimal solution to one subproblem should not depend on the optimal solution to another subproblem.
 2. <ins>Overlapping subproblems</ins>  
-   The same subproblems are encountered multiple times during the solution of a problem. To improve efficiency, the solutions to these subproblems should be stored and reused.
+   Subproblems share subsubproblems, and the same subsubproblems are encountered multiple times during the solution of a subproblem. To improve efficiency, the solutions to these subsubproblems should be stored and reused.
 
 ## Problems
 
