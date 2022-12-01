@@ -21,7 +21,7 @@ void matrixProduct(int A[], int B[], int P[], int a, int b, int p){
 
 The running time is dominated by the innermost loop, which is executed $p \cdot r \cdot q$ times. If we need to multiply $n$ matrices, then the total number becomes $p_1\cdot q_1 \cdot r_1 + p_2 \cdot q_2 \cdot r_2 + \dots + p_n \cdot q_n \cdot r_n$. How can we minimize this number?
 
-The overall idea is similar to the one used in the rod cutting problem: while in rod cutting we tried to find the optimal cuts for a rod of length $n$ in order to maximize the total revenue, here we try to find the optimal spots to split the chain of matrices into subchains so as to minimize the number of scalar multiplications needed to compute the product of the entire chain. The optimal solution for a chain of length $n$ is then the optimal solution for a chain of length $k$ followed by the optimal solution for a chain of length $n-k$, where $ 1 \leq k \leq n-1$ is the optimal split point, and the cost is then the sum of the costs of the two subchains plus the cost of multiplying the two subchains together. To find the optimal split point, i.e. the one that minimizes the total cost, we need to try all possible values of $k$ and keep track of the minimum cost.
+The overall idea is similar to the one used in the rod cutting problem: while in rod cutting we tried to find the optimal cuts for a rod of length $n$ in order to maximize the total revenue, here we try to find the optimal spots to split the chain of matrices into subchains so as to minimize the number of scalar multiplications needed to compute the product of the entire chain. The optimal solution for a chain of length $n$ is then the optimal solution for a chain of length $k$ followed by the optimal solution for a chain of length $n-k$, where $1\leq k \leq n-1$ is the optimal split point, and the cost is then the sum of the costs of the two subchains plus the cost of multiplying the two subchains together. To find the optimal split point, i.e. the one that minimizes the total cost, we need to try all possible values of $k$ and keep track of the minimum cost.
 
 ## Brute Force Solution
 
@@ -36,10 +36,7 @@ Implementation: [Matrix Chain Multiplication - Top down](https://github.com/pl3o
 
 ## Bottom-up Approach
 
-The bottom-up approach is similar, but it starts from the base cases and gradually builds up the solution to the original problem. Subproblems are thus solved in order of increasing chain length, so that at each point all subsolutions needed to solve the current subproblem are readily availabe. This is achieved by maintaining a table, where the solution to each subproblem is stored in a bottom-up fashion. The solution to the original problem is then the solution to the last subproblem in the table. The running time of this approach is $O(n^3)$.
+The bottom-up approach is similar, but it starts from the base cases and gradually builds up the solution to the original problem. Subproblems are thus solved in order of increasing chain length, so that at each step all subsolutions needed to solve the current subproblem are readily availabe. This is achieved by maintaining a table, where the solution to each subproblem is stored in a bottom-up fashion. The solution to the original problem is then the solution to the last subproblem in the table.  
+If we also want to return the optimal parenthesization, and not only the minimal cost, we need to keep track of the optimal split point for each subproblem. We do this by maintaining an extra table for the split points, which is then used to reconstruct the optimal parenthesization. The running time of this approach is $O(n^3)$.
 
 Implementation: [Matrix Chain Multiplication - Bottom up](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/matrix-chain-multiplication/mcm-3.c)
-
-## Extended bottom-up approach
-
-This extension of the previous approach also stores the optimal split points for each subproblem. This allows us to reconstruct the optimal parenthesization of the matrix chain. The running time of this approach is also in $O(n^3)$.
