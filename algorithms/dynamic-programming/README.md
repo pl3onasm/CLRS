@@ -5,7 +5,7 @@ Two main properties should be satisfied in order to apply dynamic programming:
 1. **Optimal substructure**  
    The optimal solution to a problem consists of optimal solutions to its subproblems.
 2. **Overlapping subproblems**  
-   The same subproblems are encountered multiple times during the solution of a problem. The solution to a subproblem is stored and reused.
+   The same subproblems are encountered multiple times during the solution of a problem. The solutions to these subproblems are stored and reused.
 
 ## Examples
 
