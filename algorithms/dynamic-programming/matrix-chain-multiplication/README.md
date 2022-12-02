@@ -25,7 +25,7 @@ The overall idea is similar to the one behind the rod cutting problem: while in 
 
 ## Brute Force Solution
 
-The brute force solution tackles the problem by trying all possible parenthesizations, whilst ignoring the fact that the same subproblem may be encountered multiple times during its recursive calls. The number of possible parenthesizations is in $\Omega(2^n)$, where $n$ is the number of matrices. The running time of this approach is in $O(2^n)$.
+The brute force solution tackles the problem by trying all possible parenthesizations, whilst ignoring the fact that the same subproblem may be encountered multiple times during its recursive calls. The number of possible parenthesizations is in $\Omega(2^n)$, where $n$ is the number of matrices. The running time of this approach is thus in $\Omega(2^n)$.
 
 Implementation: [Matrix Chain Multiplication - Brute Force](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/matrix-chain-multiplication/mcm-1.c)
 
