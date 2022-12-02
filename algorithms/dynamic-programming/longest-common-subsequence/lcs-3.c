@@ -2,10 +2,16 @@
 * author: David De Potter
 * description: longest common subsequence
 * bottom-up dynamic programming implementation
+* Notice that we don't need to reverse the lcs string,
+* because we are building it from the bottom up.
+* Also, we can now work with sequences that are much
+* longer than we could with the naive recursive 
+* implementation thanks to the O(mn) running time.
 */ 
 
+#include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
-#include <malloc.h>
 #define MAX(a,b) ((a)>(b)?(a):(b));
 
 void *safeCalloc (int n, int size) {
@@ -36,16 +42,19 @@ void fillTable (int **table, const char *a, const char *b, int la, int lb){
     }
 } 
 
-void getLcs (int **table, char *a, char *b, int x, int y, char *str, int z){
+void reconstructLcs (int **table, char *a, char *b, int x, int y, char *str, int z){
   /* fills str with the longest common subsequence */
-  if (x == 0 || y == 0) return;
+  if (x == 0 || y == 0){
+    str[z] = '\0';
+    return;
+  }
   if (a[x-1] == b[y-1]) {
     str[z] = a[x-1]; 
-    return getLcs(table, a, b, x-1, y-1, str, z-1);  
-  }
-  if (table[x][y-1] > table[x-1][y])  
-    return getLcs(table, a, b, x, y-1, str, z); 
-  return getLcs(table, a, b, x-1, y, str, z); 
+    reconstructLcs(table, a, b, x-1, y-1, str, z-1);
+  } else if (table[x][y-1] > table[x-1][y])  
+    reconstructLcs(table, a, b, x, y-1, str, z); 
+  else
+    reconstructLcs(table, a, b, x-1, y, str, z); 
 } 
 
 void free2Dmem (int** arr, int m) {
@@ -53,14 +62,18 @@ void free2Dmem (int** arr, int m) {
   free(arr);
 }
 
-char *lcs(char *a, char *b){
-  int la = strlen(a), lb = strlen(b); 
+int main (int argc, char *argv[]) {
+  char *a = "ACCGATATCAGGATCGGATACGGTGAGCTAACATGATCGGGGTAACG", 
+       *b = "GTAGTAATTACGAACATATTGATCCTACCCTATCCCAATGCATT";
+  int la = strlen(a), lb = strlen(b);
   int **table = createTable(la+1, lb+1); 
-  
   fillTable(table, a, b, la, lb);
-  int clslen = table[la][lb]; 
-  char *str = safeCalloc(clslen+1, sizeof(char));
-  getLcs(table, a, b, la, lb, &str, clslen-1); 
-  str[clslen]='\0'; free2Dmem(table, la); 
-  return str;
+  int lcslen = table[la][lb]; 
+  char *lcs = safeCalloc(lcslen+1, sizeof(char));
+  reconstructLcs(table, a, b, la, lb, lcs, lcslen-1);
+  printf("Given strings:\n%s\n%s\n", a, b);
+  printf("The length of an LCS is %d.\n", lcslen);
+  printf("An optimal LCS is %s.\n", lcs);
+  free(lcs); free2Dmem(table, la+1);
+  return 0;
 }
