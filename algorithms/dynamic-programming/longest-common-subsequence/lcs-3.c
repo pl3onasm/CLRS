@@ -2,11 +2,8 @@
 * author: David De Potter
 * description: longest common subsequence
 * bottom-up dynamic programming implementation
-* Notice that we don't need to reverse the lcs string,
-* because we are building it from the bottom up, instead
-* of from the top down, as we did in lcs-1.c.
-* Also, we can now work with sequences that are much
-* longer than we could in the naive recursive 
+* Notice that we can now work with sequences that are 
+* much longer than we could in the naive recursive 
 * implementation, thanks to the O(mn) running time.
 */ 
 
@@ -43,19 +40,18 @@ void fillTable (int **table, const char *a, const char *b, int la, int lb){
     }
 } 
 
-void reconstructLcs (int **table, char *a, char *b, int x, int y, char *str, int z){
-  /* fills str with the longest common subsequence */
+void reconstructLcs (int **table, char *a, char *b, int x, int y, char *lcs, int z){
+  /* fills the string lcs with the longest common subsequence */
   if (x == 0 || y == 0){
-    str[z] = '\0';
+    lcs[z] = '\0';
     return;
   }
   if (a[x-1] == b[y-1]) {
-    str[z] = a[x-1]; 
-    reconstructLcs(table, a, b, x-1, y-1, str, z-1);
-  } else if (table[x][y-1] > table[x-1][y])  
-    reconstructLcs(table, a, b, x, y-1, str, z); 
-  else
-    reconstructLcs(table, a, b, x-1, y, str, z); 
+    lcs[z] = a[x-1]; 
+    reconstructLcs(table, a, b, x-1, y-1, lcs, z-1);
+  } else if (table[x][y-1] > table[x-1][y]) { 
+    reconstructLcs(table, a, b, x, y-1, lcs, z); 
+  } else reconstructLcs(table, a, b, x-1, y, lcs, z); 
 } 
 
 void free2Dmem (int** arr, int m) {
