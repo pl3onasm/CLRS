@@ -21,7 +21,7 @@
 int computeMinCosts (int dims[], int minCosts[][22], int i, int j) {
   /* computes the minimum cost of the matrix chain multiplication
      starting at i and ending at j */
-  if (minCosts[i][j] != INT_MAX) 
+  if (minCosts[i][j] != INT_MAX)  // supbroblem already solved?
     return minCosts[i][j];
   if (i == j) {
     minCosts[i][j] = 0;   // cost of multiplying a single matrix is 0
