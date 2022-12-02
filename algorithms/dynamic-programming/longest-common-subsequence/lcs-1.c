@@ -1,4 +1,4 @@
-/* file: lcs.c
+/* file: lcs-1.c
 * author: David De Potter
 * description: longest common subsequence
 * naive recursive implementation

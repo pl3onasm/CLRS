@@ -1,4 +1,4 @@
-/* file: mcm-1.c
+/* file: mcm-2.c
   author: David De Potter
   description:
   Matrix chain multiplication using top-down approach 
