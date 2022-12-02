@@ -6,8 +6,8 @@
 * because we are building it from the bottom up, instead
 * of from the top down, as we did in lcs-1.c.
 * Also, we can now work with sequences that are much
-* longer than we could with the naive recursive 
-* implementation thanks to the O(mn) running time.
+* longer than we could in the naive recursive 
+* implementation, thanks to the O(mn) running time.
 */ 
 
 #include <stdlib.h>
