@@ -41,7 +41,8 @@ void fillTable (int **table, const char *a, const char *b, int la, int lb){
 } 
 
 void reconstructLcs (int **table, char *a, char *b, int x, int y, char *lcs, int z){
-  /* fills the string lcs with the longest common subsequence */
+  /* fills the string lcs in reverse order (index z starts at the end) 
+     with the longest common subsequence */
   if (x == 0 || y == 0) return;
   if (table[x-1] == table[y-1]) {
     lcs[z] = a[x-1]; 
@@ -65,7 +66,7 @@ int main (int argc, char *argv[]) {
   int lcslen = table[la][lb]; 
   char *lcs = safeCalloc(lcslen+1, sizeof(char));
   reconstructLcs(table, a, b, la, lb, lcs, lcslen-1);
-  lcs[lcslen] = '\0';
+  lcs[lcslen] = '\0';   
   printf("Given strings:\n%s\n%s\n", a, b);
   printf("The length of an LCS is %d.\n", lcslen);
   printf("An optimal LCS is %s.\n", lcs);
