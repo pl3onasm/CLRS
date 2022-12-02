@@ -11,7 +11,7 @@ Dynamic programming is most suited for optimization problems. Such a problem sho
 
 * [Rod Cutting](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/rod-cutting)
 * [Matrix Chain Multiplication](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/matrix-chain-multiplication)
-* Longest Common Subsequence
+* Longest Common Subsequence(https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/longest-common-subsequence)
 * Longest Increasing Subsequence
 * Longest Palindromic Subsequence
 * Knapsack problem
