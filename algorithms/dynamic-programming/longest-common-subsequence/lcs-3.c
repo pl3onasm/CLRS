@@ -3,7 +3,8 @@
 * description: longest common subsequence
 * bottom-up dynamic programming implementation
 * Notice that we don't need to reverse the lcs string,
-* because we are building it from the bottom up.
+* because we are building it from the bottom up, instead
+* of from the top down, as we did in lcs-1.c.
 * Also, we can now work with sequences that are much
 * longer than we could with the naive recursive 
 * implementation thanks to the O(mn) running time.
