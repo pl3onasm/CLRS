@@ -4,6 +4,9 @@
 * naive recursive implementation
 * As the example strings get longer, the running time 
 * of this algorithm grows exponentially.
+* Note that we need to reverse the LCS string at the end,
+* because we filled it in reverse order: we can't get around
+* because we don't know the length of the LCS in advance.
 */ 
 
 #include <stdlib.h>

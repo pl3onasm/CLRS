@@ -2,8 +2,8 @@
 * author: David De Potter
 * description: longest common subsequence
 * bottom-up dynamic programming implementation
-* Notice that we can now work with sequences that are 
-* much longer than we could in the naive recursive 
+* Notice that we can now work with sequences that  
+* are much longer than in the naive recursive 
 * implementation, thanks to the O(mn) running time.
 */ 
 
@@ -44,12 +44,14 @@ void reconstructLcs (int **table, char *a, char *b, int x, int y, char *lcs, int
   /* fills the string lcs in reverse order (index z starts at the end) 
      with the longest common subsequence */
   if (x == 0 || y == 0) return;
-  if (table[x-1] == table[y-1]) {
+  if (table[x][y] == table[x-1][y]) 
+    reconstructLcs(table, a, b, x-1, y, lcs, z);
+  else if (table[x][y] == table[x][y-1]) 
+    reconstructLcs(table, a, b, x, y-1, lcs, z);
+  else {
     lcs[z] = a[x-1]; 
     reconstructLcs(table, a, b, x-1, y-1, lcs, z-1);
-  } else if (table[x][y-1] > table[x-1][y]) { 
-    reconstructLcs(table, a, b, x, y-1, lcs, z); 
-  } else reconstructLcs(table, a, b, x-1, y, lcs, z); 
+  }
 } 
 
 void free2Dmem (int** arr, int m) {
