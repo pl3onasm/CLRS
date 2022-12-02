@@ -25,13 +25,13 @@ The overall idea is similar to the one behind the rod cutting problem: while in 
 
 ## Brute Force Solution
 
-The brute force solution tackles the problem by trying all possible parenthesizations, thereby ignoring the fact that the same subproblem may be encountered multiple times in its recursive calls. The number of possible parenthesizations is in $\Omega(2^n)$, where $n$ is the number of matrices. The running time of this approach is in $O(2^n)$.
+The brute force solution tackles the problem by trying all possible parenthesizations, whilst ignoring the fact that the same subproblem may be encountered multiple times during its recursive calls. The number of possible parenthesizations is in $\Omega(2^n)$, where $n$ is the number of matrices. The running time of this approach is in $O(2^n)$.
 
 Implementation: [Matrix Chain Multiplication - Brute Force](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/matrix-chain-multiplication/mcm-1.c)
 
 ## Top-Down Approach with Memoization
 
-This approach seeks to maintain the top-down strategy of the brute force solution, while making use of memoization by maintaining a table with subproblem solutions in order to avoid recomputing the same subproblems over and over again. This strategy improves the running time to $O(n^3)$.  
+This approach seeks to preserve the top-down strategy of the brute force solution, while making use of memoization by maintaining a table with subproblem solutions in order to avoid recomputing the same subproblems over and over again. This strategy improves the running time to $O(n^3)$.  
 
 Implementation: [Matrix Chain Multiplication - Top down](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/matrix-chain-multiplication/mcm-2.c)
 
