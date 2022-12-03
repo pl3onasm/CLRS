@@ -6,7 +6,11 @@
 * of this algorithm grows exponentially.
 * Note that we need to reverse the LCS string at the end,
 * because we filled it in reverse order: we can't get around
-* because we don't know the length of the LCS in advance.
+* this, because we are working our way from the end of the
+* strings to the beginning and don't know the length of the
+* LCS in advance. In the second version, we'll
+* see a more natural implementation by working from the
+* beginning of the strings to the end.
 */ 
 
 #include <stdlib.h>

@@ -1,23 +1,16 @@
-/* file: lcs-3.c
+/* file: lcs-4.c
 * author: David De Potter
 * description: longest common subsequence
-* Top-down approach with memoization
-* Time complexity: O(nm)
-* Space complexity: O(nm)
-* You could also choose to work as in lcs-2.c, i.e. working from the
-* start of the strings. This won't make the code easier in this case 
-* as we still need to work with indices to be able to fill the 
-* memoization table, and we still need to reconstruct the lcs afterwards
-* from the table, so we might as well work from the end of the strings.
-*
-* Note that we can now work with sequences that are much longer than
-* in the naive recursive implementation, thanks to the O(mn) running time.
+* bottom-up dynamic programming implementation
+* Notice that we can now work with sequences that  
+* are much longer than in the naive recursive 
+* implementation, thanks to the O(mn) running time.
 */ 
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#define MAX(a,b) ((a)>(b)?(a):(b))
+#define MAX(a,b) ((a)>(b)?(a):(b));
 
 void *safeCalloc (int n, int size) {
   /* allocates n elements of size size, initializing them to 0, and
@@ -35,25 +28,17 @@ int **createTable (int n, int m) {
   int **table = safeCalloc(n, sizeof(int *));
   for (int i = 0; i < n; i++) 
     table[i] = safeCalloc(m, sizeof(int));
-  // initializes all entries to -1
-  for (int i = 0; i < n; i++)
-    for (int j = 0; j < m; j++)
-      table[i][j] = -1;
   return table;
 }
 
-int computeTable (int **table, char *a, char *b, int ia, int ib) {
-  /* computes the table of longest common subsequences */
-  if (table[ia][ib] < 0) {  // if entry is not yet computed
-    if (ia == 0 || ib == 0) table[ia][ib] = 0;
-    else if (a[ia-1] == b[ib-1]) 
-      table[ia][ib] = computeTable(table, a, b, ia-1, ib-1) + 1;
-    else 
-      table[ia][ib] = MAX(computeTable(table, a, b, ia-1, ib), 
-                          computeTable(table, a, b, ia, ib-1));
-  }
-  return table[ia][ib];
-}
+void fillTable (int **table, const char *a, const char *b, int la, int lb){
+  /* fills the table with the lengths of the longest common subsequences */
+  for (int i=1; i<=la; ++i)     // fill table in row-major order
+    for (int j=1; j<=lb; ++j){
+      if (a[i-1] == b[j-1]) table[i][j] = table[i-1][j-1] + 1; 
+      else table[i][j] = MAX(table[i-1][j],table[i][j-1]); 
+    }
+} 
 
 void reconstructLcs (int **table, char *a, int x, int y, char *lcs, int z){
   /* fills the string lcs in reverse order (index z starts at the end) 
@@ -79,13 +64,15 @@ int main (int argc, char *argv[]) {
        *b = "GTAGTAATTACGAACATATTGATCCTACCCTATCCCAATGCATT";
   int la = strlen(a), lb = strlen(b);
   int **table = createTable(la+1, lb+1); 
-  int maxlen = computeTable(table, a, b, la, lb);
-  char *lcs = safeCalloc(maxlen+1, sizeof(char));
-  reconstructLcs(table, a, la, lb, lcs, maxlen-1);
-  lcs[maxlen] = '\0';
+  fillTable(table, a, b, la, lb);
+  int lcslen = table[la][lb]; 
+  char *lcs = safeCalloc(lcslen+1, sizeof(char));
+  reconstructLcs(table, a, la, lb, lcs, lcslen-1);
+  lcs[lcslen] = '\0';   
   printf("Given strings:\n%s\n%s\n", a, b);
-  printf("The length of an LCS is %d.\n", maxlen);
+  printf("The length of an LCS is %d.\n", lcslen);
   printf("An optimal LCS is %s.\n", lcs);
-  free(lcs); free2Dmem (table, la+1);
+  free(lcs); free2Dmem(table, la+1);
   return 0;
 }
+

@@ -5,7 +5,8 @@ Dynamic programming is most suited for optimization problems. Such a problem sho
 1. <ins>Optimal substructure</ins>  
    The optimal solution to a problem consists of optimal solutions to its subproblems. Mind that the subproblems should be *independent* of each other, i.e. the optimal solution to one subproblem should not depend on the optimal solution to another subproblem.
 2. <ins>Overlapping subproblems</ins>  
-   Subproblems share subsubproblems, and the same subsubproblems are encountered multiple times during the solution of a subproblem. Dynamic programming takes advantage of this this property by solving each subsubproblem once and then storing the solution in a table where it can be looked up when needed.
+   Subproblems share subsubproblems, and the same subsubproblems are encountered multiple times during the solution of a subproblem. Dynamic programming takes advantage of this property by solving each subsubproblem once and then storing the solution in a table where it can be looked up when needed.
+   A good test for this property is to see if the recursive solution has repeated calls for the same inputs. This is different from the type of subproblems that divide-and-conquer algorithms solve, where recursive calls create different subproblems each time.
 
 ## Problems
 
