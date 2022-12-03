@@ -31,13 +31,15 @@ int **createTable (int n, int m) {
   return table;
 }
 
-void fillTable (int **table, const char *a, const char *b, int la, int lb){
-  /* fills the table with the lengths of the longest common subsequences */
+int fillTable (int **table, const char *a, const char *b, int la, int lb){
+  /* fills the table with the lengths of the lcs's of the prefixes 
+      of a and b and returns the length of the lcs of a and b */
   for (int i=1; i<=la; ++i)     // fill table in row-major order
     for (int j=1; j<=lb; ++j){
       if (a[i-1] == b[j-1]) table[i][j] = table[i-1][j-1] + 1; 
       else table[i][j] = MAX(table[i-1][j],table[i][j-1]); 
     }
+  return table[la][lb];
 } 
 
 void reconstructLcs (int **table, char *a, int x, int y, char *lcs, int z){
@@ -64,8 +66,7 @@ int main (int argc, char *argv[]) {
        *b = "GTAGTAATTACGAACATATTGATCCTACCCTATCCCAATGCATT";
   int la = strlen(a), lb = strlen(b);
   int **table = createTable(la+1, lb+1); 
-  fillTable(table, a, b, la, lb);
-  int lcslen = table[la][lb]; 
+  int lcslen = fillTable(table, a, b, la, lb); 
   char *lcs = safeCalloc(lcslen+1, sizeof(char));
   reconstructLcs(table, a, la, lb, lcs, lcslen-1);
   lcs[lcslen] = '\0';   
