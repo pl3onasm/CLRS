@@ -81,8 +81,8 @@ int main (int argc, char *argv[]) {
   int **table = createTable(la+1, lb+1); 
   int maxlen = computeTable(table, a, b, la, lb);
   char *lcs = safeCalloc(maxlen+1, sizeof(char));
-  reconstructLcs(table, a, la, lb, lcs, maxlen-1);
   lcs[maxlen] = '\0';
+  reconstructLcs(table, a, la, lb, lcs, maxlen-1);
   printf("Given strings:\n%s\n%s\n", a, b);
   printf("The length of an LCS is %d.\n", maxlen);
   printf("An optimal LCS is %s.\n", lcs);
