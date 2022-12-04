@@ -36,4 +36,4 @@ Implementation: [Bottom-up](https://github.com/pl3onasm/Algorithms/blob/main/alg
 
 ## Notes
 
-The code examples can of course be simplified if you only want to return the length of the LCS, but I found it more interesting to return both the length of the LCS and an actual LCS. It should be an easy exercise to extend the code so that it returns all possible LCSs if there are multiple of the same maximum length.  
+The implementations can of course be simplified if you only want to return the length of the LCS, but I found it more interesting to return both the length of the LCS and an actual LCS. It should be an easy exercise to extend the code so that it returns all possible LCSs if there are multiple of the same maximum length.  
