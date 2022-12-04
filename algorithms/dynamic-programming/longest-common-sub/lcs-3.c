@@ -84,8 +84,8 @@ int main (int argc, char *argv[]) {
   lcs[maxlen] = '\0';
   reconstructLcs(table, a, la, lb, lcs, maxlen-1);
   printf("Given strings:\n%s\n%s\n", a, b);
-  printf("The length of an LCS is %d.\n", maxlen);
-  printf("An optimal LCS is %s.\n", lcs);
+  printf("The length of the LCS is %d.\n", maxlen);
+  printf("A possibly non-unique LCS is %s.\n", lcs);
   free(lcs); free2Dmem (table, la+1);
   return 0;
 }

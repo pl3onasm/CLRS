@@ -4,7 +4,8 @@
    This is a naive recursive implementation. 
    It is exponential in time.
    If you only want to compute the length of the LPS,
-   you can rewrite the code without the need for a
+   you can turn computeLPS into an int function and
+   rewrite the code without the need for a
    string copy and a separate palindrome checker. 
 */
 
@@ -41,7 +42,7 @@ int main(int argc, char **argv){
   char seq[50] = {0}, maxSeq[50] = {0};
   int maxLen = 0;
   computeLPS(s, seq, strlen(s), 0, 0, &maxLen, maxSeq);
-  printf("Length of LPS is %d\n", maxLen);
+  printf("Length of the LPS is %d\n", maxLen);
   printf("A possibly non-unique LPS is: %s\n", maxSeq);
   return 0; 
 }

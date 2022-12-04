@@ -70,8 +70,8 @@ int main (int argc, char *argv[]) {
   
   computeLcs(a, b, la, lb, lcs, 0, &maxlen, maxlcs);
   printf("Given strings:\n%s\n%s\n", a, b);
-  printf("The length of an LCS is %d.\n", maxlen);
-  printf("An optimal LCS is %s.\n", reverse(maxlcs));
+  printf("The length of the LCS is %d.\n", maxlen);
+  printf("A possibly non-unique LCS is %s.\n", reverse(maxlcs));
   free(lcs); free(maxlcs);
   return 0;
 }
