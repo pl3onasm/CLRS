@@ -16,23 +16,23 @@ As we keep repeating this process for the remaining elements of $X$ and $Y$, we 
 
 This is a straightforward recursive implementation of the idea described above. It is exponential in the length of the input sequences, since it computes the LCS for all possible prefixes of $X$ and $Y$, ignoring the fact that some of these prefixes are repeated. The time complexity is in $O(2^{m+n})$.
 
-Implementation: [Naive recursive solution](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/longest-common-subsequence/lcs-1.c)
+Implementation: [Naive recursive solution](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/longest-common-sub/lcs-1.c)
 
 The code can be simplified and looks more natural if we start from the beginning of the sequences $X$ and $Y$ instead of the end. The idea is the same, but the subproblems are now defined for the suffixes of $X$ and $Y$ instead of the prefixes, and the base case is when the suffixes are empty. The time complexity is still exponential. For the dynamic programming solutions, I will use the original definition of the subproblems, i.e. for the prefixes of $X$ and $Y$, in order to keep in line with how things are presented in the textbook by Cormen et al.
 
-Implementation: [Naive recursive solution - suffixes](https://github.com/pl3onasm/Algorithms/blob/main/algorithms/dynamic-programming/longest-common-subsequence/lcs-2.c)
+Implementation: [Naive recursive solution - suffixes](https://github.com/pl3onasm/Algorithms/blob/main/algorithms/dynamic-programming/longest-common-sub/lcs-2.c)
 
 ## Top-down Approach with Memoization
 
 This approach maintains the top-down strategy of the previous solution, but it uses a memoization table to avoid recomputing the LCS for the same prefixes of $X$ and $Y$ multiple times. The time complexity is in $O(mn)$. The space complexity is in $O(mn)$, since the memoization table has $m$ rows and $n$ columns. If we don't want to reconstruct the LCS, we can use a 2D array of size $2 \times n$ instead of a 2D array of size $m \times n$, since we only need the previous row of the memoization table to compute the next row.
 
-Implementation: [Top-down with memoization](https://github.com/pl3onasm/Algorithms/blob/main/algorithms/dynamic-programming/longest-common-subsequence/lcs-3.c)
+Implementation: [Top-down with memoization](https://github.com/pl3onasm/Algorithms/blob/main/algorithms/dynamic-programming/longest-common-sub/lcs-3.c)
 
 ## Bottom-up Approach
 
 Here we use a bottom-up approach, which is more natural for dynamic programming. We start from the base case of an empty sequence, and we compute the LCS for all possible prefixes of $X$ and $Y$ in a bottom-up fashion. Both the time and space complexity are in $O(mn)$. The same space optimization as in the previous solution can be applied here.
 
-Implementation: [Bottom-up](https://github.com/pl3onasm/Algorithms/blob/main/algorithms/dynamic-programming/longest-common-subsequence/lcs-4.c)
+Implementation: [Bottom-up](https://github.com/pl3onasm/Algorithms/blob/main/algorithms/dynamic-programming/longest-common-sub/lcs-4.c)
 
 ## Notes
 
