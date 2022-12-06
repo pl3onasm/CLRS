@@ -10,7 +10,7 @@ The idea is to start from the end of the sequences $X$ and $Y$ and compare their
 - If they are equal, then this identical element is necessarily part of the LCS $Z$. So we add it to $Z$, and move on to establishing an LCS for the remaining elements of $X$ and $Y$, i.e. an LCS for the sequences $X_{1:m-1}$ and $Y_{1:n-1}$.
 - If they are not equal, then we can either remove the last element of $X$ and establish an LCS for $X_{1:m-1}$ and $Y$, or we can remove the last element of $Y$ and establish an LCS for $X$ and $Y_{1:n-1}$. Both of these options should be considered, and the longest LCS should be chosen.
 
-As we keep repeating this process for the remaining elements of $X$ and $Y$, we continally reduce the size of the problem to smaller subproblems, i.e. to smaller prefixes of $X$ and $Y$. Eventually, we will reach the base case of an empty sequence, when we reach the beginning of one of the original sequences, at which point the LCS $Z$ is fully computed for a particular prefix of $X$ and $Y$ (or for the entire sequences $X$ and $Y$) and we can return it.
+As we keep repeating this process for the remaining elements of $X$ and $Y$, we continually reduce the size of the problem to smaller subproblems, i.e. to smaller prefixes of $X$ and $Y$. Eventually, we will reach the base case of an empty sequence, when we reach the beginning of one of the original sequences, at which point the LCS $Z$ is fully computed for a particular prefix of $X$ and $Y$ (or for the entire sequences $X$ and $Y$) and we can return it.
 
 ## Brute Force Solution
 
