@@ -53,8 +53,10 @@ int main (int argc, char *argv[]) {
   int *maxLis = safeMalloc(n * sizeof(int));
   int maxLen = 0;
   getMaxLis(arr, lis, n, 0, 0, maxLis, &maxLen);
-  printf("The length of the longest increasing subsequence is %d\n", maxLen);
-  printf("A possible LIS is: \n");
+  printf("The given array is:\n");
+  printArray(arr, n);
+  printf("The length of the longest increasing subsequence is %d.\n", maxLen);
+  printf("A possible LIS is:\n");
   printArray(maxLis, maxLen);
   free(lis); free(maxLis);
   return 0;
