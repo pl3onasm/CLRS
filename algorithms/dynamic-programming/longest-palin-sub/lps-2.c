@@ -10,7 +10,7 @@
 #define MAX(a,b) ((a)>(b)?(a):(b));
 
 void *safeCalloc (int n, int size) {
-  /* allocates n elements of size size, initializing them to 0, and
+  /* allocates n elements of size size, initializes them to 0, and
      checks whether the allocation was successful */
   void *ptr = calloc(n, size);
   if (ptr == NULL) {
