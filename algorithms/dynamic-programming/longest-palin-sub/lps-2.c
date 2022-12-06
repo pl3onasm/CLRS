@@ -39,7 +39,7 @@ char *reverse (char *s) {
 
 int fillTable (int **table, const char *a, const char *rev, int la){
   /* fills the table with the lengths of the lps's of the prefixes of a  
-     and rev, and returns the length of the lps */
+     and its reverse rev, and returns the length of the lps */
   for (int i=1; i<=la; ++i)     // fill table in row-major order
     for (int j=1; j<=la; ++j){
       if (a[i-1] == rev[j-1]) table[i][j] = table[i-1][j-1] + 1; 
@@ -74,7 +74,7 @@ int main (int argc, char *argv[]) {
   int **table = createTable(la+1, la+1); 
   int lpslen = fillTable(table, a, rev, la); 
   char *lps = safeCalloc(lpslen+1, sizeof(char));
-  reconstructLcs(table, a, la, la, lps, lpslen-1);
+  reconstructLps(table, a, la, la, lps, lpslen-1);
   lps[lpslen] = '\0';   
   printf("Given string:\n%s\n", a);
   printf("The length of the LPS is %d.\n", lpslen);
