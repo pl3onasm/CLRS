@@ -50,7 +50,7 @@ int fillTable (int **table, const char *a, const char *rev, int la){
 
 void reconstructLps (int **table, char *a, int x, int y, char *lps, int z){
   /* fills the string lps in reverse order (index z starts at the end) 
-     with the longest common subsequence */
+     with the longest palindromic subsequence */
   if (x == 0 || y == 0) return;
   if (table[x][y] == table[x-1][y]) 
     reconstructLps(table, a, x-1, y, lps, z);
