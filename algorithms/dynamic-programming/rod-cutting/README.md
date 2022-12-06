@@ -20,16 +20,16 @@ Implementation: [Naive recursive solution](https://github.com/pl3onasm/Algorithm
 
 The problem clearly contains overlapping subproblems: to compute the optimal solution for rods of different lengths, we repeatedly need the optimal solutions for smaller rod lengths. The previous approach can be repaired by storing the optimal solution for each rod length in a table and using this table to avoid recomputing the same subresult over and over again. This approach is called *memoization*. The running time of this approach is in $O(n^2)$.
 
-Implementation: [Memoized solution](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/rod-cutting/cut-rod2.c)
+Implementation: [Top-down DP](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/rod-cutting/cut-rod2.c)
 
 ## Bottom-up Approach
 
 The bottom-up approach solves the subproblems in order of increasing piece size, while storing the solution to each subproblem when it is first solved. Thus, the maximum revenues for subproblems of size $1, 2, ..., n$ are computed in ascending order, and all required partial solutions are readily available to solve the next subproblem in line. The solution to the original problem is then the solution to the subproblem of size $n$. The running time of this approach is also in $O(n^2)$. Note that the bottom-up approach requires a double loop, whereas the top-down approach only needs a single loop, since it uses recursion instead.
 
-Implementation: [Bottom-up solution](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/rod-cutting/cut-rod3.c)
+Implementation: [Bottom-up DP](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/rod-cutting/cut-rod3.c)
 
 ## Extended Bottom-up Approach
 
 The extended bottom-up approach not only computes the maximum revenue, but also the optimal solution: a list of piece sizes. For this purpose, an array is used to store the optimal first cut for each subproblem.
 
-Implementation: [Extended bottom-up solution](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/rod-cutting/cut-rod4.c)
+Implementation: [Extended bottom-up DP](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/rod-cutting/cut-rod4.c)

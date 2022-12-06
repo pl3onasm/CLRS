@@ -1,8 +1,8 @@
-# Longest Palindrome Subsequence
+# Longest Palindrome Subsequence (LPS)
 
 ## Problem
 
-Given a string, find the longest palindromic subsequence. For example, given the string BBABCBCAB, the longest palindromic subsequence is BABCBAB.  
+Given a string, find the longest palindromic subsequence. For example, given the string BBABCBCAB, the LPS is BABCBAB.  
 
 ## Brute Force Solution
 

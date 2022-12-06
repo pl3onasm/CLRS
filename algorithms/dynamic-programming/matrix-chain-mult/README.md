@@ -1,4 +1,4 @@
-# Matrix Chain Multiplication
+# Matrix Chain Multiplication (MCM)
 
 ## Problem
 
@@ -27,17 +27,17 @@ The overall idea is similar to the one behind the rod cutting problem: while in 
 
 The brute force solution tackles the problem by trying all possible parenthesizations, whilst ignoring the fact that the same subproblem may be encountered multiple times during its recursive calls. The number of possible parenthesizations is in $\Omega(2^n)$, where $n$ is the number of matrices. The running time of this approach is thus in $\Omega(2^n)$.
 
-Implementation: [Matrix Chain Multiplication - Brute Force](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/matrix-chain-mult/mcm-1.c)
+Implementation: [MCM - Brute Force](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/matrix-chain-mult/mcm-1.c)
 
 ## Top-Down Approach with Memoization
 
 This approach seeks to preserve the top-down strategy of the brute force solution, while making use of memoization by maintaining a table with subproblem solutions in order to avoid recomputing the same subproblems over and over again. This strategy improves the running time to $O(n^3)$.  
 
-Implementation: [Matrix Chain Multiplication - Top down](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/matrix-chain-mult/mcm-2.c)
+Implementation: [MCM - Top-down DP](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/matrix-chain-mult/mcm-2.c)
 
 ## Bottom-up Approach
 
 The bottom-up approach is similar, but it starts from the base cases and gradually builds up the solution to the original problem. Subproblems are thus solved in order of increasing chain length, so that at each step all subsolutions needed to solve the current subproblem are readily availabe. This is achieved by maintaining a table, where the solution to each subproblem is stored in a bottom-up fashion. The solution to the original problem is then the solution to the last subproblem in the table.  
 If we also want to return the optimal parenthesization, and not only the minimal cost, we need to keep track of the optimal split point for each subproblem. We do this by maintaining an extra table for the split points, which is then used to reconstruct the optimal parenthesization. The running time of this approach is $O(n^3)$.
 
-Implementation: [Matrix Chain Multiplication - Bottom up](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/matrix-chain-mult/mcm-3.c)
+Implementation: [MCM - Bottom-up DP](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/matrix-chain-mult/mcm-3.c)
