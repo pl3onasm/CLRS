@@ -19,7 +19,8 @@ int isPalindrome (int start, int end, char *s) {
   return isPalindrome(start+1, end-1, s);
 }
 
-void computeLPS (char *s, char *seq, int n, int idx, int subLen, int *maxLen, char *maxSeq) {
+void computeLPS (char *s, char *seq, int n, int idx, 
+int subLen, int *maxLen, char *maxSeq) {
   if (idx >= n) {
     if (subLen > *maxLen && isPalindrome(0, subLen-1, seq)) {
       *maxLen = subLen;
@@ -38,7 +39,7 @@ void computeLPS (char *s, char *seq, int n, int idx, int subLen, int *maxLen, ch
 
 
 int main(int argc, char **argv){
-  char s[] = "kateibdochpwhetorbilars";
+  char s[] = "kateibdochpuywhetorbilars";
   char seq[50] = {0}, maxSeq[50] = {0};
   int maxLen = 0;
   computeLPS(s, seq, strlen(s), 0, 0, &maxLen, maxSeq);
