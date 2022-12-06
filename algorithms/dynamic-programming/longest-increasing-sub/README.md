@@ -8,6 +8,6 @@ For example, given the array $nums = [12, 8, 1, 4, 2, 9, 10, 18, 15, 7, 20]$, th
 
 ## Brute Force Solution
 
-A brute force solution would be to generate all increasing subsequences of the array and then find the longest one. The time complexity of this solution is $O(2^n)$, where $n$ is the length of the array.
+A brute force solution would be to generate all increasing subsequences of the array while keeping track of the longest one. The time complexity of this solution is $O(2^n)$, where $n$ is the length of the array.
 
-Implementation: [LIS - Brute Force]
+Implementation: [LIS - Brute Force](https://github.com/pl3onasm/Algorithms/blob/main/algorithms/dynamic-programming/longest-increasing-sub/lis-1.c)
