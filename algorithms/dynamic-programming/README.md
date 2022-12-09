@@ -16,5 +16,4 @@ Dynamic programming is most suited for optimization problems. Such problems shou
 * [Longest Palindromic Subsequence](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/longest-palin-sub)
 * [Longest Increasing Subsequence](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/longest-increasing-sub)
 * Knapsack problem
-* Floyd-Warshall algorithm
-  
+* Minimal Palindromic Partitioning
