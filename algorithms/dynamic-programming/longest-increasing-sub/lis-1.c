@@ -46,8 +46,8 @@ void printArray (int *arr, int n) {
 }
 
 int main (int argc, char *argv[]) {
-  int arr[] = {12, 8, 1, 4, 2, 9, 10, 18, 15, 7, 
-             3, 20, 14, 30, 24, 40, 5, 10, 26, 11};
+  int arr[] = {12, 8, 1, 4, 2, 9, 10, 18, 15, 7, 3, 
+               20, 14, 30, 24, 40, 5, 10, 26, 11};
   int n = 20; 
   int *lis = safeMalloc(n * sizeof(int));
   int *maxLis = safeMalloc(n * sizeof(int));
