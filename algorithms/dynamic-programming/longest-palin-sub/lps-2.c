@@ -38,7 +38,7 @@ char *reverse (char *s) {
 }
 
 int fillTable (int **table, const char *a, const char *rev, int la){
-  /* fills the table with the lengths of the lps's of the prefixes of a  
+  /* fills the table with the lengths of the lcs's of the prefixes of a  
      and its reverse rev, and returns the length of the lps */
   for (int i=1; i<=la; ++i)     // fill table in row-major order
     for (int j=1; j<=la; ++j){
