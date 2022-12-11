@@ -7,8 +7,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define MAX(a,b) ((a) > (b) ? (a) : (b))
-
 void *safeCalloc (int n, int size) {
   /* allocates n elements of size size, initializing them to 0, and
      checks whether the allocation was successful */
@@ -76,12 +74,12 @@ int main (int argc, char *argv[]) {
   int indexMax = computeTable(arr, n, table);
   int *lis = safeCalloc(n, sizeof(int));
   reconstructLIS(arr, table, n, indexMax, lis);
-  int maxLen = table[indexMax];
+  int lisLen = table[indexMax];
   printf("The given array is:\n");
   printArray(arr, n);
-  printf("The length of the longest increasing subsequence is %d.\n", maxLen);
+  printf("The length of the longest increasing subsequence is %d.\n", lisLen);
   printf("A possible LIS is:\n");
-  printArray(lis, maxLen);
+  printArray(lis, lisLen);
   free(lis); free(table);
 
   return 0;
