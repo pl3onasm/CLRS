@@ -40,9 +40,9 @@ void printItems (int *weights, int *values, int *taken, int n) {
 
 void knapsack (int *weights, int *values, int *taken, int n, int idx, 
 int W, int val, int *maxVal, int *maxTaken) {
-  /* returns the maximum value that can be put in a knapsack of
+  /* computes the maximum value that can be put in a knapsack of
      capacity W, given n items with given weights and values; 
-     also stores the items that were chosen to get the max value */
+     also stores the items that were chosen to get this max value */
   if (idx == -1) {
     if (val > *maxVal) {
       *maxVal = val;
