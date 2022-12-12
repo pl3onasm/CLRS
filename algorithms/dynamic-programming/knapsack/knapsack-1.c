@@ -32,14 +32,13 @@ void printItems (int *weights, int *values, int *taken, int n) {
   /* prints the items that were taken */
   printf("The following items were taken: \n");
   for (int i = 0; i < n; i++) {
-    if (taken[i])
-      printf("item %d: weight = %d kg, value = € %d\n", 
-              i+1, weights[i], values[i]);
+    if (taken[i]) printf("item %d: weight = %d kg, value = € %d\n", 
+                          i+1, weights[i], values[i]);
   }
 }
 
 void knapsack (int *weights, int *values, int *taken, int n, int idx, 
-int W, int val, int *maxVal, int *maxTaken) {
+  int W, int val, int *maxVal, int *maxTaken) {
   /* computes the maximum value that can be put in a knapsack of
      capacity W, given n items with given weights and values; 
      also stores the items that were chosen to get this max value */
@@ -52,11 +51,11 @@ int W, int val, int *maxVal, int *maxTaken) {
     return;
   }
   if (weights[idx] <= W) {
-    taken[idx] = 1;   // take the item
+    taken[idx] = 1;   // take the current item
     knapsack(weights, values, taken, n, idx-1, W-weights[idx], 
              val+values[idx], maxVal, maxTaken);
   }
-  taken[idx] = 0;     // don't take the item
+  taken[idx] = 0;     // skip the current item
   knapsack(weights, values, taken, n, idx-1, W, val, maxVal, maxTaken);
 }
 
