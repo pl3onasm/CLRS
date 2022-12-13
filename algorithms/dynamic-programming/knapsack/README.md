@@ -1,7 +1,7 @@
 # 0-1 Knapsack Problem
 
 We are given a knapsack of a given size and a set of items. Each item has a weight and a value. The goal is to maximize the total value of the items in the knapsack while keeping the total weight less than or equal to the knapsack size. The items can't be used more than once and can't be broken up into smaller pieces: we can either put the whole item in the knapsack (1) or not (0).  
-The input to the program is a knapsack of capacity $W$, and two arrays containing n elements: $weights$ and $values$, denoting the weights and values of the items. The output is the maximum value that can be obtained by putting items in the knapsack, as well as the (possibly non-unique) combination of items that yields this value.
+The input to the program is a knapsack of capacity $W$, and two arrays containing n elements: $weights$ and $values$, denoting the weights and values of the items. The output is the maximum value that can be obtained by putting items in the knapsack without exceeding its capacity, as well as the (possibly non-unique) combination of items that yields this value.
 
 ## Brute Force
 
