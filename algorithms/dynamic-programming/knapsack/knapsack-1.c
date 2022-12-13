@@ -18,16 +18,6 @@ void *safeCalloc (int n, int size) {
   return ptr;
 }
 
-void printArray (int *arr, int n) {
-  // prints an array of size n
-  printf("[");
-  for (int i = 0; i < n; i++) {
-    printf("%d", (arr)[i]);
-    if (i < n-1) printf(", ");
-  }
-  printf("]\n");
-}
-
 void printItems (int *weights, int *values, int *taken, int n) {
   /* prints the items that were taken */
   printf("The following items were taken: \n");
@@ -42,7 +32,7 @@ void knapsack (int *weights, int *values, int *taken, int n, int idx,
   /* computes the maximum value that can be put in a knapsack of
      capacity W, given n items with given weights and values; 
      also stores the items that were chosen to get this max value */
-  if (idx == -1) {
+  if (idx < 0) {
     if (val > *maxVal) {
       *maxVal = val;
       for (int i = 0; i < n; i++)  // store the items that were taken
