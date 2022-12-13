@@ -10,3 +10,11 @@ A brute force solution would be to try all possible combinations of items and se
 Implementation: [Knapsack - Brute Force](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/knapsack/knapsack-1.c)
 
 ## Top-down DP (Memoization)
+
+
+Implementation: [Knapsack - Top-down DP](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/knapsack/knapsack-2.c)
+
+## Bottom-up DP (Tabulation)
+
+
+Implementation: [Knapsack - Bottom-up DP](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/knapsack/knapsack-3.c)
