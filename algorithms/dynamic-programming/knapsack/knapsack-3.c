@@ -1,10 +1,7 @@
-/* file: knapsack-2.c
+/* file: knapsack-3.c
 * author: David De Potter
 * description: 0-1 knapsack problem
-* top-down dynamic programming with memoization
-* note that we can now use an int function instead
-* of a void function, since we use a table from which
-* we can retrieve the items that were included in the knapsack
+* bottom-up dynamic programming
 */ 
  
 #include <stdlib.h>
@@ -27,9 +24,6 @@ int **newTable (int n, int m) {
   int **arr = safeCalloc(n, sizeof(int *));
   for (int i = 0; i < n; i++)
     arr[i] = safeCalloc(m, sizeof(int));
-  for (int i = 0; i < n; i++)
-    for (int j = 0; j < m; j++)
-      arr[i][j] = -1;
   return arr;
 }
 
@@ -55,16 +49,17 @@ void printItems (int *weights, int *values, int **dp, int n, int w) {
 int knapsack (int *weights, int *values, int n, int W, int **dp) {
   /* computes the maximum value that can be put in a knapsack of
      capacity W, given n items with given weights and values
-     using top-down dynamic programming with memoization */
-  if (n == 0 || W == 0) return 0;
-  if (dp[n][W] >= 0) return dp[n][W];
-  if (weights[n] > W) { // item n cannot be included
-    return dp[n][W] = knapsack(weights, values, n-1, W, dp);
-  } else {
-    int include = values[n] + knapsack(weights, values, n-1, W-weights[n], dp);
-    int exclude = knapsack(weights, values, n-1, W, dp);
-    return dp[n][W] = MAX(include, exclude);
+     using bottom-up approach */
+  for (int i = 1; i <= n; i++) {
+    for (int w = 1; w <= W; w++) {
+      if (weights[i] <= w) {
+        dp[i][w] = MAX(values[i] + dp[i-1][w-weights[i]], dp[i-1][w]);
+      } else {
+        dp[i][w] = dp[i-1][w];
+      }
+    }
   }
+  return dp[n][W];
 }
 
 int main (int argc, char *argv[]) {
@@ -72,14 +67,11 @@ int main (int argc, char *argv[]) {
   int values[] = {120, 90, 80, 200, 280, 180, 50, 20, 100, 250};
   int n = 10;   // number of items
   int W = 60;   // capacity of the knapsack
-  int **dp = newTable(n, W+1);
+  int **dp = newTable(n+1, W+1);
   int maxVal = knapsack(weights, values, n-1, W, dp);
   printf("Maximum value: %d\n", maxVal);
   printf("Items included in the knapsack:\n");
   printItems(weights, values, dp, n-1, W);
-  free2Dmem (dp, n);
+  free2Dmem (dp, n+1);
   return 0;
 }
-
-
-
