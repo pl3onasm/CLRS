@@ -48,8 +48,8 @@ void printItems (int *weights, int *values, int **dp, int n, int w) {
 
 int knapsack (int *weights, int *values, int n, int W, int **dp) {
   /* computes the maximum value that can be put in a knapsack of
-     capacity W, given n items with given weights and values
-     using bottom-up approach */
+     capacity W, given n items with given weights and values,
+     using a bottom-up approach */
   for (int i = 1; i <= n; i++) {
     for (int w = 1; w <= W; w++) {
       if (weights[i] <= w) {
