@@ -6,7 +6,7 @@ The input to the program is a string of $n$ characters. The output is the minimu
   
 ## Brute Force
 
-The brute force approach is to try all possible partitions of the string, check if each partition is a palindrome, and keep track of the minimum number of cuts. The time complexity of this approach is in $O(2^n)$.  
+The brute force approach is to try all possible partitions of the string, check if each part is a palindrome, and keep track of the minimum number of cuts. The time complexity of this approach is in $O(2^n)$.  
 
 Implementation: [MPP - Brute Force](https://github.com/pl3onasm/Algorithms/blob/main/algorithms/dynamic-programming/min-pal-part/mpp-1.c)
 
