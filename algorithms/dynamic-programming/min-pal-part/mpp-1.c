@@ -1,7 +1,7 @@
-
 /* file: mpp-1.c
    author: David De Potter
-   description: minimal palindromic partitioning using recursion
+   description: minimal palindromic partitioning 
+                using recursion with backtracking
 */ 
 
 #include <stdio.h>
