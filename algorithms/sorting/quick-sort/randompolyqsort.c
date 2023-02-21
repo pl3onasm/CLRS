@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <ctype.h>
 
 void *safeMalloc (int n) {
   /* allocates n bytes of memory and checks whether the allocation
@@ -37,9 +38,19 @@ int compInt (const void *a, const void *b) {
   return (*(int*)a - *(int*)b);
 }
 
+int strcmpi (const char *a, const char *b) {
+  /* case-insensitive string comparison */
+  while (*a && *b) {
+    if (tolower(*a) != tolower(*b)) 
+      return tolower(*a) - tolower(*b);
+    a++; b++;
+  }
+  return tolower(*a) - tolower(*b);
+}
+
 int compStr (const void *a, const void *b) {
   /* compares two strings */
-  return strcmp(*(char**)a, *(char**)b);
+  return strcmpi(*(char**)a, *(char**)b);
 }
 
 void swap(void *arr, int i, int j, int width) {

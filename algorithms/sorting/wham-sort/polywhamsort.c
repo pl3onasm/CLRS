@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #define MIN(a,b) ((a) < (b) ? (a) : (b)); 
 
 void *safeMalloc (int n) {
@@ -37,12 +38,22 @@ int compInt (const void *a, const void *b) {
   return (*(int*)a - *(int*)b);
 }
 
-int compStr (const void *a, const void *b) {
-  /* compares two strings */
-  return strcmp(*(char**)a, *(char**)b);
+int strcmpi (const char *a, const char *b) {
+  /* case-insensitive string comparison */
+  while (*a && *b) {
+    if (tolower(*a) != tolower(*b)) 
+      return tolower(*a) - tolower(*b);
+    a++; b++;
+  }
+  return tolower(*a) - tolower(*b);
 }
 
-void merge (int left, int invIndex, int right, int arr[], int width, 
+int compStr (const void *a, const void *b) {
+  /* compares two strings */
+  return strcmpi(*(char**)a, *(char**)b);
+}
+
+void merge (int left, int invIndex, int right, void *arr, int width, 
 int (*comp)(const void *, const void *)) {
   int idx = 0, l = left, r = invIndex;
   void *temp = safeMalloc((right-left)*width);
@@ -80,10 +91,10 @@ int (*comp)(const void*, const void*)) {
 int main(int argc, char *argv[]) {
   int intExample[] = {5, 6, 7, 8, 9, 10, 2, -1, 3, 4, 1, 2, -35, 78, -10,
                       13, 7, -11, 20, 1, 15, 7, 16, 0, 1, 2, 5, 6, 100, 23};
-  char *strExample[] = {"Harry", "Stephen", "Samuel", "James", 
+  char *strExample[] = {"Harry", "Stephen", "Samuel", "SAM", "James",
                         "Thomas", "Robert", "Michael", "William", 
                         "David", "Richard", "Charles", "Joseph", 
-                        "John", "Chris", "Daniel", "Matthew", 
+                        "John", "Chris", "DANNY", "Dan", "MATT", 
                         "Anthony", "Jonathan", "Mark", "Paul"};
   printf("Unsorted:\n");
   printArray(intExample, 30, 'i');
@@ -91,9 +102,9 @@ int main(int argc, char *argv[]) {
   printf("Sorted:\n");
   printArray(intExample, 30, 'i');
   printf("Unsorted:\n");
-  printArray(strExample, 20, 's');
-  whamSort(strExample, 0, 20, sizeof(char*), compStr);
+  printArray(strExample, 22, 's');
+  whamSort(strExample, 0, 22, sizeof(char*), compStr);
   printf("Sorted:\n");
-  printArray(strExample, 20, 's');
+  printArray(strExample, 22, 's');
   return 0;
 }
