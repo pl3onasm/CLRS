@@ -23,6 +23,7 @@ void *safeCalloc (int n, int size) {
 }
 
 int **new2DArray(int n, int m) {
+  /* allocates a 2D array of size n x m */
   int **a = safeCalloc(n, sizeof(int *));
   for (int i = 0; i < n; i++) 
     a[i] = safeCalloc(m, sizeof(int));
@@ -30,6 +31,7 @@ int **new2DArray(int n, int m) {
 }
 
 void free2DArray(int **a, int n) {
+  /* frees a 2D array of n rows */
   for (int i = 0; i < n; i++) free(a[i]);
   free(a);
 }
@@ -83,8 +85,9 @@ int main(int argc, char *argv[]) {
   int **dp = new2DArray(n, n);
   int **cuts = new2DArray(n, n);
   partition(str, n, dp, cuts);
-  printf("The minimal number of cuts needed is %d.\n", dp[0][n-1]);
-  printf("A palindrome partitioning is: ");
+  printf("The given string is:\n%s\n", str); 
+  printf("The minimal number of cuts needed: %d.\n", dp[0][n-1]);
+  printf("A minimal palindrome partitioning is:\n");
   printCuts(str, cuts, 0, n-1); 
   printf("\n");
   free2DArray(dp, n);
