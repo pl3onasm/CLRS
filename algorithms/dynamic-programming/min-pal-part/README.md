@@ -10,3 +10,6 @@ The brute force approach is to try all possible partitions of the string, check 
 
 Implementation: [MPP - Brute Force](https://github.com/pl3onasm/Algorithms/blob/main/algorithms/dynamic-programming/min-pal-part/mpp-1.c)
 
+## DP - Bottom up
+
+Implementation: [MPP - Bottom-up DP](https://github.com/pl3onasm/Algorithms/blob/main/algorithms/dynamic-programming/min-pal-part/mpp-2.c)
