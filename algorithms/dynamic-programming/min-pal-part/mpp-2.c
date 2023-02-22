@@ -44,19 +44,18 @@ void print2DArray(int **a, int n, int m) {
 }
 
 int isPalindrome(char *s, int start, int end) {
+  /* returns 1 if s[start..end] is a palindrome, 0 otherwise */
   if (start >= end) return 1;
   if (s[start] != s[end]) return 0;
   return isPalindrome(s, start+1, end-1);
 }
 
 void printCuts(char *s, int **cuts, int i, int j) {
-  if (i == j) {
-    printf("%c", s[i]);
-    return;
-  } else {
+  /* prints the palindrome partitioning of s[i..j] */
+  if (i == j) printf("%c", s[i]);
+  else {
     if (cuts[i][j] == j) {
       for (int k = i; k <= j; k++) printf("%c", s[k]);
-      return;
     } else {
       printCuts(s, cuts, i, cuts[i][j]);
       printf(" | ");
@@ -65,23 +64,14 @@ void printCuts(char *s, int **cuts, int i, int j) {
   }
 }
 
-int main(int argc, char *argv[]) {
-  char str[] = "abbacccabdbacaabccdccddababacdcbbdcaaabbbaaaabdccdeddc"
-                "ddeasabeabdccccdeedabbabaaccdeedddceddeccccdaaabccdcc";
-  int n = strlen(str);
-  int **dp = new2DArray(n, n);
-  int **cuts = new2DArray(n, n);
-  for (int i = 0; i < n; i++) 
-    for (int j = 0; j < n; j++) 
-      dp[i][j] = 0;
-
+void partition (char *str, int n, int **dp, int **cuts) {
+  /* computes the minimal number of cuts needed to partition str
+     into palindromes, and stores the cuts in cuts */
   for (int l = 2; l <= n; l++) {
     for (int i = 0; i < n-l+1; i++) {
       int j = i+l-1;
-      if (isPalindrome(str, i, j)) {
-        dp[i][j] = 0;
-        cuts[i][j] = j;
-      } else {
+      if (isPalindrome(str, i, j)) cuts[i][j] = j;
+      else {
         dp[i][j] = INT_MAX;
         for (int k = i; k < j; k++) {
           int q = dp[i][k] + dp[k+1][j] + 1;
@@ -93,7 +83,15 @@ int main(int argc, char *argv[]) {
       }
     }
   }
+}
 
+int main(int argc, char *argv[]) {
+  char str[] = "abbacccabdbacaabccdccddababacdcbbdcaaabbbaaaabdccdeddc"
+               "cddeasabeabdccccdeedabbabaaccdeedddceddeccccdaaabccdcc";
+  int n = strlen(str);
+  int **dp = new2DArray(n, n);
+  int **cuts = new2DArray(n, n);
+  partition(str, n, dp, cuts);
   printf("The minimal number of cuts needed is %d.\n", dp[0][n-1]);
   printf("A palindrome partitioning is: ");
   printCuts(str, cuts, 0, n-1); 
