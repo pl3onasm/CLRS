@@ -34,15 +34,6 @@ void free2DArray(int **a, int n) {
   free(a);
 }
 
-void print2DArray(int **a, int n, int m) {
-  for (int i = 0; i < n; i++) {
-    for (int j = 0; j < m; j++) {
-      printf("%d ", a[i][j]);
-    }
-    printf("\n");
-  }
-}
-
 int isPalindrome(char *s, int start, int end) {
   /* returns 1 if s[start..end] is a palindrome, 0 otherwise */
   if (start >= end) return 1;
