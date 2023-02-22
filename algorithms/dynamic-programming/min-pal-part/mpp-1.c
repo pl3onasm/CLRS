@@ -20,8 +20,8 @@ int isPalindrome(char *s, int start, int end) {
   return isPalindrome(s, start+1, end-1);
 }
 
-void copyArray(int *a, int *b, int n) {
-  for (int i = 0; i < n; i++) b[i] = a[i];
+void copyArray(int *copy, int *source, int n) {
+  for (int i = 0; i < n; i++) copy[i] = source[i];
 }
 
 void partition(int left, int right, char *a, int *cuts, 
@@ -29,24 +29,24 @@ void partition(int left, int right, char *a, int *cuts,
   if (left > right) {
     if (*count < *min) {
       *min = *count;
-      copyArray(cuts, minCuts, 25);
+      copyArray(minCuts, cuts, right);
     }
     return;
   }
   for (int j = left; j <= right; j++) {
     if (isPalindrome(a, left, j)) {
       ++*count;     
-      cuts[j] = 1;  // mark the cut
+      ++cuts[j];  // mark the cut
       partition(j+1, right, a, cuts, minCuts, min, count);
-      --*count;	    // backtrack
-      cuts[j] = 0;  // unmark the cut
+      --*count;	  // backtrack
+      --cuts[j];  // unmark the cut
     }
   }
 }
 
 int main(int argc, char *argv[]) {
-  char str[] = "ababbbabbababa";
-  int cuts[25]={0}, minCuts[25]={0};
+  char str[] = "ababbbabbabababababbbabbaaabbababbbbaaaab";
+  int cuts[50]={0}, minCuts[50]={0};
   int min = INT_MAX, count = 0;
   partition(0, strlen(str)-1, str, cuts, minCuts, &min, &count);
   printf("The minimal number of cuts is %d.\n", min-1);
