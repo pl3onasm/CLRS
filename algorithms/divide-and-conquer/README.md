@@ -1,6 +1,6 @@
 # Divide and Conquer
 
-| CLRS | Link |
+| **CLRS** | **Link** |
 |:---:|:---|
 | Prob 2-4 | [Array Inversion Count](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/divide-and-conquer/array-inversion-count)
 |  | [Closest Pair of Points](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/divide-and-conquer/closest-pair-of-points)

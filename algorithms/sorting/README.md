@@ -1,6 +1,6 @@
 # Sorting
 
-| CLRS | Link |
+| **CLRS** | **Link** |
 |:---:|:---|
 ||*Linear time* |
 | Chap 8.2 | [Counting sort](https://github.com/pl3onasm/Algorithms-and-data-structures/tree/main/algorithms/sorting/counting-sort)
