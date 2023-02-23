@@ -14,7 +14,7 @@ This repository grew from my work for the course AADS at the UG. The textbook us
 
 The repository contains my notes and implementations in C of the algorithms and data structures discussed in this textbook. Some of the problems are taken from the exercises in the textbook, while others are meant as examples of how the presented algorithms can be used to solve other problems.  
 
-Solutions to the exercises in the textbook can be found [here](https://walkccc.me/CLRS/). Although these are not always optimal or correct.
+All solutions to the textbook's exercises can be found [here](https://walkccc.me/CLRS/), although these are not always optimal or correct.  
 
 ## References
 
