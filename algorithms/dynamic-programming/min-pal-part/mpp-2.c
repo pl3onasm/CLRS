@@ -2,13 +2,12 @@
    author: David De Potter
    description: minimal palindromic partitioning 
                 using bottom-up dynamic programming
+   time complexity: O(n³)
 */ 
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <limits.h>
-
 #define MIN(a, b) ((a) < (b) ? (a) : (b));
 
 void *safeCalloc (int n, int size) {
@@ -65,7 +64,7 @@ void partition (char *str, int n, int **dp, int **cuts) {
       int j = i+l-1;
       if (isPalindrome(str, i, j)) cuts[i][j] = j;
       else {
-        dp[i][j] = INT_MAX;
+        dp[i][j] = n;
         for (int k = i; k < j; k++) {
           int q = dp[i][k] + dp[k+1][j] + 1;
           if (q < dp[i][j]){
