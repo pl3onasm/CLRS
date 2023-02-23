@@ -10,11 +10,12 @@
 
 ## Notes
 
-The intention is to implement a number of algorithms in C.  
-Solutions to the exercises in the textbook *Introduction to Algorithms* by Thomas H. Cormen, et al. can be found [here](https://walkccc.me/CLRS/).
+This repository grew from my work for the course AADS at the UG. The textbook used for this course is *Introduction to Algorithms* by Thomas H. Cormen, et al.  
+
+The repository contains my notes and implementations in C of the algorithms and data structures discussed in this textbook. Some of the problems are taken from the exercises in the textbook, while others are meant as examples of how the presented algorithms can be used to solve other problems.  
+
+Solutions to the exercises in the textbook can be found [here](https://walkccc.me/CLRS/). Although these are not always optimal or correct.
 
 ## References
 
-Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2022). Introduction to algorithms. MIT press.
-
-Roughgarden, T. (2022). Algorithms Illuminated: Omnibus Edition.
+Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2022). Introduction to algorithms. MIT press.  
