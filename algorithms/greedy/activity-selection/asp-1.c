@@ -1,8 +1,8 @@
 /* file: asp-1.c
    author: David De Potter
-   description: minimal palindromic partitioning 
-                using recursion with backtracking
-   time complexity: O(n^3)
+   description: activity selection problem (ASP)
+                using bottom-up dynamic programming
+   time complexity: O(n³)
 */ 
 
 #include <stdio.h>
@@ -36,7 +36,7 @@ void free2DArray(int **a, int n) {
 }
 
 void printActs(int *start, int *finish, int **maxSet, int i, int j, int no) {
-  /* prints the activities in [i..j] */
+  /* prints the selected activities in [i..j] */
   if (maxSet[i][j] > 0) {
     int k = maxSet[i][j];
     printActs(start, finish, maxSet, i, k, no);
@@ -67,7 +67,7 @@ void selectActs(int *start, int *finish, int n, int **maxSet, int **dp) {
 int main (int argc, char *argv[]) {
   int start[]  = {0, 1, 3, 0, 5, 3, 5, 6,  7,  8,  2,  12, INT_MAX};
   int finish[] = {0, 4, 5, 6, 7, 9, 9, 10, 11, 12, 14, 16, INT_MAX};
-  int n = 11+2;   // number of activities + 2 sentinel values
+  int n = 11+2;   // number of activities + 2 sentinel activities
   int **dp = new2DArray(n, n); // dp[i][j] = max number of activities in [i..j]
   int **maxSet = new2DArray(n, n); // stores the index of the selected activity
   for (int i = 0; i < n; i++)
