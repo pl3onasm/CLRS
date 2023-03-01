@@ -35,10 +35,6 @@ void free2DArray(int **a, int n) {
   free(a);
 }
 
-void copyArray(int *copy, int *source, int n) {
-  for (int i = 0; i < n; i++) copy[i] = source[i];
-}
-
 void printActs(int *start, int *finish, int **maxSet, int i, int j, int no) {
   /* prints the activities in [i..j] */
   if (maxSet[i][j] > 0) {
@@ -84,5 +80,7 @@ int main (int argc, char *argv[]) {
   printf("The selected activities are:\n");
   printActs(start, finish, maxSet, 0, n-1, 1);
   printf("\n");
+  free2DArray(dp, n);
+  free2DArray(maxSet, n);
   return 0;
 }
