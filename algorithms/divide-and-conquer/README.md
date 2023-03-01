@@ -9,4 +9,4 @@
 | | Binary Search
 | Chap 2.3 | [Merge Sort](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/sorting/merge-sort)
 | Chap 7.1-2 | [Quick Sort](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/sorting/quick-sort)
-|  | [WHAM Sort](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/sorting/wham-sort)
+|| [WHAM Sort](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/sorting/wham-sort)
