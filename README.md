@@ -4,7 +4,7 @@
 * Searching
 * [Divide and conquer](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/divide-and-conquer)
 * [Dynamic programming](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming)
-* Greedy algorithms
+* [Greedy algorithms](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy)
 * Graph algorithms
 * String algorithms
 
