@@ -24,7 +24,7 @@ $$
 
 where $k$ is the index of the activity that we choose to include in the solution. As we noted above, we need to try all possible values of $k$ in order to find the optimal solution.
 
-Implementation using bottom-up DP: [ASP - Bottom-up DP]()
+Implementation using bottom-up DP: [ASP - Bottom-up DP](https://github.com/pl3onasm/AADS/blob/main/algorithms/greedy/activity-selection/asp-1.c)
 
 Note the similarity with the DP implementation for the matrix-chain multiplication problem. For the activity-selection problem, we have to add two sentinel activities, one with start time $0$ and finish time $0$, and another one with start time $\infty$ and finish time $\infty$, in order to simplify the implementation.
 
