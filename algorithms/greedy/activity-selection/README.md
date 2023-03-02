@@ -18,16 +18,18 @@ $$
 s[i,j] =  
 \begin{cases}
 0 & \text{if } A_{ij} = \emptyset \\
-\max\{s[i,k] + s[k,j] + 1 \} & \text{if } A_{ij} \neq \emptyset
+\max \{s[i,k] + s[k,j] + 1\} & \text{if } A_{ij} \neq \emptyset
 \end{cases}
 $$
 
 where $k$ is the index of the activity that we choose to include in the solution. As we noted above, we need to try all possible values of $k$ in order to find the optimal solution.
 
-For the implementation, we need to add two sentinel activities, one with start time $0$ and finish time $0$, and another one with start time $\infty$ and finish time $\infty$, in order to simplify the implementation. We use the example from section 15.1 of the textbook to illustrate the implementation.
+For the implementation, we need to add two sentinel activities, one with start time $0$ and finish time $0$, and another one with start time $\infty$ and finish time $\infty$, in order to simplify the implementation. We use the example from section 15.1 of the textbook to illustrate the implementation.  
+
 Implementation using bottom-up DP: [ASP - Bottom-up DP](https://github.com/pl3onasm/AADS/blob/main/algorithms/greedy/activity-selection/asp-1.c)
 
-Note the similarity with the [bottom-up DP implementation for the matrix-chain multiplication problem](https://github.com/pl3onasm/AADS/blob/main/algorithms/dynamic-programming/matrix-chain-mult/mcm-3.c).
+Note the similarity with the [bottom-up DP implementation for the matrix-chain multiplication problem](https://github.com/pl3onasm/AADS/blob/main/algorithms/dynamic-programming/matrix-chain-mult/mcm-3.c).  
+The time complexity in both cases is the same: $O(n^3)$.
 
 ## Greedy solution
 
