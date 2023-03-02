@@ -35,13 +35,13 @@ void free2DArray(int **a, int n) {
   free(a);
 }
 
-void printActs(int *start, int *finish, int **maxSet, int i, int j, int no) {
+void printActs(int *start, int *finish, int **maxSet, int i, int j) {
   /* prints the selected activities in [i..j] */
   if (maxSet[i][j] > 0) {
     int k = maxSet[i][j];
-    printActs(start, finish, maxSet, i, k, no);
-    printf("Activity %d: [%d, %d)\n", no++, start[k], finish[k]);
-    printActs(start, finish, maxSet, k, j, no);
+    printActs(start, finish, maxSet, i, k);
+    printf("Activity %d: [%d, %d)\n", k, start[k], finish[k]);
+    printActs(start, finish, maxSet, k, j);
   }
 }
 
@@ -78,8 +78,7 @@ int main (int argc, char *argv[]) {
   selectActs (start, finish, n, maxSet, dp);
   printf("The maximal number of activities is %d.\n", dp[0][n-1]);
   printf("The selected activities are:\n");
-  printActs(start, finish, maxSet, 0, n-1, 1);
-  printf("\n");
+  printActs(start, finish, maxSet, 0, n-1);
   free2DArray(dp, n);
   free2DArray(maxSet, n);
   return 0;
