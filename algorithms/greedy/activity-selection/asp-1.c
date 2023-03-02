@@ -2,12 +2,12 @@
    author: David De Potter
    description: activity selection problem (ASP)
                 using bottom-up dynamic programming
+   assumptions: the activities are sorted in increasing order of finish time
    time complexity: O(n³)
 */ 
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <limits.h>
 
 void *safeCalloc (int n, int size) {
