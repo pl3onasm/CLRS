@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Like dynamic programming, greedy algorithms are best suited to optimization problems. Unlike dynamic programming, which is based on breaking down a problem into subproblems and then combining the solutions to the subproblems in order to solve the original problem, greedy algorithms make locally optimal choices at each stage with the hope of finding a global optimum. It's often the case that a greedy algorithm won't find the global optimum, but an approximation to it.
+Like dynamic programming, greedy algorithms are best suited to optimization problems. Unlike dynamic programming, which is based on breaking down a problem into subproblems and then combining the solutions to the subproblems in order to solve the original problem, greedy algorithms make locally optimal choices at each stage with the hope of finding a global optimum. A greedy algorithm can also be used as an approximation algorithm for a problem.  
 
 There are two key properties of a problem that suggest the use of a greedy algorithm:
 
@@ -16,5 +16,5 @@ There are two key properties of a problem that suggest the use of a greedy algor
 |:---:|:---|
 | Chap 15.1 | [Activity-selection Problem](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy/activity-selection)
 | Chap 15.2 | [Fractional Knapsack](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy/fract-knapsack)
-| Chap 15.3 | [Huffman Codes]()
+| Chap 15.3 | [Huffman Codes](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy/huffman)
 | Prob 15-1 | [Coin Changing]()
