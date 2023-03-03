@@ -1,4 +1,4 @@
-/* file: fkp.c
+/* file: fkp-1.c
    author: David De Potter
    description: fracktional knapsack problem (FKP)
                 using a greedy algorithm
@@ -36,14 +36,16 @@ Item *createUnits(int *values, int *weights, int n) {
   return unitValues;
 }
 
-void printItems(double *maxSet, int n) {
+void printItems(double *maxSet, double max, int n) {
   /* prints the selected items */
+  printf("Total value: %.2f\n", max);
+  printf("Selected items:\n"); 
   for (int i = 0; i < n; i++) {
     if (maxSet[i] > 0){
       if (maxSet[i] == 1)
-        printf("Item %d selected in full\n", i+1);
+        printf("Item %d in full\n", i+1);
       else
-        printf("Item %d selected for %.2f of its weight\n", i+1, maxSet[i]);
+        printf("Item %d for %.2f of its weight\n", i+1, maxSet[i]);
     }
   }
 }
@@ -76,17 +78,15 @@ double selectItems(Item *unitValues, int n, int W, double *maxSet) {
 }
 
 int main (int argc, char *argv[]) {
-  int weights[] = {10,  25, 15, 20,  30,  18,  5,  12,  9,  13};
-  int values[] =  {120, 90, 80, 200, 280, 180, 50, 20, 100, 250};
+  int weights[] = {11,  25, 14,  5,  33,  15,  16, 12,  9,  13};
+  int values[] =  {120, 94, 85, 200, 271, 183, 50, 20, 100, 250};
   int n = 10;   // number of items
   int W = 60;   // capacity of the knapsack
   Item *unitValues = createUnits(values, weights, n);
   qsort(unitValues, n, sizeof(Item), compare);
   double *maxSet = safeCalloc(n, sizeof(double));
   double max = selectItems(unitValues, n, W, maxSet);
-  printf("Maximum value: %.2f euros\n", max);
-  printf("Selected items: \n");
-  printItems(maxSet, n);
+  printItems(maxSet, max, n);
   free(unitValues);
   free(maxSet);
   return 0;
