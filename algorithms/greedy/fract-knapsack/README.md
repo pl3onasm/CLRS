@@ -10,6 +10,8 @@ This problem can be solved by using a greedy algorithm. First, the items need to
 
 The greedy choice made at each step is to add the item with the highest value per unit weight. This choice is locally optimal, since it maximizes the value of the knapsack at that step. The algorithm is correct because the items are sorted in decreasing order of their value per unit weight, so the greedy choice made at each step is also globally optimal.
 
+The implementation uses a priority queue to store the items. The max heap takes $O(n)$ time to build. After that, we can extract the item with the highest value per unit weight in $O(\log n)$ time. This is then repeated until the knapsack is filled to capacity. In the worst case, the knapsack is filled to capacity after $n$ iterations, so the total time complexity is $O(n\log n)$.
+
 Implementation: [FKP - Linearithmic Greedy](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy/fract-knapsack/fkp-1.c)  
 
 Time complexity: $O(n\log n)$, due to the sorting step.
@@ -20,6 +22,6 @@ The main reason why the greedy approach works for the fractional knapsack proble
 
 ## Greedy solution in linear time (CLRS Ex 15.2-6)
 
-The greedy approach described above works, but can be improved upon. The bottleneck of the algorithm is the sorting step, which takes $O(n\log n)$ time. We can improve the time complexity to $O(n)$ by using a priority queue to store the items. This can be implemented using a max heap, which takes $O(n)$ time to build. After that, we can extract the item with the highest value per unit weight in $O(\log n)$ time. This is then repeated until the knapsack is filled to capacity.
+The greedy approach described above works, but can be improved upon. The bottleneck of the algorithm is the sorting step, which takes $O(n\log n)$ time. 
 
-Implementation: [FKP - Linear Greedy](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy/fract-knapsack/fkp-2.c)
+Implementation: [FKP - Linear Greedy]()
