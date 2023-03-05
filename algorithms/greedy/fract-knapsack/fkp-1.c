@@ -1,7 +1,7 @@
-/* file: fkp-2.c
+/* file: fkp-1.c
    author: David De Potter
    description: fractional knapsack problem (FKP)
-                using a greedy algorithm and a max heap
+      using a greedy algorithm and a max heap (priority queue)
    time complexity: O(nlogn), where n is the number of items
 */ 
 
@@ -10,7 +10,8 @@
 
 typedef struct {
   int index;          // index of the item
-  int weight;         // weight of the item
+  double weight;      // weight of the item
+  double value;       // value of the item
   double unitValue;   // unit value of the item
 } Item;
 
@@ -54,7 +55,7 @@ void maxHeapify(Heap *hp, int i){
   }
 }
 
-void initMaxHeap(int *values, int *weights, int n, Heap *hp) {
+void initMaxHeap(Heap *hp) {
   /* initializes the max heap */
   for (int i = hp->size >>1; i >= 0; --i) maxHeapify(hp, i);
 }
@@ -75,58 +76,71 @@ Item extractMax(Heap *hp){
   return max; 
 }
 
-void readHeap(Heap *hp, int *weights, int *values, int n) {
+void readHeap(Heap *hp, double *weights, double *values) {
   /* reads the heap from the input */
-  for (int i = 0; i < n; i++) {
+  for (int i = 0; i < hp->size; i++) {
     hp->items[i].index = i;
     hp->items[i].weight = weights[i];
-    hp->items[i].unitValue = (double)values[i] / weights[i];
+    hp->items[i].value = values[i];
+    hp->items[i].unitValue = values[i] / weights[i];
   }
 }
 
-void printItems(double *maxSet, double max, int n) {
+void printItems(double *maxSet, double max, int n, double rem) {
   /* prints the selected items */
-  printf("Total value: %.2f\n", max);
   printf("Selected items:\n"); 
   for (int i = 0; i < n; i++) {
     if (maxSet[i] > 0){
       if (maxSet[i] == 1)
         printf("Item %d in full\n", i+1);
       else
-        printf("Item %d for %.2f of its weight\n", i+1, maxSet[i]);
+        printf("Item %d for %.2f%% of its weight (= %.2f kg)\n", i+1, maxSet[i], rem);
     }
   }
+  printf("Total value: %.2f euros\n", max);
 }
 
-double selectItems(Heap *hp, double *maxSet, int W, int n) {
-  /* selects the items to be put in the knapsack */
+double selectItems(Heap *hp, double *maxSet, double W, double *rem) {
+  /* selects the items to be put in the knapsack and returns the total value */
   double totalValue = 0;
   while (W > 0 && hp->size > 0) {
     Item item = extractMax(hp);
     if (item.weight <= W) {
       maxSet[item.index] = 1;
       W -= item.weight;
-      totalValue += item.weight * item.unitValue;
+      totalValue += item.value;
     } else {
-      maxSet[item.index] = (double)W / item.weight;
-      totalValue += W * item.unitValue;
-      W = 0;
+      maxSet[item.index] = W / item.weight * 100;
+      totalValue += item.unitValue * W;
+      *rem = W; W = 0;
     }
   }
   return totalValue;
 }
 
+double sum (double *arr, int n) {
+  /* returns the sum of the first n elements of arr */
+  double sum = 0;
+  for (int i = 0; i < n; i++) sum += arr[i];
+  return sum;
+}
+
 int main (int argc, char *argv[]) {
-  int weights[] = {11,  25, 14,  5,  33,  15,  16, 12,  9,  13};
-  int values[] =  {120, 94, 85, 200, 271, 183, 50, 20, 100, 250};
-  int n = 10;   // number of items
-  int W = 60;   // capacity of the knapsack
+  double weights[] = {11.1,  25.2, 14.5, 5.25, 33,  15.3,  16,  12.9, 9.7, 13.9};
+  double values[]  = {125.5, 94.13, 85,  201, 27.6, 183, 50.75, 20.2, 105, 250};
+  int n = 10;       // number of items
+  double W = 61.5;  // capacity of the knapsack
+  if (sum(weights, n) <= W) {
+    printf("All items selected\n");
+    return 0;
+  }
   Heap *hp = newHeap(n);
-  readHeap(hp, weights, values, n);
-  initMaxHeap(weights, values, n, hp);
+  readHeap(hp, weights, values);
+  initMaxHeap(hp);
   double *maxSet = safeCalloc(sizeof(double), n);
-  double max = selectItems(hp, maxSet, W, n);
-  printItems(maxSet, max, n);
+  double rem = 0;
+  double max = selectItems(hp, maxSet, W, &rem);
+  printItems(maxSet, max, n, rem);
   freeHeap(hp);
   free(maxSet);
   return 0;
