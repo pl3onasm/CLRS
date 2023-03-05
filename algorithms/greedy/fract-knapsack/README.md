@@ -14,14 +14,12 @@ The implementation uses a priority queue to store the items. The max heap takes 
 
 Implementation: [FKP - Linearithmic Greedy](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy/fract-knapsack/fkp-1.c)  
 
-Time complexity: $O(n\log n)$, due to the sorting step.
-
 Note: the greedy approach works for the fractional knapsack problem, but not for the 0-1 knapsack problem. The [0-1 knapsack problem can be solved using dynamic programming](https://github.com/pl3onasm/AADS/tree/main/algorithms/dynamic-programming/knapsack) instead, with a time complexity of $O(nW)$ where $n$ is the number of items and $W$ is the capacity of the knapsack.  
 
 The main reason why the greedy approach works for the fractional knapsack problem is that in this case, the greedy choice made at each step is also globally optimal. This is not the case for the 0-1 knapsack problem, because items can't be broken into fractions and thus the greedy choice for one step may not be optimal for the next step.
 
 ## Greedy solution in linear time (CLRS Ex 15.2-6)
 
-The greedy approach described above works, but can be improved upon. The bottleneck of the algorithm is the sorting step, which takes $O(n\log n)$ time. 
+The greedy approach described above works, but can be improved upon. The bottleneck of the algorithm is the sorting.  
 
-Implementation: [FKP - Linear Greedy]()
+Implementation: [FKP - Linear Greedy](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy/fract-knapsack/fkp-2.c)  
