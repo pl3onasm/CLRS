@@ -53,10 +53,6 @@ void printItems (Item *items, int lim, double W, int n) {
   /* prints the selected items */
   double totalW = sumWeights(items, 0, lim);
   double total = 0;
-  if (totalW == 0) {
-    printf("No items selected.\n");
-    return;
-  }
   printf("Selected items:\n");
   for (int i = 0; i < lim; i++) {
     printf("Item %d in full\n", items[i].index+1);
@@ -114,10 +110,7 @@ int getLimit (Item *items, double W, int left, int right) {
   // we use quickselect to find the median of the items array;
   // the array is then partitioned (not sorted) around the median
   int k = ceil((double)(left+right)/2);
-  if (k == left) {
-      printf("DEBUG: k == left, left = %d\n", left); 
-      return left;
-    } 
+  if (k == left) return left;
   Item med = quickSelect(items, left, right, k);
   
   // W1 is the sum of the weights of the items 
@@ -162,7 +155,6 @@ int main (int argc, char *argv[]) {
   } 
 
   int lim = getLimit(items, W, 0, n-1); 
-  printf("DEBUG: lim = %d\n", lim);
   printItems(items, lim, W, n);
   free(items);
   return 0;
