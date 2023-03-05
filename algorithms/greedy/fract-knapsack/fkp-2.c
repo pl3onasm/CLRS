@@ -152,7 +152,7 @@ int main (int argc, char *argv[]) {
   if (W1 <= W) {
     printf("All items selected.\n");
     return 0;
-  } 
+  }
 
   int lim = getLimit(items, W, 0, n-1); 
   printItems(items, lim, W, n);
