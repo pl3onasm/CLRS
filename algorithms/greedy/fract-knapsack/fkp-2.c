@@ -42,7 +42,7 @@ Item *readItems (double *weights, double *values, int n) {
 
 double sumWeights (Item *items, int left, int right) {
   /* returns the sum of the weights of the items 
-     in closed interval [left, right] */
+     in interval [left, right) */
   double total = 0;
   for (int i = left; i < right; i++)
     total += items[i].weight;
@@ -61,7 +61,7 @@ void printItems (Item *items, int lim, double W, int n) {
   if (totalW < W && lim < n && totalW + items[lim].weight > W) {
     double w = W - totalW;
     double p = w / (items[lim].weight) * 100;
-    total += p / 100 * items[lim].value;
+    total += w * items[lim].unitValue;
     printf("Item %d for %.2f%% of its weight (= %.2f kg)\n", 
             items[lim].index+1, p, w);
   } 
@@ -80,7 +80,7 @@ void swap (int a, int b, Item *arr) {
 int partition(Item *arr, int left, int right) {
   /* partitions the array arr around a random
      pivot and returns the index of the pivot */
-  srand(time(NULL));
+  srand(time(NULL));  // seed the random number generator
   int idx = left + rand() % (right-left+1);
   Item pivot = arr[idx];
   swap(idx, right, arr);
@@ -135,9 +135,7 @@ int getLimit (Item *items, double W, int left, int right) {
     return k;
   }
 
-  if (W1 > W) {
-    return getLimit(items, W, left, k-1);
-  }
+  if (W1 > W) return getLimit(items, W, left, k-1);
   return getLimit(items, W-W1-W2, i, right);
 }
 
