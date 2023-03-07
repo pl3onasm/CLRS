@@ -167,6 +167,16 @@ void showTree(Node *n, int level){
   showTree(n->right, level+1);
 }
 
+void printExample(Node *root, int example) {
+  int code[10];  
+  printf("Example %d\n", example); 
+  printf("---------\n"); 
+  showCodes(root, code, 0);
+  printf("\nTree:\n\n  ");
+  showTree(root, 0);
+  printf("\n");
+}
+
 int main (int argc, char *argv[]) {
   //EXAMPLE 1: taken from the textbook
   char chars1[] = {'a','b','c','d','e','f'};
@@ -183,19 +193,9 @@ int main (int argc, char *argv[]) {
   Heap *hp2 = readHeap(chars2, freq2, len2);
   Node *root1 = huffman(hp1);
   Node *root2 = huffman(hp2);
-  
-  int code[10];  
-  printf("Example 1\n"); 
-  printf("---------\n"); 
-  showCodes(root1, code, 0);
-  printf("\nTree:\n\n  ");
-  showTree(root1, 0);
-  printf("\nExample 2\n");
-  printf("---------\n");
-  showCodes(root2, code, 0);
-  printf("\nTree:\n\n  ");
-  showTree(root2, 0);
-  printf("\n");
+ 
+  printExample(root1, 1);
+  printExample(root2, 2);
 
   freeTree(root1);
   freeTree(root2);
