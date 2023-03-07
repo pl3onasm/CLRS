@@ -52,7 +52,7 @@ void swap (Heap *hp, int a, int b) {
 
 void maxHeapify(Heap *hp, int i){
   /* restores the max heap property for the heap */
-  int max = i, left = i<<1, right = (i<<1) + 1;
+  int max = i, left = 2*i+1, right = 2*i+2;
   if (left < hp->size && hp->array[left] > hp->array[max])
     max = left;
   if (right < hp->size && hp->array[right] > hp->array[max])
@@ -65,7 +65,8 @@ void maxHeapify(Heap *hp, int i){
 
 void initMaxHeap(Heap *hp){
   /* initializes the max heap */
-  for (int i = (hp->size>>1)-1; i >= 0; --i) maxHeapify(hp, i);
+  for (int i = hp->size/2; i >= 0; i--)
+    maxHeapify(hp, i);
 }
 
 void heapsort(Heap *hp){

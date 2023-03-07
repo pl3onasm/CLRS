@@ -7,7 +7,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 typedef struct Node {
   int freq;     // frequency of the character
@@ -172,7 +171,7 @@ void printExample(Node *root, int example) {
   printf("Example %d\n", example); 
   printf("---------\n"); 
   showCodes(root, code, 0);
-  printf("\nTree:\n\n  ");
+  printf("\nHuffman tree:\n\n  ");
   showTree(root, 0);
   printf("\n");
 }
