@@ -2,7 +2,8 @@
    author: David De Potter
    description: Huffman coding
     using a greedy approach and a minimum priority queue
-  time complexity: O(n log n), where n is the number of items
+  time complexity: O(n log n), where n is the number 
+    of characters in the input
 */ 
 
 #include <stdio.h>
