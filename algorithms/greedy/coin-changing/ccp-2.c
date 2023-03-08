@@ -53,7 +53,7 @@ void printChange(int *denom, int amount) {
 }
 
 int main(int argc, char *argv[]) {
-  int coins[] = {25, 20, 10, 5, 2, 1}; // non-canonical coin system
+  int coins[] = {25, 20, 10, 5, 1}; // non-canonical coin system
   int cs = sizeof(coins)/sizeof(int);
   int amounts[] = {40, 67, 19, 28};
   int as = sizeof(amounts)/sizeof(int);
