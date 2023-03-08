@@ -24,12 +24,12 @@ Implementation: [CCP - Greedy](https://github.com/pl3onasm/AADS/blob/main/algori
 
 Given the fact that the greedy approach doesn't yield the optimal solution for all coin systems, there's always the option to fall back on dynamic programming. Of course, the downside of dynamic programming is that it requires more space and time than the greedy approach. So if the given coin system is canonical, the greedy approach is preferred.
 
-It should be an easy exercise to implement a top-down approach with memoization. We'll limit ourselves to the bottom-up approach. Let $D = \lbrace d_1, d_2, \ldots, d_n \rbrace$ be the set of coins in the coin system, and let $A$ be the amount for which we want to make a change. We define $C(A)$ as the minimum number of coins needed to make a change for $A$. We can then define the recurrence relation as follows:
+It should be an easy exercise to implement a top-down approach with memoization. We'll limit ourselves to the bottom-up approach. Let $D = \lbrace d_1, d_2, \ldots, d_n \rbrace$ be the set of coins in the coin system, and let $A$ be the amount for which we want to make a change. We define $C[A]$ as the minimum number of coins needed to make a change for $A$. We can then define the recurrence relation as follows:
 
 $$
-C(A) = \begin{cases}
+C[A] = \begin{cases}
 0 & \text{if } A = 0 \\
-1 + \min_{i=1}^n \lbrace C(A - d_i) \rbrace & \text{if } A > 0
+1 + \text{min}_{i=1}^n \lbrace C[A - d_i] \rbrace & \text{if } A > 0
 \end{cases}
 $$
 
