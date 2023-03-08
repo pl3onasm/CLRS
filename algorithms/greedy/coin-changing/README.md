@@ -4,7 +4,7 @@
 
 Given a set of coins of different denominations, find the minimum number of coins needed to make a change for a given amount, assuming there is an infinite supply of each coin.
 
-## Greedy Algorithm
+## Greedy Approach
 
 The greedy algorithm is to always choose the largest coin that is less than or equal to the remaining amount. However, this approach only works for certain sets of coins. For example, the greedy approach works for the American coin system, which consists of coins for 1 (penny), 5 (nickel), 10 (dime), and 25 (quarter) cents. However, it stops working if we remove the nickel from the coin system. For example, if we want to make a change for 30 cents, the greedy approach will then yield 6 coins (1 quarter and 5 pennies), while the optimal solution in that case is 3 coins (3 dimes).
 
@@ -12,7 +12,7 @@ The coin systems for which the greedy algorithm always yields the optimal soluti
 
 Implementing the greedy algorithm is straightforward. We just need to iterate through the coins in descending order, and for each coin determine if the remaining amount is divisible by the coin's value. If it is, we add the quotient to the total number of coins, and subtract the quotient times the coin's value from the remaining amount. If the remaining amount is not divisible by the coin's value, we simply move on to the next coin. The algorithm terminates when the remaining amount is 0.
 
-Time complexity: O(n), where n is the number of coins in the coin system.
+Time complexity: $O(n)$, where n is the number of coins in the coin system.
 
 Implementation: [CCP - Greedy](https://github.com/pl3onasm/AADS/blob/main/algorithms/greedy/coin-changing/ccp-1.c)
 
@@ -33,9 +33,9 @@ C[A] = \begin{cases}
 \end{cases}
 $$
 
-The recurrence relation is easy to implement in a bottom-up fashion. We just need to iterate through the amounts ranging from 1 to $A$, and for each of these amounts we iterate through the coins in the coin system, and check if the remaining amount is greater than or equal to the coin's value. If it is, we update the minimum number of coins needed to make a change for the current amount. The algorithm terminates when the minimum number of coins needed to make a change for $A$ is found.
+The recurrence relation is easy to implement in a bottom-up fashion. We just need to iterate through the amounts ranging from 1 to $A$, and then for each of these amounts, we need to iterate through the coins in the coin system and check if the remaining amount is greater than or equal to the coin's value. If it is, we update the minimum number of coins needed to make a change for the current amount if we get a new minimum by adding the coin to the current solution. The algorithm terminates when the minimum number of coins needed to make a change for $A$ is found.
 
-Time complexity: O(nA), where n is the number of coins in the coin system, and A is the amount for which we want to make a change.
+Time complexity: $O(nA)$, where n is the number of coins in the coin system, and A is the amount for which we want to make a change.
 
 For the implementation, we simply add a coin of 20 cents to the previous example of the American coin system: $D = \lbrace 25, 20, 10, 5, 2, 1 \rbrace$ to make it non-canonical and justify our use of the dynamic programming technique. To see that this system is non-canonical, observe that for the amount of 40 cents, the greedy approach yields 3 coins (25 + 10 + 5), while the optimal solution is 2 coins (20 + 20). The bottom-up approach yields this optimal solution.
 
