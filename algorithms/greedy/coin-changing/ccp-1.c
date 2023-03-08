@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 int main(int argc, char *argv[]) {
   int coins[] = {25, 10, 5, 1};
   char *singular[] = {"quarter", "dime", "nickel", "penny"};
@@ -17,7 +16,7 @@ int main(int argc, char *argv[]) {
   int n = sizeof(coins)/sizeof(int);
 
   for (int i = 0; i < n; ++i) {
-    printf("Amount: %d cents = ", amounts[i]);
+    printf("Amount of %d cents = ", amounts[i]);
     int j = 0;
     int amount = amounts[i];
     int coin = coins[j];
