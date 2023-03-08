@@ -33,10 +33,10 @@ C[A] = \begin{cases}
 \end{cases}
 $$
 
-The recurrence relation is easy to implement in a bottom-up fashion. We just need to iterate through the amounts ranging from 1 to $A$, and for each amount we iterate through the coins in the coin system, and check if the remaining amount is greater than or equal to the coin's value. If it is, we update the minimum number of coins needed to make a change for the current amount. The algorithm terminates when the minimum number of coins needed to make a change for $A$ is found.
+The recurrence relation is easy to implement in a bottom-up fashion. We just need to iterate through the amounts ranging from 1 to $A$, and for each of these amounts we iterate through the coins in the coin system, and check if the remaining amount is greater than or equal to the coin's value. If it is, we update the minimum number of coins needed to make a change for the current amount. The algorithm terminates when the minimum number of coins needed to make a change for $A$ is found.
 
 Time complexity: O(nA), where n is the number of coins in the coin system, and A is the amount for which we want to make a change.
 
-For the implementation, we simply add a coin of 20 cents to the previous example of the American coin system: $D = \lbrace 25, 20, 10, 5, 2, 1 \rbrace$ to make it non-canonical. To see that this system is not canonical, observe that for the amount of 40 cents, the greedy approach yields 3 coins (25 + 10 + 5), while the optimal solution is 2 coins (20 + 20). The bottom-up approach yields the optimal solution.
+For the implementation, we simply add a coin of 20 cents to the previous example of the American coin system: $D = \lbrace 25, 20, 10, 5, 2, 1 \rbrace$ to make it non-canonical and justify our use of the dynamic programming technique. To see that this system is non-canonical, observe that for the amount of 40 cents, the greedy approach yields 3 coins (25 + 10 + 5), while the optimal solution is 2 coins (20 + 20). The bottom-up approach yields this optimal solution.
 
 Implementation: [CCP - Bottom-up DP](https://github.com/pl3onasm/AADS/blob/main/algorithms/greedy/coin-changing/ccp-2.c)
