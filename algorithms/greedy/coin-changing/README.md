@@ -37,6 +37,6 @@ The recurrence relation is easy to implement in a bottom-up fashion. We just nee
 
 Time complexity: $O(nA)$, where n is the number of coins in the coin system, and A is the amount for which we want to make a change.
 
-For the implementation, we simply add a coin of 20 cents to the previous example of the American coin system: $D = \lbrace 25, 20, 10, 5, 2, 1 \rbrace$ to make it non-canonical and justify our use of the dynamic programming technique. To see that this system is non-canonical, observe that for the amount of 40 cents, the greedy approach yields 3 coins (25 + 10 + 5), while the optimal solution is 2 coins (20 + 20). The bottom-up approach yields this optimal solution.
+For the implementation, we simply add a coin of 20 cents to the previous example of the American coin system: $D = \lbrace 25, 20, 10, 5, 1 \rbrace$ to make it non-canonical and justify our use of the dynamic programming technique. To see that this system is non-canonical, observe that for the amount of 40 cents, the greedy approach yields 3 coins (25 + 10 + 5), while the optimal solution is 2 coins (20 + 20). The bottom-up approach yields this optimal solution.
 
 Implementation: [CCP - Bottom-up DP](https://github.com/pl3onasm/AADS/blob/main/algorithms/greedy/coin-changing/ccp-2.c)
