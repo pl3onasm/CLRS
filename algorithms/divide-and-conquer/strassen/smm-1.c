@@ -66,6 +66,7 @@ void multiplyMatrices(int **A, int **B, int **C, int n, int i, int j, int k) {
   int i2 = i + n2;
   int j2 = j + n2;
   int k2 = k + n2;
+
   // C₁₁ = A₁₁ * B₁₁ + A₁₂ * B₂₁
   multiplyMatrices(A, B, C, n2, i, j, k);
   multiplyMatrices(A, B, C, n2, i, j2, k2);
@@ -81,7 +82,7 @@ void multiplyMatrices(int **A, int **B, int **C, int n, int i, int j, int k) {
 }
 
 int pow2(int n) {
-  /* computes the next power of 2 of n */
+  /* computes the next power of 2 ≥ n */
   int p = 1;
   while (p < n) p <<= 1;
   return p;
@@ -91,6 +92,7 @@ int main(int argc, char *argv[]) {
   int n;
   scanf("%d", &n);
   int p = pow2(n);  // pad matrices
+  
   int **A = newMatrix(p);
   int **B = newMatrix(p);
   int **C = newMatrix(p);
