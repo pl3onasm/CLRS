@@ -31,12 +31,14 @@ $$ \begin{align*}
    \begin{pmatrix} 
    B_{11} & B_{12} \\
    B_{21} & B_{22} \\
-   \end{pmatrix}\\\\
+   \end{pmatrix}\\
+   \quad\\
     &=
   \begin{pmatrix}
   A_{11}B_{11} + A_{12}B_{21} & A_{11}B_{12} + A_{12}B_{22} \\
   A_{21}B_{11} + A_{22}B_{21} & A_{21}B_{12} + A_{22}B_{22} \\
-  \end{pmatrix}\\\\
+  \end{pmatrix}\\
+  \quad\\
     &=
   \begin{pmatrix}
   C_{11} & C_{12} \\
