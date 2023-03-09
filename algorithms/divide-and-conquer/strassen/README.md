@@ -23,7 +23,7 @@ In the above pseudocode, $Cᵢⱼ$ is the element in the $i$th row and $j$th col
 We can turn this algorithm into a divide and conquer algorithm by splitting the matrices $A$ and $B$ into four $n/2 \times n/2$ block-matrices and then multiplying them recursively. Doing so, we make use of the fact that the standard rule for matrix multiplication is also true for block-matrices:
 
 $$ \begin{align*} 
-   &\quad\:\begin{pmatrix} 
+   &\quad \;\begin{pmatrix} 
    A_{11} & A_{12} \\
    A_{21} & A_{22} \\
    \end{pmatrix} 
