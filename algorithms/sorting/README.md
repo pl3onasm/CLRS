@@ -10,7 +10,7 @@
 | O(n²) | Chap 2.1-2 | [Insertion sort](https://github.com/pl3onasm/Algorithms-and-data-structures/tree/main/algorithms/sorting/insertion-sort) | Ex 2.2-2 | [Selection sort](https://github.com/pl3onasm/Algorithms-and-data-structures/tree/main/algorithms/sorting/selection-sort)
 || n/a | [Bubble sort](https://github.com/pl3onasm/Algorithms-and-data-structures/tree/main/algorithms/sorting/bubble-sort)
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+&nbsp;&nbsp;
 
-[^1] The tilde (~) means that this is the expected complexity: the complexity is not guaranteed,  
+[^1]: The tilde (~) means that this is the expected complexity: the complexity is not guaranteed,  
 but it is the average case complexity. The worst case complexity is higher.
