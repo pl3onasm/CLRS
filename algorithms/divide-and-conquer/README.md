@@ -4,7 +4,7 @@
 |:---:|:---|
 | Prob 2-4 | [Array Inversion Count](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/divide-and-conquer/array-inversion-count)
 | n/a | [Closest Pair of Points](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/divide-and-conquer/closest-pair-of-points)
-|  | Strassen's Matrix Multiplication
+| Chap 4.1-2 | [Strassen's Matrix Multiplication](https://github.com/pl3onasm/AADS/tree/main/algorithms/divide-and-conquer/strassen)
 | | Maximum Subarray
 | | Binary Search
 | Chap 2.3 | [Merge Sort](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/sorting/merge-sort)
