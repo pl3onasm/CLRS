@@ -1,9 +1,9 @@
 /* file: ccp-2.c
    author: David De Potter
    description: coin changing problem (CCP)
-                using a bottom-up dynamic programming approach
-   time complexity: O(nk), where n is the number of coins in the coin system
-                    and k is the amount to be changed
+    using a bottom-up dynamic programming approach
+   time complexity: O(nk), where n is the number of coins 
+    in the coin system and k is the amount to be changed
 */ 
 
 #include <stdio.h>
