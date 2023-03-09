@@ -23,7 +23,7 @@ In the above pseudocode, $Cᵢⱼ$ is the element in the $i$th row and $j$th col
 We can turn this algorithm into a divide and conquer algorithm by splitting the matrices $A$ and $B$ into four $n/2 \times n/2$ block-matrices and then multiplying them recursively. Doing so, we make use of the fact that the standard rule for matrix multiplication is also true for block-matrices:
 
 $$ \begin{align*} 
-   &\quad\begin{pmatrix} 
+   &\quad\:\begin{pmatrix} 
    A_{11} & A_{12} \\
    A_{21} & A_{22} \\
    \end{pmatrix} 
@@ -57,7 +57,7 @@ $$
 
 By case 1 of the master theorem (CLRS 4.5), we can conclude that $T(n) = \Theta(n^3)$, which is the same time complexity as the naive algorithm.
 
-Implementation: [Matrix Multiplication - D&C]()
+Implementation: [Matrix Multiplication - D&C](https://github.com/pl3onasm/AADS/tree/main/algorithms/divide-and-conquer/strassen/ssm-1.c)
 
 ## Strassen's Matrix Multiplication
 
@@ -110,4 +110,4 @@ $$
 
 By case 1 of the master theorem (CLRS 4.5), we can conclude that $T(n) = \Theta(n^{\log{7}}) = O(n^{2.8074})$.  
 
-Implementation: [Matrix Multiplication - Strassen]()
+Implementation: [Matrix Multiplication - Strassen](https://github.com/pl3onasm/AADS/tree/main/algorithms/divide-and-conquer/strassen/ssm-2.c)
