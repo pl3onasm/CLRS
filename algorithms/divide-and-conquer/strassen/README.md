@@ -31,12 +31,12 @@ $$ \begin{align*}
    \begin{pmatrix} 
    B_{11} & B_{12} \\
    B_{21} & B_{22} \\
-   \end{pmatrix}\\ \\
+   \end{pmatrix}\\\\
     &=
   \begin{pmatrix}
   A_{11}B_{11} + A_{12}B_{21} & A_{11}B_{12} + A_{12}B_{22} \\
   A_{21}B_{11} + A_{22}B_{21} & A_{21}B_{12} + A_{22}B_{22} \\
-  \end{pmatrix}\\ \\
+  \end{pmatrix}\\\\
     &=
   \begin{pmatrix}
   C_{11} & C_{12} \\
@@ -47,8 +47,12 @@ $$
 
 Repeatedly dividing the matrices in submatrices of size $n/2 \times n/2$ in order to apply a divide and conquer algorithm presumes that $n$ is a power of two. This way, we can keep dividing the matrices until we get to the base case, where we have matrices of size $1 \times 1$, which is just scalar multiplication. If $n$ is not a power of two, we can simply pad the original matrices with zeros until we get a matrix of size $2^k \times 2^k$, where $k$ is the smallest integer such that $2^k \geq n$.
 
-Looking at the above formula, we can see that we need to compute 8 products of matrices of size $n/2 \times n/2$ at each dividing step. If we use index calculations to partition the matrices at each step, the partitioning itself only takes $\Theta(1)$ time. All this leads to the following recurrence relation: 
-$$ T(n) = 8T(n/2) + \Theta(1) $$
+Looking at the above formula, we can see that we need to compute 8 products of matrices of size $n/2 \times n/2$ at each dividing step. If we use index calculations to partition the matrices at each step, the partitioning itself only takes $\Theta(1)$ time. All this leads to the following recurrence relation:
+
+$$
+T(n) = 8T(n/2) + \Theta(1)
+$$
+
 By case 1 of the master theorem (CLRS 4.5), we can conclude that $T(n) = \Theta(n^3)$, which is the same time complexity as the naive algorithm.
 
 Implementation: [Matrix Multiplication - D&C]()
@@ -96,8 +100,12 @@ $$
 \end{align*}
 $$
 
-Step 1, 2, and 4 take $\Theta(n^2)$ time. In step 3, we compute seven multiplications of $n/2 \times n/2$ matrices. Thus we get the recurrence relation: 
-$$ T(n) = 7T(n/2) + \Theta(n^2) $$
+Step 1, 2, and 4 take $\Theta(n^2)$ time. In step 3, we compute seven multiplications of $n/2 \times n/2$ matrices. Thus we get the recurrence relation:
+
+$$
+T(n) = 7T(n/2) + \Theta(n^2)
+$$
+
 By case 1 of the master theorem (CLRS 4.5), we can conclude that $T(n) = \Theta(n^{\log{7}}) = O(n^{2.8074})$.  
 
 Implementation: [Matrix Multiplication - Strassen]()
