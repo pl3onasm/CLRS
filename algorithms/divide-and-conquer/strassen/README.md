@@ -22,30 +22,30 @@ In the above pseudocode, $Cᵢⱼ$ is the element in the $i$th row and $j$th col
 
 We can turn this algorithm into a divide and conquer algorithm by splitting the matrices $A$ and $B$ into four $n/2 \times n/2$ block-matrices and then multiplying them recursively. Doing so, we make use of the fact that the standard rule for matrix multiplication is also true for block-matrices:
 
-$$ \begin{align*} 
+$$ \begin{align*}
    &\quad
-   \begin{pmatrix} 
-   A_{11} & A_{12} \\
-   A_{21} & A_{22} \\
-   \end{pmatrix} 
+   \begin{pmatrix}
+   A_{11} & A_{12}\\
+   A_{21} & A_{22}\\
+   \end{pmatrix}
    \cdot
-   \begin{pmatrix} 
-   B_{11} & B_{12} \\
-   B_{21} & B_{22} \\
+   \begin{pmatrix}
+   B_{11} & B_{12}\\
+   B_{21} & B_{22}\\
    \end{pmatrix}\\
    \quad\\
     &=
   \begin{pmatrix}
-  A_{11}B_{11} + A_{12}B_{21} & A_{11}B_{12} + A_{12}B_{22} \\
-  A_{21}B_{11} + A_{22}B_{21} & A_{21}B_{12} + A_{22}B_{22} \\
+  A_{11}B_{11} + A_{12}B_{21} & A_{11}B_{12} + A_{12}B_{22}\\
+  A_{21}B_{11} + A_{22}B_{21} & A_{21}B_{12} + A_{22}B_{22}\\
   \end{pmatrix}\\
   \quad\\
     &=
   \begin{pmatrix}
-  C_{11} & C_{12} \\
-  C_{21} & C_{22} \\ 
+  C_{11} & C_{12}\\
+  C_{21} & C_{22}\\
   \end{pmatrix}
-  \end{align*} 
+  \end{align*}
 $$
 
 Repeatedly dividing the matrices in submatrices of size $n/2 \times n/2$ in order to apply a divide and conquer algorithm presumes that $n$ is a power of two. This way, we can keep dividing the matrices until we get to the base case, where we have matrices of size $1 \times 1$, which is just scalar multiplication. If $n$ is not a power of two, we can simply pad the original matrices with zeros until we get a matrix of size $2^k \times 2^k$, where $k$ is the smallest integer such that $2^k \geq n$.
