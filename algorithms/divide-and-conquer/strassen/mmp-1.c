@@ -1,4 +1,4 @@
-/* file: smm-1.c
+/* file: mmp-1.c
    author: David De Potter
    description: standard matrix multiplication problem
                 using a divide-and-conquer approach
@@ -19,7 +19,7 @@ void *safeCalloc (int n, int size) {
   return ptr;
 }
 
-int **newMatrix(int n) {
+int **newM(int n) {
   /* allocates a n x n matrix */
   int **m = safeCalloc(n, sizeof(int *));
   for (int i = 0; i < n; ++i)
@@ -27,13 +27,13 @@ int **newMatrix(int n) {
   return m;
 }
 
-void freeMatrix(int **m, int n) {
+void freeM(int **m, int n) {
   /* frees a n x n matrix */
   for (int i = 0; i < n; ++i) free(m[i]);
   free(m);
 }
 
-void printMatrix(int **m, int n) {
+void printM(int **m, int n) {
   /* prints a n x n matrix */
   for (int i = 0; i < n; ++i) {
     for (int j = 0; j < n; ++j){
@@ -44,18 +44,18 @@ void printMatrix(int **m, int n) {
   }
 }
 
-void readMatrix(int **m, int n) {
+void readM(int **m, int n) {
   /* reads a n x n matrix */
   for (int i = 0; i < n; ++i)
     for (int j = 0; j < n; ++j)
       scanf("%d", &m[i][j]);
 }
 
-void multiplyMatrices(int **A, int **B, int **C, int n, int i, int j, int k) {
-  /* multiplies the n x n submatrices of A and B, and adds the result
-     to the n x n submatrix of C, using indices i, j and k */
+void multiplyM(int **A, int **B, int **C, int n, int i, int k, int j) {
+  /* recursively computes the product of n x n matrices A and B
+     and stores the result in n x n matrix C */
 
-  // base case: n = 1
+  // base case
   if (n == 1) {
     C[i][j] += A[i][k] * B[k][j];
     return;
@@ -68,17 +68,17 @@ void multiplyMatrices(int **A, int **B, int **C, int n, int i, int j, int k) {
   int k2 = k + n2;
 
   // C₁₁ = A₁₁ * B₁₁ + A₁₂ * B₂₁
-  multiplyMatrices(A, B, C, n2, i, j, k);
-  multiplyMatrices(A, B, C, n2, i, j2, k2);
+  multiplyM(A, B, C, n2, i, k, j);
+  multiplyM(A, B, C, n2, i, k2, j);
   // C₁₂ = A₁₁ * B₁₂ + A₁₂ * B₂₂
-  multiplyMatrices(A, B, C, n2, i, j, k2);
-  multiplyMatrices(A, B, C, n2, i, j2, k);
+  multiplyM(A, B, C, n2, i, k, j2);
+  multiplyM(A, B, C, n2, i, k2, j2);
   // C₂₁ = A₂₁ * B₁₁ + A₂₂ * B₂₁
-  multiplyMatrices(A, B, C, n2, i2, j, k);
-  multiplyMatrices(A, B, C, n2, i2, j2, k2);
+  multiplyM(A, B, C, n2, i2, k, j);
+  multiplyM(A, B, C, n2, i2, k2, j);
   // C₂₂ = A₂₁ * B₁₂ + A₂₂ * B₂₂
-  multiplyMatrices(A, B, C, n2, i2, j, k2);
-  multiplyMatrices(A, B, C, n2, i2, j2, k);
+  multiplyM(A, B, C, n2, i2, k, j2);
+  multiplyM(A, B, C, n2, i2, k2, j2);
 }
 
 int pow2(int n) {
@@ -93,19 +93,19 @@ int main(int argc, char *argv[]) {
   scanf("%d", &n);
   int p = pow2(n);  // pad matrices
   
-  int **A = newMatrix(p);
-  int **B = newMatrix(p);
-  int **C = newMatrix(p);
+  int **A = newM(p);
+  int **B = newM(p);
+  int **C = newM(p);
 
-  readMatrix(A, n);
-  readMatrix(B, n);
+  readM(A, n);
+  readM(B, n);
 
-  multiplyMatrices(A, B, C, p, 0, 0, 0);
-  printMatrix(C, n);
+  multiplyM(A, B, C, p, 0, 0, 0);
+  printM(C, n);
 
-  freeMatrix(A, p);
-  freeMatrix(B, p);
-  freeMatrix(C, p);
+  freeM(A, p);
+  freeM(B, p);
+  freeM(C, p);
   return 0; 
 }
   
