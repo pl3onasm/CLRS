@@ -1,4 +1,4 @@
-# Strassen's Matrix Multiplication (SMM)
+# Matrix Multiplication Problem (MMP)
 
 ## Description
 
@@ -18,7 +18,7 @@ If we want to multiply two $n \times n$ matrices $A$ and $B$, we can do so by ta
     return C
 ```
 
-In the above pseudocode, $Cᵢⱼ$ is the element in the $i$th row and $j$th column of $C$. Since we have three nested loops iterating over $n$ elements, the time complexity of this algorithm is in $O(n^3)$.
+In the above pseudocode, $Cᵢⱼ$ is the element in the $i$ th row and $j$ th column of $C$. Since we have three nested loops iterating over $n$ elements, the time complexity of this algorithm is in $O(n^3)$.
 
 We can turn this algorithm into a divide and conquer algorithm by splitting the matrices $A$ and $B$ into four $n/2 \times n/2$ block-matrices and then multiplying them recursively. Doing so, we make use of the fact that the standard rule for matrix multiplication is also true for block-matrices:
 
@@ -48,7 +48,7 @@ $$ \begin{align*}
   \end{align*}
 $$
 
-Repeatedly dividing the matrices in submatrices of size $n/2 \times n/2$ in order to apply a divide and conquer algorithm presumes that $n$ is a power of two. This way, we can keep dividing the matrices until we get to the base case, where we have matrices of size $1 \times 1$, which is just scalar multiplication. If $n$ is not a power of two, we can simply pad the original matrices with zeros until we get a matrix of size $2^k \times 2^k$, where $k$ is the smallest integer such that $2^k \geq n$.
+Repeatedly dividing the matrices in submatrices of size $n/2 \times n/2$ in order to apply a divide and conquer algorithm presumes that $n$ is a power of two. This way, we can keep halving the dimensions until we get to the base case, where we have matrices of size $1 \times 1$, which is just scalar multiplication. If $n$ is not a power of two, we can simply pad the original matrices with zeros until we get a matrix of size $2^k \times 2^k$, where $k$ is the smallest integer such that $2^k \geq n$.
 
 Looking at the above formula, we can see that we need to compute 8 products of matrices of size $n/2 \times n/2$ at each dividing step. If we use index calculations to partition the matrices at each step, the partitioning itself only takes $\Theta(1)$ time. All this leads to the following recurrence relation:
 
@@ -58,7 +58,7 @@ $$
 
 By case 1 of the master theorem (CLRS 4.5), we can conclude that $T(n) = \Theta(n^3)$, which is the same time complexity as the naive algorithm.
 
-Implementation: [Matrix Multiplication - D&C](https://github.com/pl3onasm/AADS/tree/main/algorithms/divide-and-conquer/strassen/ssm-1.c)
+Implementation: [Matrix Multiplication - D&C](https://github.com/pl3onasm/AADS/tree/main/algorithms/divide-and-conquer/strassen/mmp-1.c)
 
 ## Strassen's Matrix Multiplication
 
@@ -111,4 +111,4 @@ $$
 
 By case 1 of the master theorem (CLRS 4.5), we can conclude that $T(n) = \Theta(n^{\log{7}}) = O(n^{2.8074})$.  
 
-Implementation: [Matrix Multiplication - Strassen](https://github.com/pl3onasm/AADS/tree/main/algorithms/divide-and-conquer/strassen/ssm-2.c)
+Implementation: [Matrix Multiplication - Strassen](https://github.com/pl3onasm/AADS/tree/main/algorithms/divide-and-conquer/strassen/mmp-2.c)
