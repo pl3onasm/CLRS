@@ -1,8 +1,8 @@
 /* file: mmp-1.c
    author: David De Potter
-   description: standard matrix multiplication problem
-                using a divide-and-conquer approach
-   time complexity: O(n³), where n is the matrix dimension
+   description: standard matrix multiplication for input
+    matrices of arbitrary size, using a divide-and-conquer approach
+   time complexity: O(n³), where n is the padding size
 */
 
 #include <stdio.h>
@@ -33,22 +33,22 @@ void freeM(int **m, int n) {
   free(m);
 }
 
-void printM(int **m, int n) {
-  /* prints a n x n matrix */
-  for (int i = 0; i < n; ++i) {
+void printM(int **arr, int m, int n) {
+  /* prints a m x n matrix */
+  for (int i = 0; i < m; ++i) {
     for (int j = 0; j < n; ++j){
-      printf("%d", m[i][j]);
+      printf("%d", arr[i][j]);
       if (j < n - 1) printf(" ");
     }
     printf("\n");
   }
 }
 
-void readM(int **m, int n) {
-  /* reads a n x n matrix */
-  for (int i = 0; i < n; ++i)
+void readM(int **arr, int m, int n) {
+  /* reads a m x n matrix */
+  for (int i = 0; i < m; ++i)
     for (int j = 0; j < n; ++j)
-      scanf("%d", &m[i][j]);
+      scanf("%d", &arr[i][j]);
 }
 
 void multiplyM(int **A, int **B, int **C, int n, int i, int k, int j) {
@@ -81,27 +81,38 @@ void multiplyM(int **A, int **B, int **C, int n, int i, int k, int j) {
   multiplyM(A, B, C, n2, i2, k2, j2);
 }
 
-int pow2(int n) {
-  /* computes the next power of 2 ≥ n */
+int pow2(int m, int l) {
+  /* computes the next power of 2 ≥ n and l */
+  if (m < l) m = l;
   int p = 1;
-  while (p < n) p <<= 1;
+  while (p < m) p <<= 1;
   return p;
 }
 
 int main(int argc, char *argv[]) {
-  int n;
-  scanf("%d", &n);
-  int p = pow2(n);  // pad matrices
-  
+  int m, n, k, l;   // matrix dimensions
+
+  scanf("%d %d", &m, &n);
+  scanf("%d %d", &k, &l);
+
+  if (n != k) { 
+    printf("Incompatible matrices.\n");
+    return 1;
+  }
+
+  int p = pow2(m, l); // padding size
+
+  // allocate pxp matrices
   int **A = newM(p);
   int **B = newM(p);
   int **C = newM(p);
 
-  readM(A, n);
-  readM(B, n);
+  // read matrices
+  readM(A, m, n);
+  readM(B, k, l);
 
   multiplyM(A, B, C, p, 0, 0, 0);
-  printM(C, n);
+  printM(C, m, l);
 
   freeM(A, p);
   freeM(B, p);

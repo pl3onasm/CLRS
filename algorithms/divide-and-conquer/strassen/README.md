@@ -48,7 +48,7 @@ $$ \begin{align*}
   \end{align*}
 $$
 
-Repeatedly dividing the matrices in submatrices of size $n/2 \times n/2$ in order to apply a divide and conquer algorithm presumes that $n$ is a power of two. This way, we can keep halving the dimensions until we get to the base case, where we have matrices of size $1 \times 1$, which is just scalar multiplication. If $n$ is not a power of two, we can simply pad the original matrices with zeros until we get a matrix of size $2^k \times 2^k$, where $k$ is the smallest integer such that $2^k \geq n$.
+Repeatedly dividing the matrices in submatrices of size $n/2 \times n/2$ in order to apply a divide and conquer algorithm presumes that $n$ is a power of two. This way, it's possible to keep halving the dimensions until we reach the base case, where we have matrices of size $1 \times 1$, which is just scalar multiplication. If $n$ is not a power of two, we can simply pad the original matrices with zeros until we get a matrix of size $2^k \times 2^k$, where $k$ is the smallest integer such that $2^k \geq n$. Padding makes it even possible to generalize the algorithm to input matrices of arbitrary dimensions, while the core algorithm works for matrices of size $2^k \times 2^k$.
 
 Looking at the above formula, we can see that we need to compute 8 products of matrices of size $n/2 \times n/2$ at each dividing step. If we use index calculations to partition the matrices at each step, the partitioning itself only takes $\Theta(1)$ time. All this leads to the following recurrence relation:
 
@@ -58,7 +58,7 @@ $$
 
 By case 1 of the master theorem (CLRS 4.5), we can conclude that $T(n) = \Theta(n^3)$, which is the same time complexity as the naive algorithm.
 
-Implementation: [Matrix Multiplication - D&C](https://github.com/pl3onasm/AADS/tree/main/algorithms/divide-and-conquer/strassen/mmp-1.c)
+Implementation: [Matrix Multiplication - D&C](https://github.com/pl3onasm/AADS/blob/main/algorithms/divide-and-conquer/strassen/mmp-1.c)
 
 ## Strassen's Matrix Multiplication
 
@@ -81,7 +81,7 @@ $$
 \end{align*}
 $$
 
-Then, we compute the following 7 products of matrices of size $n/2 \times n/2$:
+Next, we compute the following 7 products of matrices of size $n/2 \times n/2$:
 
 $$
 \begin{align*}
@@ -111,4 +111,4 @@ $$
 
 By case 1 of the master theorem (CLRS 4.5), we can conclude that $T(n) = \Theta(n^{\log{7}}) = O(n^{2.8074})$.  
 
-Implementation: [Matrix Multiplication - Strassen](https://github.com/pl3onasm/AADS/tree/main/algorithms/divide-and-conquer/strassen/mmp-2.c)
+Implementation: [Matrix Multiplication - Strassen](https://github.com/pl3onasm/AADS/blob/main/algorithms/divide-and-conquer/strassen/mmp-2.c)
