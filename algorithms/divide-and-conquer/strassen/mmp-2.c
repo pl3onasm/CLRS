@@ -51,100 +51,60 @@ void readM(int **arr, int m, int n) {
       scanf("%d", &arr[i][j]);
 }
 
-int **addSubm(int **A, int n, int r1, int c1, int r2, int c2, char op) {
-  /* adds or subtracts the n x n submatrices of A marked by indices r1,  
-     c1, r2 and c2, and returns the result in a new n x n matrix */
-  int **S = newM(n);
-  for (int i = 0; i < n; ++i)
-    for (int j = 0; j < n; ++j)
-      if (op == '+') S[i][j] = A[r1 + i][c1 + j] + A[r2 + i][c2 + j];
-      else S[i][j] = A[r1 + i][c1 + j] - A[r2 + i][c2 + j];
-  return S;
-}
+void strassen(int **A, int **B, int **C, int sz) {
+  /* computes C = A x B using Strassen's algorithm */
+  if (sz == 1) C[0][0] = A[0][0] * B[0][0];  // base case
+  else {
+    int n = sz/2, **S[10], **P[7], **Sub[4]; 
+    // allocate memory for submatrices
+    for (int i = 0; i < 10; ++i) S[i] = newM(n);
+    for (int i = 0; i < 7; ++i) P[i] = newM(n);
+    for (int i = 0; i < 4; ++i) Sub[i] = newM(n);
 
-int **getSubm (int **A, int n, int r, int c) {
-  /* returns the n x n submatrix of A marked by indices r and c */
-  int **M = newM(n);
-  for (int i = 0; i < n; ++i)
-    for (int j = 0; j < n; ++j)
-      M[i][j] = A[r + i][c + j];
-  return M;
-}
-
-void update (int **C, int **P1, int **P2, int **P3, int **P4, 
-  int **P5, int **P6, int **P7, int n) {
-  /* computes C₁₁ += P₅ + P₄ - P₂ + P₆, C₁₂ += P₁ + P₂
-     C₂₁ += P₃ + P₄, C₂₂ += P₅ + P₁ - P₃ - P₇ */
-  for (int i = 0; i < n; ++i)
-    for (int j = 0; j < n; ++j){
-      C[i][j] += P5[i][j] + P4[i][j] - P2[i][j] + P6[i][j];
-      C[i][j+n] += P1[i][j] + P2[i][j];
-      C[i+n][j] += P3[i][j] + P4[i][j];
-      C[i+n][j+n] += P5[i][j] + P1[i][j] - P3[i][j] - P7[i][j];
-    }
-}
-
-void strassen(int **A, int **B, int **C, int n) {
-  /* computes the product of the n x n matrices A and B, and stores the
-     result in C, using Strassen's matrix multiplication algorithm */
-   
-  // base case
-  if (n == 1) {
-    C[0][0] = A[0][0] * B[0][0]; 
-    return;
+    // compute S₁ to S₁₀ and sumatrices A₁₁, A₂₂, B₁₁, B₂₂
+    for (int i = 0; i < n; ++i)
+      for (int j = 0; j < n; ++j){
+        S[0][i][j] = B[i][j+n] - B[i+n][j+n];   // S₁ = B₁₂ - B₂₂
+        S[1][i][j] = A[i][j] + A[i][j+n];       // S₂ = A₁₁ + A₁₂
+        S[2][i][j] = A[i+n][j] + A[i+n][j+n];   // S₃ = A₂₁ + A₂₂
+        S[3][i][j] = B[i+n][j] - B[i][j];       // S₄ = B₂₁ - B₁₁
+        S[4][i][j] = A[i][j] + A[i+n][j+n];     // S₅ = A₁₁ + A₂₂
+        S[5][i][j] = B[i][j] + B[i+n][j+n];     // S₆ = B₁₁ + B₂₂
+        S[6][i][j] = A[i][j+n] - A[i+n][j+n];   // S₇ = A₁₂ - A₂₂
+        S[7][i][j] = B[i+n][j] + B[i+n][j+n];   // S₈ = B₂₁ + B₂₂
+        S[8][i][j] = A[i][j] - A[i+n][j];       // S₉ = A₁₁ - A₂₁
+        S[9][i][j] = B[i][j] + B[i][j+n];       // S₁₀ = B₁₁ + B₁₂
+        Sub[0][i][j] = A[i][j];                 // A₁₁ 	      
+        Sub[1][i][j] = B[i+n][j+n];             // B₂₂
+        Sub[2][i][j] = A[i+n][j+n];             // A₂₂
+        Sub[3][i][j] = B[i][j];                 // B₁₁
+      }
+    
+    // recursively compute P₁ to P₇
+    strassen(Sub[0], S[0], P[0], n);    // P₁ = A₁₁ x S₁
+    strassen(S[1], Sub[1], P[1], n);    // P₂ = S₂ x B₂₂
+    strassen(S[2], Sub[3], P[2], n);    // P₃ = S₃ x B₁₁
+    strassen(Sub[2], S[3], P[3], n);    // P₄ = A₂₂ x S₄
+    strassen(S[4], S[5], P[4], n);      // P₅ = S₅ x S₆
+    strassen(S[6], S[7], P[5], n);      // P₆ = S₇ x S₈
+    strassen(S[8], S[9], P[6], n);      // P₇ = S₉ x S₁₀
+    
+    // update the result matrix C
+    for (int i = 0; i < n; ++i)
+      for (int j = 0; j < n; ++j){
+        C[i][j] += P[4][i][j] + P[3][i][j]      // C₁₁ = P₅ + P₄ - P₂ + P₆
+                - P[1][i][j] + P[5][i][j];  
+        C[i][j+n] += P[0][i][j] + P[1][i][j];   // C₁₂ = P₁ + P₂
+        C[i+n][j] += P[2][i][j] + P[3][i][j];   // C₂₁ = P₃ + P₄
+        C[i+n][j+n] += P[4][i][j] + P[0][i][j]  // C₂₂ = P₅ + P₁ - P₃ - P₇
+                - P[2][i][j] - P[6][i][j];
+      }
+    
+    // free auxiliary matrices
+    for (int i = 0; i < 10; ++i) freeM(S[i], n);
+    for (int i = 0; i < 7; ++i) freeM(P[i], n);
+    for (int i = 0; i < 4; ++i) freeM(Sub[i], n);
   }
-
-  // recursive case
-  int s = n / 2;
-
-  // allocate memory for products
-  int **P1 = newM(s); int **P2 = newM(s);
-  int **P3 = newM(s); int **P4 = newM(s);
-  int **P5 = newM(s); int **P6 = newM(s);
-  int **P7 = newM(s);
-  
-  // compute P₁ = A₁₁ * (B₁₂ - B₂₂)
-  int **S1 = addSubm(B, s, 0, s, s, s, '-');
-  int **A11 = getSubm(A, s, 0, 0);
-  strassen(A11, S1, P1, s);
-
-  // compute P₂ = (A₁₁ + A₁₂) * B₂₂
-  int **S2 = addSubm(A, s, 0, 0, 0, s, '+');
-  int **B22 = getSubm(B, s, s, s);
-  strassen(S2, B22, P2, s);
-
-  // compute P₃ = (A₂₁ + A₂₂) * B₁₁
-  int **S3 = addSubm(A, s, s, 0, s, s, '+');
-  int **B11 = getSubm(B, s, 0, 0);
-  strassen(S3, B11, P3, s);
-
-  // compute P₄ = A₂₂ * (B₂₁ - B₁₁)
-  int **S4 = addSubm(B, s, s, 0, 0, 0, '-');
-  int **A22 = getSubm(A, s, s, s);
-  strassen(A22, S4, P4, s);
-
-  // compute P₅ = (A₁₁ + A₂₂) * (B₁₁ + B₂₂)
-  int **S5 = addSubm(A, s, 0, 0, s, s, '+');
-  int **S6 = addSubm(B, s, 0, 0, s, s, '+');
-  strassen(S5, S6, P5, s);
-
-  // compute P₆ = (A₁₂ - A₂₂) * (B₂₁ + B₂₂)
-  int **S7 = addSubm(A, s, 0, s, s, s, '-');
-  int **S8 = addSubm(B, s, s, 0, s, s, '+');
-  strassen(S7, S8, P6, s);
-
-  // compute P₇ = (A₁₁ - A₂₁) * (B₁₁ + B₁₂)
-  int **S9 = addSubm(A, s, 0, 0, s, 0, '-');
-  int **S10 = addSubm(B, s, 0, 0, 0, s, '+');
-  strassen(S9, S10, P7, s);
-
-  // update the result matrix
-  update(C, P1, P2, P3, P4, P5, P6, P7, s);
-
-  // free temporary matrices
-  int **ms[] = {P1, P2, P3, P4, P5, P6, P7, S1, S2, S3, S4, 
-                S5, S6, S7, S8, S9, S10, A11, A22, B11, B22};
-  for (int i = 0; i < 21; ++i) freeM(ms[i], s);
 }
 
 int pow2(int m, int l) {
@@ -172,9 +132,10 @@ int main(int argc, char *argv[]) {
   int **A = newM(p);
   int **B = newM(p);
   int **C = newM(p);
-
+  
   readM(A, m, n); readM(B, k, l);
 
+  // compute C = A x B
   strassen(A, B, C, p);
   printM(C, m, l);
 
