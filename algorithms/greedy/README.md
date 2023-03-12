@@ -14,9 +14,9 @@ There are two key properties of a problem that suggest the use of a greedy algor
 
 ## Problems
 
-|**CLRS** | **Link** |
-|:---:|:---|
-| Chap 15.1 | [Activity-selection Problem](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy/activity-selection)
-| Chap 15.2 | [Fractional Knapsack](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy/fract-knapsack)
-| Chap 15.3 | [Huffman Codes](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy/huffman)
-| Prob 15-1 | [Coin Changing](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy/coin-changing)
+| **CLRS³** | **CLRS⁴** | **Link** |
+|:---:|:---:|:---|
+| Chap 16.1 | Chap 15.1 | [Activity-selection Problem](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy/activity-selection)
+| Chap 16.2 | Chap 15.2 | [Fractional Knapsack](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy/fract-knapsack)
+| Chap 16.3 | Chap 15.3 | [Huffman Codes](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy/huffman)
+| Prob 16-1 | Prob 15-1 | [Coin Changing](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy/coin-changing)
