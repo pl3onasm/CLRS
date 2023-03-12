@@ -1,7 +1,6 @@
 # Algorithms in C
 
 * [Sorting](https://github.com/pl3onasm/Algorithms-and-data-structures/tree/main/algorithms/sorting)
-* Searching
 * [Divide and conquer](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/divide-and-conquer)
 * [Dynamic programming](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming)
 * [Greedy algorithms](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy)
