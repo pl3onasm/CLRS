@@ -46,7 +46,7 @@ void freeM(int **arr, int m) {
 }
 
 void med(int **dp, char *s1, char *s2, int len1, int len2, int *costs) {
-  /* bottom-up approach to get the minimum edit distance between s1[0..i] and s2[0..j] */
+  /* bottom-up approach to get the minimum edit distance between s1 and s2 */
   dp[len1][len2] = INT_MAX;                  
 
   for (int i = 0; i <= len1; ++i)    // empty target string, so                   
@@ -89,6 +89,7 @@ void print(char *result, int idx, int len) {
 void printPath(int **dp, char *s1, char *s2, int len1, int len2, 
   int *costs, char *result, int *resLen, int *resIdx) {
   /* recursively prints the path showing the transformations from s1 to s2 */
+  
   if (len1 == 0 && len2 == 0 && dp[len1][len2] == 0) return;
 
   int cost = dp[len1][len2];
@@ -96,16 +97,14 @@ void printPath(int **dp, char *s1, char *s2, int len1, int len2,
   // kill
   if (len1 == strlen(s1) && len2 == strlen(s2)) 
     // check if a kill operation was performed
-    for (int i = len1-1; i >= 0; --i) {
+    for (int i = len1-1; i >= 0; --i) 
       if (dp[i][len2] + costs[5] == dp[len1][len2]){
         printPath (dp, s1, s2, i, len2, costs, result, resLen, resIdx);
-        *resLen = *resLen - (len1 - i);
+        *resLen -= (len1 - i);
         result[*resLen] = '\0';
-        printf("  - Kill %02d chars:    ", len1 - i);
-        print(result, *resIdx, *resLen);
-        return; 
+        printf("  - Kill %02d chars:    ", len1 - i); 
+        break; 
       }
-    }
 
   // copy
   if (len1 > 0 && len2 > 0 && s1[len1-1] == s2[len2-1] 
@@ -113,7 +112,6 @@ void printPath(int **dp, char *s1, char *s2, int len1, int len2,
     printPath(dp, s1, s2, len1-1, len2-1, costs, result, resLen, resIdx);
     (*resIdx)++; 
     printf("  - Copy %c:           ", s1[len1-1]);
-    print(result, *resIdx, *resLen);
 
   // twiddle
   } else if (len1 > 1 && len2 > 1 && s1[len1-1] == s2[len2-2] 
@@ -122,40 +120,37 @@ void printPath(int **dp, char *s1, char *s2, int len1, int len2,
     result[(*resIdx)++] = s1[len1-1];
     result[(*resIdx)++] = s1[len1-2];
     printf("  - Twiddle %c and %c:  ", s1[len1-1], s1[len1-2]);
-    print (result, *resIdx, *resLen);
 
   // insertion
   } else if (len2 > 0 && cost == costs[1] + dp[len1][len2-1]){
     printPath(dp, s1, s2, len1, len2-1, costs, result, resLen, resIdx);
-    (*resLen)++; 
-    for (int i = *resLen; i >= *resIdx; --i) result[i+1] = result[i];
+    for (int i = ++*resLen; i >= *resIdx; --i) result[i+1] = result[i];
     result[(*resIdx)++] = s2[len2-1];
-    result[*resLen] = '\0';
     printf("  - Insert %c:         ", s2[len2-1]);
-    print(result, *resIdx, *resLen);
 
   // deletion
   } else if (len1 > 0 && cost == costs[2] + dp[len1-1][len2]){
     printPath(dp, s1, s2, len1-1, len2, costs, result, resLen, resIdx);
     for (int i = *resIdx; i < *resLen; ++i) result[i] = result[i+1];
-    (*resLen)--;
+    --*resLen;
     printf("  - Delete %c:         ", s1[len1-1]);
-    print(result, *resIdx, *resLen);
 
   // replacement/substitution
   } else if (len1 > 0 && len2 > 0 && cost == costs[3] + dp[len1-1][len2-1]){
     printPath(dp, s1, s2, len1-1, len2-1, costs, result, resLen, resIdx);
     result[*resIdx] = s2[*resIdx]; 
-    (*resIdx)++;
+    ++*resIdx;
     printf("  - Replace %c -> %c:   ", s1[len1-1], s2[len2-1]); 
-    print(result, *resIdx, *resLen);
   }
+
+  print(result, *resIdx, *resLen);
 }
 
 void printResult(int **dp, char *s1, char *s2, int len1, int len2, int *costs) {
   /* prints the minimum edit distance and the path */
   int resIdx = 0, resLen = len1;
   char *result = safeCalloc(len1 + len2 + 2, sizeof(char));
+  strcpy(result, s1); 
 
   printf("Task: source -> target\n      ");
   printf("'%s' -> '%s'\n\n", s1, s2);
@@ -163,7 +158,6 @@ void printResult(int **dp, char *s1, char *s2, int len1, int len2, int *costs) {
          "replace = %d, twiddle = %d, kill = %d\n\n", 
          costs[0], costs[1], costs[2], costs[3], costs[4], costs[5]); 
   printf("Edit sequence:\n  - Source:           '%s'\n", s1);
-  strcpy(result, s1); 
   printPath(dp, s1, s2, len1, len2, costs, result, &resLen, &resIdx);
   printf("  - Result:           '%s'\n\n", s2);
   printf("Minimum edit distance: %d\n", dp[len1][len2]);
