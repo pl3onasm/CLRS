@@ -5,7 +5,7 @@
 * [Dynamic programming](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming)
 * [Greedy algorithms](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy)
 * Graph algorithms
-* String algorithms
+* [String algorithms](https://github.com/pl3onasm/AADS/tree/main/algorithms/string-algorithms)
 
 ## Notes
 
