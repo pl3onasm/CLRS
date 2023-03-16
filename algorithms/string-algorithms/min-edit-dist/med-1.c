@@ -91,7 +91,7 @@ void printPath(int **dp, char *s1, char *s2, int len1, int len2,
         printPath (dp, s1, s2, i, len2, costs, result, resLen, resIdx);
         *resLen = *resLen - (len1 - i);
         result[*resLen] = '\0';
-        printf("  - Kill %d:\t\t", len1 - i);
+        printf("  - Kill %02d chars:    ", len1 - i);
         print(result, *resIdx, *resLen);
         return; 
       }
@@ -102,7 +102,7 @@ void printPath(int **dp, char *s1, char *s2, int len1, int len2,
       && cost == costs[0] + dp[len1-1][len2-1]){
     printPath(dp, s1, s2, len1-1, len2-1, costs, result, resLen, resIdx);
     (*resIdx)++; 
-    printf("  - Copy %c:\t\t", s1[len1-1]);
+    printf("  - Copy %c:           ", s1[len1-1]);
     print(result, *resIdx, *resLen);
 
   // twiddle
@@ -111,7 +111,7 @@ void printPath(int **dp, char *s1, char *s2, int len1, int len2,
     printPath(dp, s1, s2, len1-2, len2-2, costs, result, resLen, resIdx);
     result[(*resIdx)++] = s1[len1-1];
     result[(*resIdx)++] = s1[len1-2];
-    printf("  - Twiddle %c and %c:\t", s1[len1-1], s1[len1-2]);
+    printf("  - Twiddle %c and %c:  ", s1[len1-1], s1[len1-2]);
     print (result, *resIdx, *resLen);
 
   // insertion
@@ -121,7 +121,7 @@ void printPath(int **dp, char *s1, char *s2, int len1, int len2,
     for (int i = *resLen; i >= *resIdx; --i) result[i+1] = result[i];
     result[(*resIdx)++] = s2[len2-1];
     result[*resLen] = '\0';
-    printf("  - Insert %c:\t\t", s2[len2-1]);
+    printf("  - Insert %c:         ", s2[len2-1]);
     print(result, *resIdx, *resLen);
 
   // deletion
@@ -129,31 +129,33 @@ void printPath(int **dp, char *s1, char *s2, int len1, int len2,
     printPath(dp, s1, s2, len1-1, len2, costs, result, resLen, resIdx);
     for (int i = *resIdx; i < *resLen; ++i) result[i] = result[i+1];
     (*resLen)--;
-    printf("  - Delete %c:\t\t", s1[len1-1]);
+    printf("  - Delete %c:         ", s1[len1-1]);
     print(result, *resIdx, *resLen);
 
-  // replacement
+  // replacement/substitution
   } else if (len1 > 0 && len2 > 0 && cost == costs[3] + dp[len1-1][len2-1]){
     printPath(dp, s1, s2, len1-1, len2-1, costs, result, resLen, resIdx);
     result[*resIdx] = s2[*resIdx]; 
     (*resIdx)++;
-    printf("  - Replace %c with %c:\t", s1[len1-1], s2[len2-1]); 
+    printf("  - Replace %c -> %c:   ", s1[len1-1], s2[len2-1]); 
     print(result, *resIdx, *resLen);
   }
 }
 
 void printResult(int **dp, char *s1, char *s2, int len1, int len2, int *costs) {
   /* prints the minimum edit distance and the path */
-  printf("Task: source -> target\n      ");
-  printf("'%s' -> '%s'\n\n", s1, s2);
-  printf("Costs: copy = %d, insert = %d, delete = %d,\n       replace = %d, twiddle = %d"
-    ", kill = %d\n\n", costs[0], costs[1], costs[2], costs[3], costs[4], costs[5]); 
-  printf("Edit sequence:\n  - Source:\t\t'%s'\n", s1);
   int resIdx = 0, resLen = len1;
   char *result = (char *) malloc(sizeof(char) * (len1 + len2 + 2));
+
+  printf("Task: source -> target\n      ");
+  printf("'%s' -> '%s'\n\n", s1, s2);
+  printf("Costs: copy = %d, insert = %d, delete = %d,\n       "
+         "replace = %d, twiddle = %d, kill = %d\n\n", 
+         costs[0], costs[1], costs[2], costs[3], costs[4], costs[5]); 
+  printf("Edit sequence:\n  - Source:           '%s'\n", s1);
   strcpy(result, s1); 
   printPath(dp, s1, s2, len1, len2, costs, result, &resLen, &resIdx);
-  printf("  - Result:\t\t'%s'\n\n", s2);
+  printf("  - Result:           '%s'\n\n", s2);
   printf("Minimum edit distance: %d\n", dp[len1][len2]);
   free(result);
 }

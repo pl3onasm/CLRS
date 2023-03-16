@@ -1,0 +1,16 @@
+Task: source -> target
+      'retaliate' -> 'stelar'
+
+Costs: copy = 2, insert = 3, delete = 3,
+       replace = 4, twiddle = 0, kill = 5
+
+Edit sequence:
+  - Source:           'retaliate'
+  - Replace r -> s:   s-etaliate
+  - Twiddle t and e:  ste-aliate
+  - Twiddle l and a:  stela-iate
+  - Insert r:         stelar-iate
+  - Kill 04 chars:    stelar-
+  - Result:           'stelar'
+
+Minimum edit distance: 12

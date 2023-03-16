@@ -1,0 +1,15 @@
+Task: source -> target
+      '' -> 'test'
+
+Costs: copy = 1, insert = 2, delete = 3,
+       replace = 1, twiddle = 0, kill = 5
+
+Edit sequence:
+  - Source:           ''
+  - Insert t:         t-
+  - Insert e:         te-
+  - Insert s:         tes-
+  - Insert t:         test-
+  - Result:           'test'
+
+Minimum edit distance: 8
