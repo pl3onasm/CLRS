@@ -103,7 +103,7 @@ $$
 \end{align*}
 $$
 
-Step 1, 2, and 4 take $\Theta(n^2)$ time. In step 3, we compute seven multiplications of $n/2 \times n/2$ matrices. Thus we get the recurrence relation:
+Steps 1 and 3 both take $\Theta(n^2)$ time. In step 2, we compute seven multiplications of $n/2 \times n/2$ matrices. Thus we get the recurrence relation:
 
 $$
 T(n) = 7T(n/2) + \Theta(n^2)
