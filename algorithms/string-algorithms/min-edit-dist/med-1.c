@@ -21,6 +21,16 @@ void *safeCalloc (int n, int size) {
   return ptr;
 }
 
+void *safeRealloc (void *ptr, int newSize) {
+  // reallocates memory and checks whether the allocation was successful
+  ptr = realloc(ptr, newSize);
+  if (ptr == NULL) {
+    printf("Error: realloc(%d) failed. Out of memory?\n", newSize);
+    exit(EXIT_FAILURE);
+  }
+  return ptr;
+}
+
 int **newM(int m, int n) {
   /* allocates and initializes a m x n matrix */
   int **arr = safeCalloc(m, sizeof(int *));
@@ -145,7 +155,7 @@ void printPath(int **dp, char *s1, char *s2, int len1, int len2,
 void printResult(int **dp, char *s1, char *s2, int len1, int len2, int *costs) {
   /* prints the minimum edit distance and the path */
   int resIdx = 0, resLen = len1;
-  char *result = (char *) malloc(sizeof(char) * (len1 + len2 + 2));
+  char *result = safeCalloc(len1 + len2 + 2, sizeof(char));
 
   printf("Task: source -> target\n      ");
   printf("'%s' -> '%s'\n\n", s1, s2);
@@ -160,43 +170,37 @@ void printResult(int **dp, char *s1, char *s2, int len1, int len2, int *costs) {
   free(result);
 }
 
-char *readString(){
+char *readString(int *size) {
   /* reads a string of arbitrary length from stdin */
-  char n; int index = 0, cap = 128;
-  char *arr = calloc(cap,sizeof(char)); 
-  while (scanf("%c", &n) && n != '\n' && n != EOF){
-    index++;
-    if (index % cap == 0) {
-      arr = realloc(arr, 2*index*sizeof(char));
-      cap *= 2;
-    }
-    arr[index-1] = n;
+  char c; int len = 0; 
+  char *str = safeCalloc(100, sizeof(char));
+  while (scanf("%c", &c) == 1 && c != '\n') {
+    str[len++] = c; 
+    if (len % 100 == 0) str = safeRealloc(str, (len+100) * sizeof(char));
   }
-  arr[index] = '\0';
-  return arr; 
+  str[len] = '\0';
+  *size = len;
+  return str;
 }
 
 int *readCosts() {
   /* reads the costs for the operations from stdin */
-  int *costs = (int *) malloc(sizeof(int) * 6);
+  int *costs = safeCalloc(6, sizeof(int));
   for (int i = 0; i < 6; ++i) scanf("%d ", &costs[i]);
   return costs;
 }
 
 int main (int argc, char *argv[]) {
-  char *s1 = readString();    // source string
-  char *s2 = readString();    // target string
-  
+  int len1, len2;  // length of source and target string
+  char *s1 = readString(&len1);    // source string
+  char *s2 = readString(&len2);    // target string
+
   // operation costs for copy, insert, 
   // delete, replace, twiddle, kill
   int *costs = readCosts();   
-  
-  int len1 = strlen(s1);
-  int len2 = strlen(s2);
   int **dp1 = newM(len1+1, len2+1);
 
   med(dp1, s1, s2, len1, len2, costs);
-
   printResult(dp1, s1, s2, len1, len2, costs);
 
   freeM(dp1, len1+1);
