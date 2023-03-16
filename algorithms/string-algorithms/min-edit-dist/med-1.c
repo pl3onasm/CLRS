@@ -29,10 +29,10 @@ int **newM(int m, int n) {
   return arr;
 }
 
-void freeM(int **m, int n) {
-  /* frees a n x n matrix */
-  for (int i = 0; i < n; ++i) free(m[i]);
-  free(m);
+void freeM(int **arr, int m) {
+  /* frees a m x n matrix */
+  for (int i = 0; i < m; ++i) free(arr[i]);
+  free(arr);
 }
 
 void med(int **dp, char *s1, char *s2, int len1, int len2, int *costs) {
@@ -48,8 +48,6 @@ void med(int **dp, char *s1, char *s2, int len1, int len2, int *costs) {
   for (int i = 1; i <= len1; ++i){
     for (int j = 1; j <= len2; ++j){
       int cost = INT_MAX; 
-
-      
 
       if (s1[i-1] == s2[j-1])
         cost = MIN(costs[0] + dp[i-1][j-1], cost);    // copy
@@ -161,6 +159,7 @@ void printResult(int **dp, char *s1, char *s2, int len1, int len2, int *costs) {
 }
 
 char *readString(){
+  /* reads a string of arbitrary length from stdin */
   char n; int index = 0, cap = 128;
   char *arr = calloc(cap,sizeof(char)); 
   while (scanf("%c", &n) && n != '\n' && n != EOF){
