@@ -100,7 +100,7 @@ void printPath(int **dp, char *s1, char *s2, int len1, int len2,
     for (int i = len1-1; i >= 0; --i) 
       if (dp[i][len2] + costs[5] == dp[len1][len2]){
         printPath (dp, s1, s2, i, len2, costs, result, resLen, resIdx);
-        *resLen -= (len1 - i);
+        *resLen -= len1 - i;
         result[*resLen] = '\0';
         printf("  - Kill %02d chars:    ", len1 - i); 
         break; 
@@ -110,7 +110,7 @@ void printPath(int **dp, char *s1, char *s2, int len1, int len2,
   if (len1 > 0 && len2 > 0 && s1[len1-1] == s2[len2-1] 
       && cost == costs[0] + dp[len1-1][len2-1]){
     printPath(dp, s1, s2, len1-1, len2-1, costs, result, resLen, resIdx);
-    (*resIdx)++; 
+    ++*resIdx; 
     printf("  - Copy %c:           ", s1[len1-1]);
 
   // twiddle
@@ -159,7 +159,7 @@ void printResult(int **dp, char *s1, char *s2, int len1, int len2, int *costs) {
          costs[0], costs[1], costs[2], costs[3], costs[4], costs[5]); 
   printf("Edit sequence:\n  - Source:           '%s'\n", s1);
   printPath(dp, s1, s2, len1, len2, costs, result, &resLen, &resIdx);
-  printf("  - Result:           '%s'\n\n", s2);
+  printf("  - Result:           '%s'\n\n", result);
   printf("Minimum edit distance: %d\n", dp[len1][len2]);
   free(result);
 }
