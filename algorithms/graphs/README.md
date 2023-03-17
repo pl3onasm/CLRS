@@ -6,4 +6,5 @@
 * Kruskal's algorithm (greedy)
 * Prim's algorithm (greedy)
 * Topological sort (greedy)
+* Flood fill (greedy)
   
