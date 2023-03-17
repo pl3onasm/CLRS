@@ -2,7 +2,7 @@
 
 ## Problem
 
-Given a pattern $P$ and a text $T$, find all occurrences of $P$ in $T$. The result should consist of the indices of the first character of each occurrence of $P$ in $T$ (so-called *shifts*). The pattern $P$ and the text $T$ are both strings of length $m$ and $n$, respectively.
+Given a pattern $P$ and a text $T$, find all occurrences of $P$ in $T$. The result should consist of the indices indicating where each occurrence of $P$ in $T$ starts (so-called *shifts*). The pattern $P$ and the text $T$ are both strings of length $m$ and $n$, respectively.
 
 ## Brute-force
 
