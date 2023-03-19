@@ -83,15 +83,14 @@ void computeShifts (char *text, uint tLen, char *pattern, uint pLen) {
     }
   }
   if (r) printf("\n"); 
-  else printf("No shifts found.\n");
+  else printf("No matches found.\n");
 }
 
 int main (int argc, char *argv[]) {
-  char *text, *pattern;
   uint tLen, pLen;
 
-  pattern = readString(&pLen, 1);
-  text = readString(&tLen, 0);
+  char *pattern = readString(&pLen, 1);
+  char *text = readString(&tLen, 0);
 
   computeShifts(text, tLen, pattern, pLen);
 
