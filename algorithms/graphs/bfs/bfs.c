@@ -159,10 +159,11 @@ void bfs(graph *G, int s) {
     node *m = n->next; 
    
     while (m) {
-      if (G->adj[m->id]->parent < 0) {
+      node *a = G->adj[m->id];
+      if (a->parent < 0) {
         // set parent and update distance
-        G->adj[m->id]->parent = n->id;
-        G->adj[m->id]->dist = n->dist + 1;
+        a->parent = n->id;
+        a->dist = n->dist + 1;
         enqueue(q, m->id);  
       }
       m = m->next;  // move to next adjacent node
