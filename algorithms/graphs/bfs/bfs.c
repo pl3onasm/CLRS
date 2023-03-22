@@ -173,8 +173,8 @@ void bfs(graph *G, int s) {
   while (!isEmpty(q)) {
     node *n = G->vertices[dequeue(q)]; 
    
-    while (n->nbrCount > 0) {  // for each neighbor of n
-      node *a = G->vertices[n->neighbors[--n->nbrCount]];
+    for (int i = 0; i < n->nbrCount; i++) {   // for each neighbor
+      node *a = G->vertices[n->neighbors[i]];
       if (a->parent < 0) {
         // set parent and update distance
         a->parent = n->id;
