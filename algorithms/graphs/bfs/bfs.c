@@ -1,25 +1,26 @@
 /* file: bfs.c
 * author: David De Potter
 * description: breadth-first search 
-*   with a queue implemented as a circular array
+*   with a queue implemented as a circular array and a graph
+*   implemented as an array of nodes with adjacency lists
 */
 
 #include <stdio.h>
 #include <stdlib.h>
 
 typedef struct node {
-  int id, dist, parent, numNeighbors;
-  int *neighbors;
+  int id, dist, parent, nbrCount, nbrCap;
+  int *neighbors;   // adjacency list
 } node;
 
 typedef struct queue {
-  int *array;
   int front, back, size; 
+  int *array;
 } queue;
 
 typedef struct graph {
   int n;
-  node **vertices;
+  node **vertices;  // array of pointers to nodes
 } graph;
 
 void *safeCalloc (int n, int size) {
@@ -46,10 +47,12 @@ void *safeRealloc (void *ptr, int newSize) {
 //:::::::::::::::::::::::: queue functions ::::::::::::::::::::::::://
 
 short isEmpty(queue *Q) {
+  /* returns 1 if the queue is empty, 0 otherwise */
   return Q->front == Q->back;
 }
 
 queue *newQueue(int n) {
+  /* creates a queue with n elements */
   queue *Q = safeCalloc(1, sizeof(queue));
   Q->array = safeCalloc(n, sizeof(int));
   Q->front = 0;
@@ -59,11 +62,13 @@ queue *newQueue(int n) {
 }
 
 void freeQueue(queue *q) {
+  /* frees all memory allocated for the queue */
   free(q->array);
   free(q);
 }
 
 void doubleQueueSize(queue *Q) {
+  /* doubles the size of the queue */
   Q->array = safeRealloc(Q->array, 2 * Q->size * sizeof(int));
   for (int i = 0; i < Q->back; ++i){
     Q->array[i + Q->size] = Q->array[i];
@@ -73,12 +78,14 @@ void doubleQueueSize(queue *Q) {
 }
 
 void enqueue (queue *Q, int n) {
+  /* adds n to the back of the queue */
   Q->array[Q->back] = n;
   Q->back = (Q->back + 1) % Q->size;
   if (Q->back == Q->front) doubleQueueSize(Q);
 }
 
 int dequeue (queue *Q) {
+  /* removes and returns the first element of the queue */
   if (isEmpty(Q)) {
     printf("Error: dequeue() called on empty queue.\n");
     exit(EXIT_FAILURE);
@@ -90,16 +97,20 @@ int dequeue (queue *Q) {
 
 //:::::::::::::::::::::::: graph functions ::::::::::::::::::::::::://
 
-node *newNode(int v) {
+node *newNode(int id) {
+  /* creates a node with given id */
   node *n = safeCalloc(1, sizeof(node));
-  n->id = v;
+  n->id = id;
   n->dist = 0;
-  n->parent = -1;
+  n->parent = -1; // -1 means no parent
   n->neighbors = NULL;
+  n->nbrCount = 0;
+  n->nbrCap = 0;
   return n;
 }
 
 graph *newGraph(int n) {
+  /* creates a graph with n vertices */
   graph *G = safeCalloc(1, sizeof(graph));
   G->n = n;
   G->vertices = safeCalloc(n, sizeof(node*));
@@ -109,6 +120,7 @@ graph *newGraph(int n) {
 }
 
 void freeGraph(graph *G) {
+  /* frees all memory allocated for the graph */
   for (int i = 0; i < G->n; i++) {
     free(G->vertices[i]->neighbors);
     free(G->vertices[i]);
@@ -117,28 +129,34 @@ void freeGraph(graph *G) {
   free(G);
 }
 
-void addEdges(graph *G) {
+void buildGraph(graph *G) {
+  /* reads edges from stdin and adds them to the graph */
   int u, v;
   while (scanf("%d %d", &u, &v) == 2) {
     node *n = G->vertices[u];
     // add v's id to u's adjacency list
-    n->neighbors = safeRealloc(n->neighbors, (++n->numNeighbors) * sizeof(int));
-    n->neighbors[n->numNeighbors - 1] = v;
+    if (n->nbrCount == n->nbrCap) {
+      // if the adjacency list is full, double its size
+      n->nbrCap = (n->nbrCap == 0) ? 2 : 2 * n->nbrCap;
+      n->neighbors = safeRealloc(n->neighbors, n->nbrCap * sizeof(int));
+    }
+    n->neighbors[n->nbrCount++] = v;
   }
 }
 
 //:::::::::::::::::::::::: bfs functions :::::::::::::::::::::::::://
 
 void printPath(graph *G, int s, int d) {
-  if (d == s) {
-    printf("%d", s);
-  } else {
+  /* recursively prints the path from s to d */
+  if (d == s) printf("%d", s);
+  else {
     printPath(G, s, G->vertices[d]->parent);
     printf(", %d", d);
   }
 }
 
 void printResult(graph *G, int s, int d) {
+  /* prints the result of the bfs */
   if (G->vertices[d]->parent >= 0) {
     // if d's parent is set, there is a path from s to d
     printf("Distance from %d to %d: %d\n", s, d, G->vertices[d]->dist);
@@ -149,13 +167,14 @@ void printResult(graph *G, int s, int d) {
 }
 
 void bfs(graph *G, int s) {
+  /* performs a breadth-first search on the graph G starting at node s */
   queue *q = newQueue(G->n); 
   enqueue(q, s); // enqueue source node
   while (!isEmpty(q)) {
     node *n = G->vertices[dequeue(q)]; 
    
-    while (n->numNeighbors > 0) {  // for each neighbor of n
-      node *a = G->vertices[n->neighbors[--n->numNeighbors]];
+    while (n->nbrCount > 0) {  // for each neighbor of n
+      node *a = G->vertices[n->neighbors[--n->nbrCount]];
       if (a->parent < 0) {
         // set parent and update distance
         a->parent = n->id;
@@ -180,7 +199,7 @@ int main (int argc, char *argv[]) {
   }
   
   graph *G = newGraph(n); 
-  addEdges(G);  // build graph from edges
+  buildGraph(G);  // build graph from edges
 
   bfs(G, source);
   printResult(G, source, dest);
