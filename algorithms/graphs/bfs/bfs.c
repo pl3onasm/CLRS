@@ -8,8 +8,8 @@
 #include <stdlib.h>
 
 typedef struct node {
-  int id, dist, parent;
-  struct node *next;
+  int id, dist, parent, numNeighbors;
+  int *neighbors;
 } node;
 
 typedef struct queue {
@@ -19,7 +19,7 @@ typedef struct queue {
 
 typedef struct graph {
   int n;
-  node **adj; 
+  node **vertices;
 } graph;
 
 void *safeCalloc (int n, int size) {
@@ -92,41 +92,38 @@ int dequeue (queue *Q) {
 
 node *newNode(int v) {
   node *n = safeCalloc(1, sizeof(node));
-  n->next = NULL;
   n->id = v;
   n->dist = 0;
   n->parent = -1;
+  n->neighbors = NULL;
   return n;
 }
 
 graph *newGraph(int n) {
   graph *G = safeCalloc(1, sizeof(graph));
   G->n = n;
-  G->adj = safeCalloc(n, sizeof(node*));
+  G->vertices = safeCalloc(n, sizeof(node*));
   for (int i = 0; i < n; i++)
-    G->adj[i] = newNode(i);
+    G->vertices[i] = newNode(i);
   return G;
 }
 
 void freeGraph(graph *G) {
   for (int i = 0; i < G->n; i++) {
-    node *n = G->adj[i];
-    while (n != NULL) {
-      node *m = n;
-      n = n->next;
-      free(m);
-    }
+    free(G->vertices[i]->neighbors);
+    free(G->vertices[i]);
   }
-  free(G->adj);
+  free(G->vertices);
   free(G);
 }
 
 void addEdges(graph *G) {
   int u, v;
   while (scanf("%d %d", &u, &v) == 2) {
-    node *n = newNode(v);
-    n->next = G->adj[u]->next;
-    G->adj[u]->next = n;
+    node *n = G->vertices[u];
+    // add v's id to u's adjacency list
+    n->neighbors = safeRealloc(n->neighbors, (++n->numNeighbors) * sizeof(int));
+    n->neighbors[n->numNeighbors - 1] = v;
   }
 }
 
@@ -136,15 +133,15 @@ void printPath(graph *G, int s, int d) {
   if (d == s) {
     printf("%d", s);
   } else {
-    printPath(G, s, G->adj[d]->parent);
+    printPath(G, s, G->vertices[d]->parent);
     printf(", %d", d);
   }
 }
 
 void printResult(graph *G, int s, int d) {
-  if (G->adj[d]->parent >= 0) { 
+  if (G->vertices[d]->parent >= 0) {
     // if d's parent is set, there is a path from s to d
-    printf("Distance from %d to %d: %d\n", s, d, G->adj[d]->dist);
+    printf("Distance from %d to %d: %d\n", s, d, G->vertices[d]->dist);
     printf("Path: [");
     printPath(G, s, d);
     printf("]\n");
@@ -152,21 +149,19 @@ void printResult(graph *G, int s, int d) {
 }
 
 void bfs(graph *G, int s) {
-  queue *q = newQueue(G->n);
+  queue *q = newQueue(G->n); 
   enqueue(q, s); // enqueue source node
   while (!isEmpty(q)) {
-    node *n = G->adj[dequeue(q)]; 
-    node *m = n->next; 
+    node *n = G->vertices[dequeue(q)]; 
    
-    while (m) {
-      node *a = G->adj[m->id];
+    while (n->numNeighbors > 0) {  // for each neighbor of n
+      node *a = G->vertices[n->neighbors[--n->numNeighbors]];
       if (a->parent < 0) {
         // set parent and update distance
         a->parent = n->id;
         a->dist = n->dist + 1;
-        enqueue(q, m->id);  
+        enqueue(q, a->id);
       }
-      m = m->next;  // move to next adjacent node
     }
   }
   freeQueue(q);
