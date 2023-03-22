@@ -1,0 +1,35 @@
+Discovery and finish times
+
+   Node   Discovery    Finish
+  label        time      time
+      0           1        18
+      1           2        15
+      2          16        17
+      3           3        14
+      4           5        12
+      5           6        11
+      6           8         9
+      7           4        13
+      8           7        10
+
+Edge classification
+
+  Starting   Ending      Edge
+      node     node      type
+         0        1         T
+         0        2         T
+         0        5         F
+         1        3         T
+         2        3         C
+         3        7         T
+         4        1         B
+         4        5         T
+         5        8         T
+         5        6         F
+         6        5         B
+         6        8         B
+         6        7         B
+         7        4         T
+         7        6         F
+         8        6         T
+         8        5         B

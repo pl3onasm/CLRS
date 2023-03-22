@@ -3,6 +3,7 @@
 * description: breadth-first search 
 *   with a queue implemented as a circular array and a graph
 *   implemented as an array of nodes with adjacency lists
+* assumption: nodes are numbered 0..n-1
 */
 
 #include <stdio.h>
@@ -19,7 +20,7 @@ typedef struct queue {
 } queue;
 
 typedef struct graph {
-  int n;
+  int nNodes, nEdges;
   node **vertices;  // array of pointers to nodes
 } graph;
 
@@ -112,7 +113,7 @@ node *newNode(int id) {
 graph *newGraph(int n) {
   /* creates a graph with n vertices */
   graph *G = safeCalloc(1, sizeof(graph));
-  G->n = n;
+  G->nNodes = n;
   G->vertices = safeCalloc(n, sizeof(node*));
   for (int i = 0; i < n; i++)
     G->vertices[i] = newNode(i);
@@ -121,7 +122,7 @@ graph *newGraph(int n) {
 
 void freeGraph(graph *G) {
   /* frees all memory allocated for the graph */
-  for (int i = 0; i < G->n; i++) {
+  for (int i = 0; i < G->nNodes; i++) {
     free(G->vertices[i]->neighbors);
     free(G->vertices[i]);
   }
@@ -134,6 +135,7 @@ void buildGraph(graph *G) {
   int u, v;
   while (scanf("%d %d", &u, &v) == 2) {
     node *n = G->vertices[u];
+    G->nEdges++;
     // add v's id to u's adjacency list
     if (n->nbrCount == n->nbrCap) {
       // if the adjacency list is full, double its size
@@ -168,12 +170,12 @@ void printResult(graph *G, int s, int d) {
 
 void bfs(graph *G, int s) {
   /* performs a breadth-first search on the graph G starting at node s */
-  queue *q = newQueue(G->n); 
+  queue *q = newQueue(G->nNodes); 
   enqueue(q, s); // enqueue source node
   while (!isEmpty(q)) {
     node *n = G->vertices[dequeue(q)]; 
    
-    for (int i = 0; i < n->nbrCount; i++) {   // for each neighbor
+    for (int i = 0; i < n->nbrCount; i++) {   // check each neighbor
       node *a = G->vertices[n->neighbors[i]];
       if (a->parent < 0) {
         // set parent and update distance
