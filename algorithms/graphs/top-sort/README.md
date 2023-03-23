@@ -40,4 +40,4 @@ The topological sort of the above graph is a linear ordering of its vertices suc
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-Note that this topological sort is not unique. For example, the permutation $6,0,1,5,4,3,2$ is another valid topological sort of the graph.
+Note that this topological sort is not unique. For example, the permutation $6,0,1,5,2,4,3$ is another valid topological sort of the graph.
