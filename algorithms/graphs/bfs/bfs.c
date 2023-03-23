@@ -24,6 +24,8 @@ typedef struct graph {
   node **vertices;  // array of pointers to nodes
 } graph;
 
+//::::::::::::::::::::: memory management ::::::::::::::::::::::::://
+
 void *safeCalloc (int n, int size) {
   /* allocates n elements of size size, initializing them to 0, and
      checks whether the allocation was successful */
