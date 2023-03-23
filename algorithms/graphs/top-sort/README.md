@@ -30,6 +30,8 @@ We have the following DAG representing a dependency graph of tasks to be perform
 
 The topological sort of the above graph is a linear ordering of its vertices such that for every directed edge $(u,v)$ from vertex $u$ to vertex $v$, $u$ comes before $v$ in the ordering. The topological sort of the above graph is the permutation $0,6,1,5,4,2,3$:
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 <p align="center" width="85%">
 <img src="sorted.png"
      alt="sorted dag"
