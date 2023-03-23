@@ -1,8 +1,8 @@
-/* file: tps.c
+/* file: scc.c
 * author: David De Potter
-* description: topological sort of a directed acyclic 
-*              graph using depth-first search
-* complexity: O(V + E)
+* description: computes the strongly connected 
+*              components of a directed graph
+* complexity: O(n+m)
 */
 
 #include <stdio.h>
@@ -61,6 +61,15 @@ node *newNode(int id) {
   return n;
 }
 
+void checkCap(node *n) {
+  /* checks whether the adjacency list of n is full, and if so, 
+     doubles its capacity */
+  if (n->nbrCount == n->nbrCap) {
+    n->nbrCap = (n->nbrCap == 0) ? 1 : 2*n->nbrCap;
+    n->neighbors = safeRealloc(n->neighbors, n->nbrCap*sizeof(int));
+  }
+}
+
 graph *newGraph(int n) {
   /* creates a graph with n vertices */
   graph *G = safeCalloc(1, sizeof(graph));
@@ -82,18 +91,22 @@ void freeGraph(graph *G) {
   free(G);
 }
 
-void buildGraph(graph *G) {
-  /* reads edges from stdin and adds them to the graph */
+void addEge(graph *G, int u, int v) {
+  /* adds an edge (u,v) to the graph G */
+  node *n = G->vertices[u]; 
+  G->nEdges++;
+  // add v's id to u's adjacency list
+  checkCap(n);
+  n->neighbors[n->nbrCount++] = v;
+}
+
+void buildGraphs(graph *G, graph *GT) {
+  /* reads edges from stdin and adds them to the graph, 
+     and builds the transposed graph at the same time*/
   int u, v;
   while (scanf("%d %d", &u, &v) == 2) {
-    node *n = G->vertices[u];
-    G->nEdges++;
-    // add v's id to u's adjacency list
-    if (n->nbrCount == n->nbrCap) {
-      n->nbrCap = (n->nbrCap == 0) ? 2 : 2 * n->nbrCap;
-      n->neighbors = safeRealloc(n->neighbors, n->nbrCap * sizeof(int));
-    }
-    n->neighbors[n->nbrCount++] = v;
+    addEge(G, u, v);
+    addEge(GT, v, u);
   }
 }
 
@@ -106,10 +119,13 @@ list *newList() {
 
 void printList(list *L) {
   /* prints the list L */
-  if (L == NULL) return;
-  printf("%d", L->n->id);
-  if (L->next != NULL) printf(", ");
-  printList(L->next);
+  printf("{"); 
+  while (L != NULL) {
+    printf("%d", L->n->id);
+    if (L->next != NULL) printf(", ");
+    L = L->next;
+  }
+  printf("}\n");
 }
 
 void freeList(list *L) {
@@ -143,7 +159,7 @@ void dfsVisit(graph *G, node *u, list **L, int *time) {
   *L = listInsert(*L, u);
 }
 
-void dfs(graph *G, list **L, int *time) {
+void dfsG(graph *G, list **L, int *time) {
   /* performs a depth-first search on the graph G */
   for (int i = 0; i < G->nNodes; i++) {
     node *n = G->vertices[i];
@@ -152,36 +168,51 @@ void dfs(graph *G, list **L, int *time) {
   }
 }
 
-//::::::::::::::::::::::::: topSort ::::::::::::::::::::::::::::::://
+void dfsGT(graph *GT, list **L, int *time) {
+  /* performs a depth-first search on the transposed graph GT */
+  for (list *l = *L; l != NULL; l = l->next) {
+    node *n = GT->vertices[l->n->id];
+    if (n->dTime < 0) {  // n is undiscovered
+      list *component = newList();
+      dfsVisit(GT, n, &component, time);
+      printList(component);
+      freeList(component);
+    }
+  }
+}
+
+//::::::::::::::: topological sort and decomposition :::::::::::::://
 
 list *topSort(graph *G) {
   /* performs a topological sort on the graph G */
   list *L = newList();
   int time = 0;
-  dfs(G, &L, &time);
+  dfsG(G, &L, &time);
   return L;
 }
 
-void printResult(list *L) {
-  /* prints the result of the topological sort */
-  printf("Topological sort:\n[");
-  printList(L);
-  printf("]\n");
+void decompose(graph *GT, list *L) {
+  /* decomposes the graph GT into strongly connected components */
+  printf("Strongly connected components:\n");
+  int time = 0;
+  dfsGT(GT, &L, &time);
 }
 
 //::::::::::::::::::::::: main function ::::::::::::::::::::::::::://
 
 int main (int argc, char *argv[]) {
-  int n;  // n = number of nodes
+  int n;                    // n = number of nodes
   scanf("%d", &n); 
 
-  graph *G = newGraph(n); 
-  buildGraph(G);  // read edges from stdin
+  graph *G = newGraph(n);   // original graph
+  graph *GT = newGraph(n);  // transposed graph
+  buildGraphs(G, GT);       // read edges from stdin
 
-  list *L = topSort(G); // topological sort
-  printResult(L);       
+  list *L = topSort(G);     // topological sort
+  decompose(GT, L);         // strongly connected components
 
   freeGraph(G);
+  freeGraph(GT);
   freeList(L);
   return 0;
 }
