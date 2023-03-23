@@ -1,12 +1,9 @@
 /* file: dfs.c
 * author: David De Potter
-* description: depth-first search,
+* description: depth-first search 
 *   with a queue implemented as a circular array and a graph
 *   implemented as an array of nodes with adjacency lists
 * assumption: nodes are numbered 0..n-1
-* input: directed graph 
-* output: discovery and finish times for each node and
-*         the edge types (tree, back, forward, cross)
 */
 
 #include <stdio.h>
@@ -15,8 +12,7 @@
 typedef struct node {
   int id, dTime, fTime, parent, nbrCount, nbrCap;
   int *neighbors;   // adjacency list
-  char *type;       // edge type
-  char color;       // white, gray, or black
+  char *type;       
 } node;              
 
 typedef struct graph {
@@ -57,7 +53,6 @@ node *newNode(int id) {
   n->neighbors = NULL;
   n->nbrCount = 0;
   n->nbrCap = 0;
-  n->color = 'w';
   return n;
 }
 
@@ -83,7 +78,7 @@ void freeGraph(graph *G) {
   free(G);
 }
 
-void buildGraph(graph *G) {
+void buildGraph(graph *G, short directed) {
   /* reads edges from stdin and adds them to the graph */
   int u, v;
   while (scanf("%d %d", &u, &v) == 2) {
@@ -91,6 +86,7 @@ void buildGraph(graph *G) {
     G->nEdges++;
     // add v's id to u's adjacency list
     if (n->nbrCount == n->nbrCap) {
+      // if the adjacency list is full, double its size
       n->nbrCap = (n->nbrCap == 0) ? 2 : 2 * n->nbrCap;
       n->neighbors = safeRealloc(n->neighbors, n->nbrCap * sizeof(int));
       n->type = safeRealloc(n->type, n->nbrCap * sizeof(char));
@@ -121,33 +117,43 @@ void printResults(graph *G) {
   }
 }
 
+void classifyEdges(graph *G) {
+  /* classifies the edges of the graph G */
+  for (int i = 0; i < G->nNodes; i++) {
+    node *u = G->vertices[i];
+    printf("Node %d has parent %d\n", u->id, u->parent);
+    for (int j = 0; j < u->nbrCount; j++) {
+      node *v = G->vertices[u->neighbors[j]];
+      if (v->fTime < u->fTime && v->parent == u->id)
+        u->type[j] = 'T';  // tree edge
+      else if (v->dTime < u->dTime && u->fTime < v->fTime)
+        u->type[j] = 'B';  // back edge
+      else if (v->dTime < u->dTime)
+        u->type[j] = 'C';  // cross edge
+      else if (u->dTime < v->dTime)
+        u->type[j] = 'F';  // forward edge
+    }
+  }
+}
+
 void dfsVisit(graph *G, node *u, int *time) {
   /* visits the node u and its descendants in the graph G */
   u->dTime = ++*time;
-  u->color = 'g';
-  
   for (int i = 0; i < u->nbrCount; i++) {
     node *v = G->vertices[u->neighbors[i]];
-    if (v->color == 'w') {
-      u->type[i] = 'T';   // tree edge
+    if (v->dTime < 0) {    // if v is not visited yet
       v->parent = u->id;
       dfsVisit(G, v, time);
     } 
-    else if (v->color == 'g') u->type[i] = 'B';   // back edge
-    else if (v->dTime > u->dTime)  
-      u->type[i] = 'F';   // forward edge
-    else if (v->dTime < u->dTime) 
-      u->type[i] = 'C';   // cross edge
   }
   u->fTime = ++*time;
-  u->color = 'b';
 }
 
 void dfs(graph *G, int *time) {
   /* performs a depth-first search on the graph G */
   for (int i = 0; i < G->nNodes; i++) {
     node *n = G->vertices[i];
-    if (n->color == 'w')
+    if (n->dTime < 0)      // if n is not visited yet
       dfsVisit(G, n, time);
   }
 }
@@ -156,12 +162,15 @@ void dfs(graph *G, int *time) {
 
 int main (int argc, char *argv[]) {
   int n, time = 0;  // n = number of nodes
-  scanf("%d", &n); 
+  short directed = 0;   // directed = 1 if graph is directed
+  scanf("%d", &n);
+  scanf("%hd", &directed);  
 
   graph *G = newGraph(n); 
-  buildGraph(G);  // read edges from stdin
+  buildGraph(G, directed);    // build graph from edges
 
-  dfs(G, &time);  
+  dfs(G, &time);
+  classifyEdges(G);
   printResults(G);
 
   freeGraph(G);
