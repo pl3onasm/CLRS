@@ -10,7 +10,7 @@
 
 typedef struct node {
   int id, dTime, fTime, parent, nbrCount, nbrCap;
-  int *neighbors;   // adjacency list
+  int *neighbors;   // adjacency list: node ids of neighbors
 } node;              
 
 typedef struct graph {
@@ -23,7 +23,7 @@ typedef struct list {
   struct list *next;
 } list;
 
-//::::::::::::::::::::: memory management ::::::::::::::::::::::::://
+//::::::::::::::::::::::: memory management :::::::::::::::::::::::://
 
 void *safeCalloc (int n, int size) {
   /* allocates n elements of size size, initializing them to 0, and
@@ -61,6 +61,15 @@ node *newNode(int id) {
   return n;
 }
 
+void checkCap(node *n) {
+  /* checks whether the adjacency list of n is full, and if so, 
+     doubles its capacity */
+  if (n->nbrCount == n->nbrCap) {
+    n->nbrCap = (n->nbrCap == 0) ? 2 : 2*n->nbrCap;
+    n->neighbors = safeRealloc(n->neighbors, n->nbrCap*sizeof(int));
+  }
+}
+
 graph *newGraph(int n) {
   /* creates a graph with n vertices */
   graph *G = safeCalloc(1, sizeof(graph));
@@ -88,16 +97,13 @@ void buildGraph(graph *G) {
   while (scanf("%d %d", &u, &v) == 2) {
     node *n = G->vertices[u];
     G->nEdges++;
+    checkCap(n);
     // add v's id to u's adjacency list
-    if (n->nbrCount == n->nbrCap) {
-      n->nbrCap = (n->nbrCap == 0) ? 2 : 2 * n->nbrCap;
-      n->neighbors = safeRealloc(n->neighbors, n->nbrCap * sizeof(int));
-    }
     n->neighbors[n->nbrCount++] = v;
   }
 }
 
-//:::::::::::::::::::::::: list functions ::::::::::::::::::::::::://
+//::::::::::::::::::::::::: list functions ::::::::::::::::::::::::://
 
 list *newList() {
   /* creates an empty list */
@@ -127,7 +133,7 @@ list *listInsert (list *L, node *n) {
   return new;
 }
 
-//:::::::::::::::::::::::: dfs functions :::::::::::::::::::::::::://
+//::::::::::::::::::::::::: dfs functions :::::::::::::::::::::::::://
 
 void dfsVisit(graph *G, node *u, list **L, int *time) {
   /* visits the node u and its descendants in the graph G */
@@ -152,7 +158,7 @@ void dfs(graph *G, list **L, int *time) {
   }
 }
 
-//::::::::::::::::::::::::: topSort ::::::::::::::::::::::::::::::://
+//:::::::::::::::::::::::: topological sort :::::::::::::::::::::::://
 
 list *topSort(graph *G) {
   /* performs a topological sort on the graph G */
@@ -162,14 +168,14 @@ list *topSort(graph *G) {
   return L;
 }
 
-void printResult(list *L) {
+void printTopSort(list *L) {
   /* prints the result of the topological sort */
   printf("Topological sort:\n[");
   printList(L);
   printf("]\n");
 }
 
-//::::::::::::::::::::::: main function ::::::::::::::::::::::::::://
+//::::::::::::::::::::::::: main function :::::::::::::::::::::::::://
 
 int main (int argc, char *argv[]) {
   int n;  // n = number of nodes
@@ -179,7 +185,7 @@ int main (int argc, char *argv[]) {
   buildGraph(G);  // read edges from stdin
 
   list *L = topSort(G); // topological sort
-  printResult(L);       
+  printTopSort(L);       
 
   freeGraph(G);
   freeList(L);

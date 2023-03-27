@@ -10,7 +10,7 @@
 
 typedef struct node {
   int id, dTime, fTime, parent, nbrCount, nbrCap;
-  int *neighbors;   // adjacency list
+  int *neighbors;   // adjacency list: node ids of neighbors
 } node;              
 
 typedef struct graph {
@@ -23,7 +23,7 @@ typedef struct list {
   struct list *next;
 } list;
 
-//::::::::::::::::::::: memory management ::::::::::::::::::::::::://
+//::::::::::::::::::::::: memory management :::::::::::::::::::::::://
 
 void *safeCalloc (int n, int size) {
   /* allocates n elements of size size, initializing them to 0, and
@@ -101,8 +101,8 @@ void addEge(graph *G, int u, int v) {
 }
 
 void buildGraphs(graph *G, graph *GT) {
-  /* reads edges from stdin and adds them to the graph, 
-     and builds the transposed graph at the same time*/
+  /* reads edges from stdin and adds them to the graph G,
+     and builds the transposed graph Gᵀ at the same time*/
   int u, v;
   while (scanf("%d %d", &u, &v) == 2) {
     addEge(G, u, v);
@@ -110,7 +110,7 @@ void buildGraphs(graph *G, graph *GT) {
   }
 }
 
-//:::::::::::::::::::::::: list functions ::::::::::::::::::::::::://
+//:::::::::::::::::::::::: list functions :::::::::::::::::::::::::://
 
 list *newList() {
   /* creates an empty list */
@@ -143,7 +143,7 @@ list *listInsert (list *L, node *n) {
   return new;
 }
 
-//:::::::::::::::::::::::: dfs functions :::::::::::::::::::::::::://
+//::::::::::::::::::::::::: dfs functions :::::::::::::::::::::::::://
 
 void dfsVisit(graph *G, node *u, list **L, int *time) {
   /* visits the node u and its descendants in the graph G */
@@ -163,25 +163,26 @@ void dfsG(graph *G, list **L, int *time) {
   /* performs a depth-first search on the graph G */
   for (int i = 0; i < G->nNodes; i++) {
     node *n = G->vertices[i];
-    if (n->dTime < 0)  // n is undiscovered
+    if (n->dTime < 0)    // n is undiscovered in G
       dfsVisit(G, n, L, time);
   }
 }
 
-void dfsGT(graph *GT, list **L, int *time) {
-  /* performs a depth-first search on the transposed graph GT */
-  for (list *l = *L; l != NULL; l = l->next) {
+void dfsGT(graph *GT, list *L, int *time) {
+  /* performs a depth-first search on the transposed graph Gᵀ and
+     prints the strongly connected components of G on the fly */
+  for (list *l = L; l != NULL; l = l->next) {
     node *n = GT->vertices[l->n->id];
-    if (n->dTime < 0) {  // n is undiscovered
+    if (n->dTime < 0) {  // n is undiscovered in Gᵀ
       list *component = newList();
-      dfsVisit(GT, n, &component, time);
+      dfsVisit(GT, n, &component, time); 
       printList(component);
       freeList(component);
     }
   }
 }
 
-//::::::::::::::: topological sort and decomposition :::::::::::::://
+//::::::::::::::: topological sort and decomposition ::::::::::::::://
 
 list *topSort(graph *G) {
   /* performs a topological sort on the graph G */
@@ -192,24 +193,26 @@ list *topSort(graph *G) {
 }
 
 void decompose(graph *GT, list *L) {
-  /* decomposes the graph GT into strongly connected components */
+  /* decomposes the graph into strongly connected components 
+     using a topological sort on Gᵀ and a list L of nodes in
+     decreasing order of finishing time in G */
   printf("Strongly connected components:\n");
   int time = 0;
-  dfsGT(GT, &L, &time);
+  dfsGT(GT, L, &time);
 }
 
-//::::::::::::::::::::::: main function ::::::::::::::::::::::::::://
+//:::::::::::::::::::::::: main function ::::::::::::::::::::::::::://
 
 int main (int argc, char *argv[]) {
   int n;                    // n = number of nodes
   scanf("%d", &n); 
 
-  graph *G = newGraph(n);   // original graph
-  graph *GT = newGraph(n);  // transposed graph
+  graph *G = newGraph(n);   // original graph G
+  graph *GT = newGraph(n);  // transposed graph Gᵀ
   buildGraphs(G, GT);       // read edges from stdin
 
   list *L = topSort(G);     // topological sort
-  decompose(GT, L);         // strongly connected components
+  decompose(GT, L);         // get the strongly connected components
 
   freeGraph(G);
   freeGraph(GT);

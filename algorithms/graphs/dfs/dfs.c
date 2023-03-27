@@ -14,7 +14,7 @@
 
 typedef struct node {
   int id, dTime, fTime, parent, nbrCount, nbrCap;
-  int *neighbors;   // adjacency list
+  int *neighbors;   // adjacency list: node ids of neighbors
   char *type;       // edge type
   char color;       // white, gray, or black
 } node;              
@@ -24,7 +24,7 @@ typedef struct graph {
   node **vertices;  // array of pointers to nodes
 } graph;
 
-//::::::::::::::::::::: memory management ::::::::::::::::::::::::://
+//::::::::::::::::::::::: memory management :::::::::::::::::::::::://
 
 void *safeCalloc (int n, int size) {
   /* allocates n elements of size size, initializing them to 0, and
@@ -53,10 +53,8 @@ node *newNode(int id) {
   /* creates a node with given id */
   node *n = safeCalloc(1, sizeof(node));
   n->id = id;
-  n->fTime = -1;
   n->dTime = -1; 
   n->parent = -1; // -1 means no parent
-  n->neighbors = NULL;
   n->nbrCount = 0;
   n->nbrCap = 0;
   n->color = 'w';
@@ -85,23 +83,28 @@ void freeGraph(graph *G) {
   free(G);
 }
 
+void checkCap(node *n) {
+  /* checks whether the adjacency list of n is large enough */
+  if (n->nbrCount == n->nbrCap) {
+    n->nbrCap = (n->nbrCap == 0) ? 2 : 2 * n->nbrCap;
+    n->neighbors = safeRealloc(n->neighbors, n->nbrCap * sizeof(int));
+    n->type = safeRealloc(n->type, n->nbrCap * sizeof(char));
+  }
+}
+
 void buildGraph(graph *G) {
   /* reads edges from stdin and adds them to the graph */
   int u, v;
   while (scanf("%d %d", &u, &v) == 2) {
     node *n = G->vertices[u];
     G->nEdges++;
+    checkCap(n);
     // add v's id to u's adjacency list
-    if (n->nbrCount == n->nbrCap) {
-      n->nbrCap = (n->nbrCap == 0) ? 2 : 2 * n->nbrCap;
-      n->neighbors = safeRealloc(n->neighbors, n->nbrCap * sizeof(int));
-      n->type = safeRealloc(n->type, n->nbrCap * sizeof(char));
-    }
     n->neighbors[n->nbrCount++] = v;
   }
 }
 
-//:::::::::::::::::::::::: dfs functions :::::::::::::::::::::::::://
+//::::::::::::::::::::::::: dfs functions :::::::::::::::::::::::::://
 
 void printResults(graph *G) {
   /* prints the discovery and finish times of the nodes in the graph G 
@@ -155,7 +158,7 @@ void dfs(graph *G, int *time) {
   }
 }
 
-//::::::::::::::::::::::: main function ::::::::::::::::::::::::::://
+//::::::::::::::::::::::::: main function :::::::::::::::::::::::::://
 
 int main (int argc, char *argv[]) {
   int n, time = 0;  // n = number of nodes

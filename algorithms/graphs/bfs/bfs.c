@@ -11,7 +11,7 @@
 
 typedef struct node {
   int id, dist, parent, nbrCount, nbrCap;
-  int *neighbors;   // adjacency list
+  int *neighbors;   // adjacency list: node ids of neighbors
 } node;
 
 typedef struct queue {
@@ -24,7 +24,7 @@ typedef struct graph {
   node **vertices;  // array of pointers to nodes
 } graph;
 
-//::::::::::::::::::::: memory management ::::::::::::::::::::::::://
+//::::::::::::::::::::::: memory management :::::::::::::::::::::::://
 
 void *safeCalloc (int n, int size) {
   /* allocates n elements of size size, initializing them to 0, and
@@ -106,7 +106,6 @@ node *newNode(int id) {
   n->id = id;
   n->dist = 0;
   n->parent = -1; // -1 means no parent
-  n->neighbors = NULL;
   n->nbrCount = 0;
   n->nbrCap = 0;
   return n;
@@ -132,23 +131,27 @@ void freeGraph(graph *G) {
   free(G);
 }
 
+void checkCap(node *n) {
+  /* checks whether the adjacency list of n is large enough */
+  if (n->nbrCount == n->nbrCap) {
+    n->nbrCap = (n->nbrCap == 0) ? 2 : 2 * n->nbrCap;
+    n->neighbors = safeRealloc(n->neighbors, n->nbrCap * sizeof(int));
+  }
+}
+
 void buildGraph(graph *G) {
   /* reads edges from stdin and adds them to the graph */
   int u, v;
   while (scanf("%d %d", &u, &v) == 2) {
     node *n = G->vertices[u];
     G->nEdges++;
+    checkCap(n);
     // add v's id to u's adjacency list
-    if (n->nbrCount == n->nbrCap) {
-      // if the adjacency list is full, double its size
-      n->nbrCap = (n->nbrCap == 0) ? 2 : 2 * n->nbrCap;
-      n->neighbors = safeRealloc(n->neighbors, n->nbrCap * sizeof(int));
-    }
     n->neighbors[n->nbrCount++] = v;
   }
 }
 
-//:::::::::::::::::::::::: bfs functions :::::::::::::::::::::::::://
+//::::::::::::::::::::::::: bfs functions :::::::::::::::::::::::::://
 
 void printPath(graph *G, int s, int d) {
   /* recursively prints the path from s to d */
@@ -190,7 +193,7 @@ void bfs(graph *G, int s) {
   freeQueue(q);
 }
 
-//::::::::::::::::::::::: main function ::::::::::::::::::::::::::://
+//::::::::::::::::::::::::: main function :::::::::::::::::::::::::://
 
 int main (int argc, char *argv[]) {
   int n, source, dest;  // n = number of vertices
