@@ -1,8 +1,8 @@
 /* file: mst-1.c
 * author: David De Potter
 * description: implements Kruskal's algorithm to compute the minimum
-*   the minimum spanning tree of a graph. For this, we use a disjoint
-*   set data structure to keep track of the connected components.
+*   spanning tree of a graph. For this, we use a disjoint set data
+*   structure to keep track of the connected components.
 *   Path compression and union by rank are used to improve the
 *   performance of the disjoint set operations.
 * complexity: O(m log n) where m is the number of edges and n is the
