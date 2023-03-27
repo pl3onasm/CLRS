@@ -20,11 +20,11 @@
 
 ## Notes
 
-This repository grew from my work for the course AADS at the UG. The textbook used for this course is *Introduction to Algorithms* by Thomas H. Cormen, et al. which will be referred to as CLRS. The third edition of this textbook will be referred to as CLRS³, while the fourth edition will be referred to as CLRS⁴.
+This repository grew from my work for the course AADS at the UG. The textbook used for this course is *Introduction to Algorithms* by Thomas H. Cormen, et al. The third edition of this textbook will be referred to as CLRS³, and the fourth edition as CLRS⁴.
 
-The repository contains my notes and implementations in C of the algorithms and data structures discussed in this textbook. Some of the problems are taken from the exercises in the textbook, while others are meant as examples of how the presented algorithms can be used to solve other problems.  
+The aim is to implement all the algorithms and data structures discussed in this textbook, along with a few other algorithms and data structures that are not discussed or merely referenced. All implementations will be in C, the language used in the course and the most basic one, without any fancy features which would make the code less readable. Implementations will follow the pseudocode in the textbook as closely as possible.
 
-All solutions to the textbook's exercises can be found [here](https://walkccc.me/CLRS/), although these are not always optimal or correct.  
+All solutions to the textbook's exercises can be found on [this site](https://walkccc.me/CLRS/), although these are not always optimal or correct.  
 
 ## References
 

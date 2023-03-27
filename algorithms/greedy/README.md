@@ -20,3 +20,4 @@ There are two key properties of a problem that suggest the use of a greedy algor
 | Chap 16.2 | Chap 15.2 | [Fractional Knapsack](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy/fract-knapsack)
 | Chap 16.3 | Chap 15.3 | [Huffman Codes](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy/huffman)
 | Prob 16-1 | Prob 15-1 | [Coin Changing](https://github.com/pl3onasm/AADS/tree/main/algorithms/greedy/coin-changing)
+| Chap 23 | Chap 21 | [Minimum spanning trees](https://github.com/pl3onasm/AADS/tree/main/algorithms/graphs/mst)
