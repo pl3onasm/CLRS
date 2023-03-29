@@ -77,7 +77,7 @@ node *newNode(int id) {
   n->nbrCount = 0;
   n->nbrCap = 0;
   n->mstNode = 0;     // 0 means not in the MST yet
-  n->key = 100;       // initialize key to infinity
+  n->key = DBL_MAX;   // intialize key to infinity
   return n;
 }
 
@@ -167,7 +167,7 @@ void link(heap *H, node *u, node *v) {
 
 void insertNode(heap *H, node *u) {
   /* inserts a node into the heap */
-  u->degree = 0;
+  u->degree = 0;                
   u->mark = 0;
   u->child = NULL;              
   u->parentH = NULL;
@@ -341,7 +341,7 @@ void printMST(graph *G) {
   for (int i = 0; i < G->nNodes; i++) {
     node *n = G->vertices[i];
     if (n->parentG != -1 && n->mstNode == 1) {
-      // reconstruct the edge (u, v, w) as (v.gParent, v.id, v.key)
+      // reconstruct the edge (u, v, w) as (v.parentG, v.id, v.key)
       printf("(%d, %d, %.2lf)\n", n->parentG, n->id, n->key);
       totalWeight += n->key;
     } 
