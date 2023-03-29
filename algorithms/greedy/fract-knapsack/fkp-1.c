@@ -1,5 +1,7 @@
 /* file: fkp-1.c
    author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
    description: fractional knapsack problem (FKP)
       using a greedy algorithm and a max heap (priority queue)
    time complexity: O(nlogn), where n is the number of items

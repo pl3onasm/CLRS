@@ -1,5 +1,7 @@
 /* file: fkp-2.c
    author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
    description: fractional knapsack problem (FKP)
       using a greedy approach and a divide-and-conquer algorithm
    time complexity: O(n), where n is the number of items

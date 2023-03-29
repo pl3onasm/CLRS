@@ -1,11 +1,13 @@
 /* file: closestpair-1.c
-* author: David De Potter
-* description: closest pair of points using divide and conquer
-* This version is in O(nlog²n), since we only presort on 
-* x-coordinates and sort the strip on y-coordinates for each 
-* recursive call.
-* We find T(n) = 2T(n/2) + Θ(nlogn) = Θ(nlog²n) by case 2 
-* of the master theorem.
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: closest pair of points using divide and conquer
+   time complexity: O(nlog²n), since we only presort on 
+     x-coordinates and sort the strip on y-coordinates for each 
+     recursive call.
+     We find T(n) = 2T(n/2) + Θ(nlogn) = Θ(nlog²n) by case 2 
+     of the master theorem.
 */ 
 
 #include <stdio.h>

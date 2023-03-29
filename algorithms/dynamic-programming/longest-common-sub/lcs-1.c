@@ -1,16 +1,18 @@
 /* file: lcs-1.c
-* author: David De Potter
-* description: longest common subsequence
-* naive recursive implementation
-* As the example strings get longer, the running time 
-* of this algorithm grows exponentially.
-* Note that we need to reverse the LCS string at the end,
-* because we filled it in reverse order: we can't get around
-* this, because we are working our way from the end of the
-* strings to the beginning and don't know the length of the
-* LCS in advance. In the second version, we'll
-* see a more natural implementation by working from the
-* beginning of the strings to the end.
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: longest common subsequence
+     naive recursive implementation
+     As the example strings get longer, the running time 
+     of this algorithm grows exponentially.
+   Note: we need to reverse the LCS string at the end,
+     because we filled it in reverse order: we can't get around
+     this, because we are working our way from the end of the
+     strings to the beginning and don't know the length of the
+     LCS in advance. In the second version, we'll get to
+     a more natural implementation by working our way up from 
+     the start of the strings to the end.
 */ 
 
 #include <stdlib.h>

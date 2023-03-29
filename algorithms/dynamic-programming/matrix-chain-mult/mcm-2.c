@@ -1,15 +1,17 @@
 /* file: mcm-2.c
-  author: David De Potter
-  description:
-  Matrix chain multiplication using top-down approach 
-  with memoization.
-  We use an example where we want to compute the minimal
-  cost of the matrix chain multiplication A₁ * ... * A₂₀.
-  The dimensions of the matrices are: A₁ = 30x35, 
-  A₂ = 35x15, A₃ = 15x5, A₄ = 5x10, ... , A₂₀ = 40x50.
-  Note that it takes a lot less time to compute the
-  same minimal cost for this example as compared to
-  the naive recursion approach.
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description:
+    Matrix chain multiplication using top-down approach 
+    with memoization.
+    We use an example where we want to compute the minimal
+    cost of the matrix chain multiplication A₁ * ... * A₂₀.
+    The dimensions of the matrices are: A₁ = 30x35, 
+    A₂ = 35x15, A₃ = 15x5, A₄ = 5x10, ... , A₂₀ = 40x50.
+    Note that it takes a lot less time to compute the
+    same minimal cost for this example as compared to
+    the naive recursion approach.
 */
 
 #include <stdio.h>

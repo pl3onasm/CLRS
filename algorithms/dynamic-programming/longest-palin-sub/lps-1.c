@@ -1,8 +1,9 @@
 /* file: lps-1.c
    author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
    description: Longest Palindromic Subsequence
-   This is a naive recursive implementation. 
-   It is exponential in time.
+     This is a naive recursive implementation. 
    If you only want to compute the length of the LPS,
    you can turn computeLPS into an int function and
    rewrite the code without the need for a

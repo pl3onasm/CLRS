@@ -1,5 +1,7 @@
 /* file: asp-3.c
    author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
    description: activity selection problem (ASP)
                 using an iterative top-down greedy algorithm
    assumptions: the activities are sorted in increasing order of finish time

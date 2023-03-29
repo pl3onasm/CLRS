@@ -1,5 +1,7 @@
 /* file: mmp-2.c
    author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
    description: Strassen's matrix multiplication algorithm
                 generalized to matrices of any size
    time complexity: O(n^2.8074)

@@ -1,7 +1,9 @@
 /* file: knapsack-3.c
-* author: David De Potter
-* description: 0-1 knapsack problem
-* bottom-up dynamic programming
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: 0-1 knapsack problem
+     bottom-up dynamic programming
 */ 
  
 #include <stdlib.h>

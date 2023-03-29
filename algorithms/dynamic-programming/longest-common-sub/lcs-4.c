@@ -1,10 +1,12 @@
 /* file: lcs-4.c
-* author: David De Potter
-* description: longest common subsequence
-* bottom-up dynamic programming implementation
-* Notice that we can now work with sequences that  
-* are much longer than in the naive recursive 
-* implementation, thanks to the O(mn) running time.
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: longest common subsequence
+     bottom-up dynamic programming implementation
+     Notice that we can now work with sequences that  
+     are much longer than in the naive recursive 
+     implementation, thanks to the O(mn) running time.
 */ 
 
 #include <stdlib.h>

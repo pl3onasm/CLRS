@@ -1,7 +1,9 @@
 /* file: rba-2.c
-* author: David De Potter
-* description: string matching using the Rabin-Karp algorithm
-* assumption: length of the alphabet is 256 (ASCII)
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: string matching using the Rabin-Karp algorithm
+   assumption: length of the alphabet is 256 (ASCII)
 */
 
 #include <stdio.h>

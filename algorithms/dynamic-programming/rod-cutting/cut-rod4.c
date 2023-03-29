@@ -1,8 +1,10 @@
 /* file: cut-rod4.c
-* author: David De Potter
-* description: extended version to also print 
-* the optimal solution.
-* The time complexity is in O(n²).
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: extended version to also print 
+     the optimal solution.
+   The time complexity is in O(n²).
 */ 
 
 #include <stdio.h>

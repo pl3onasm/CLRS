@@ -1,29 +1,34 @@
 /* file: mst-1.c
-* author: David De Potter
-* description: implements Kruskal's algorithm to compute the minimum
-*   spanning tree of a graph. For this, we use a disjoint set data
-*   structure to keep track of the connected components.
-*   Path compression and union by rank are used to improve the
-*   performance of the disjoint set operations.
-* complexity: O(m log n) where m is the number of edges and n is the
-*   number of nodes.
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: implements Kruskal's algorithm to compute the minimum
+     spanning tree of a graph. For this, we use a disjoint set data
+     structure to keep track of the connected components.
+     Path compression and union by rank are used to improve the
+     performance of the disjoint set operations.
+   complexity: O(m log n) where m is the number of edges and n is the
+     number of nodes.
 */
 
 #include <stdio.h>
 #include <stdlib.h>
 
+//:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
+
 typedef struct set {
-  int parent, rank;
+  int parent, rank;     // parent and rank of the set
 } set;
 
 typedef struct edge {
-  int u, v;  // u and v are the endpoints of the edge
-  double weight;
+  int u, v;             // u and v are the endpoints of the edge
+  double weight;        // weight of the edge
 } edge;
 
 typedef struct graph {
-  int nNodes, nEdges, edgeCap;
-  edge **edges;  // array of pointers to edges
+  int nNodes;           // number of nodes in the graph 
+  int nEdges, edgeCap;  // number of edges and capacity
+  edge **edges;         // array of pointers to edges
 } graph;
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
@@ -40,7 +45,7 @@ void *safeCalloc (int n, int size) {
 }
 
 void *safeRealloc (void *ptr, int newSize) {
-  // reallocates memory and checks whether the allocation was successful
+  /* reallocates memory and checks whether the allocation was successful */
   ptr = realloc(ptr, newSize);
   if (ptr == NULL) {
     printf("Error: realloc(%d) failed. Out of memory?\n", newSize);
@@ -154,7 +159,7 @@ edge **mstKruskal(graph *G) {
   edge **mst = safeCalloc(n, sizeof(edge*));
   set **sets = safeCalloc(n, sizeof(set*));
 
-  // initialize the n sets
+  // initialize n sets
   for (int i = 0; i < n; i++) sets[i] = newSet(i);
 
   // sort the edges by increasing weight
@@ -189,11 +194,11 @@ void printMST(graph *G, edge **mst) {
 //::::::::::::::::::::::::: main function :::::::::::::::::::::::::://
 
 int main (int argc, char *argv[]) {
-  int n;                    // n = number of nodes
+  int n;                       // n = number of nodes
   scanf("%d", &n); 
 
   graph *G = newGraph(n); 
-  buildGraph(G);            // read edges from stdin
+  buildGraph(G);               // read edges from stdin
 
   edge **mst = mstKruskal(G);  // compute minimum spanning tree
 

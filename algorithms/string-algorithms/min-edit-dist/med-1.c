@@ -1,7 +1,9 @@
 /* file: med-1.c
-* author: David De Potter
-* description: minimum edit distance
-*   bottom-up dynamic programming (with path reconstruction)  
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: minimum edit distance
+     bottom-up dynamic programming with path reconstruction 
 */
 
 #include <stdio.h>

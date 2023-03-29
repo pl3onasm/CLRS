@@ -1,5 +1,7 @@
 /* file: msp-3.c
    author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
    description: Maximum subarray problem using 
     an iterative linear approach
    time complexity: O(n)

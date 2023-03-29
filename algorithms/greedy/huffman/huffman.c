@@ -1,9 +1,11 @@
 /* file: huffman.c
    author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
    description: Huffman coding
-    using a greedy approach and a minimum priority queue
-  time complexity: O(n log n), where n is the number 
-    of characters in the input
+     using a greedy approach and a minimum priority queue
+   time complexity: O(n log n), where n is the number 
+     of characters in the input
 */ 
 
 #include <stdio.h>

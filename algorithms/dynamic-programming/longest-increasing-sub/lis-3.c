@@ -1,7 +1,9 @@
 /* file: lis-3.c
-* author: David De Potter
-* description: longest increasing subsequence
-* bottom-up dynamic programming, optimized
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: longest increasing subsequence
+     bottom-up dynamic programming, optimized
 */ 
 
 #include <stdlib.h>

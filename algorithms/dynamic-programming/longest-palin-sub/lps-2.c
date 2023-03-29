@@ -1,7 +1,9 @@
 /* file: lps-2.c
-* author: David De Potter
-* description: longest palindromic subsequence
-* bottom-up dynamic programming implementation
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: longest palindromic subsequence
+     bottom-up dynamic programming implementation
 */ 
 
 #include <stdlib.h>

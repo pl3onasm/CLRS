@@ -1,16 +1,10 @@
 /* file: lcs-2.c
-* author: David De Potter
-* description: longest common subsequence
-* This is a more natural implementation of the naive recursive 
-* solution. 
-* The subproblems no longer consist of decreasing the length of
-* the sequences, but of increasing the starting position in the
-* strings. This makes the code more natural: 
-* we can work with increasing char pointers and stop when we reach
-* the null character, and we don't need to reverse the LCS string
-* at the end.
-* Note that we still need to keep track of the length of the LCS
-* in order to be able make a copy of the LCS string.
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: longest common subsequence
+     This is a more natural implementation of the naive  
+     recursive solution. 
 */ 
 
 #include <stdlib.h>

@@ -1,12 +1,14 @@
 /* file: mst-2.c
-* author: David De Potter
-* description: implements Prim's algorithm to compute the minimum
-*   spanning tree of a graph. For this, we use a min priority queue 
-*   to keep track of the edges with the smallest weight. In this
-*   version, we use a binary min heap to implement the priority 
-*   queue.
-* complexity: O(m log n) where m is the number of edges and n is the
-*   number of nodes.
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: implements Prim's algorithm to compute the minimum
+     spanning tree of a graph. For this, we use a min priority queue 
+     to keep track of the edges with the smallest weight. In this
+     version, we use a binary min heap to implement the priority 
+     queue.
+   complexity: O(m log n) where m is the number of edges 
+     and n is the number of nodes.
 */
 
 #include <stdio.h>
@@ -17,22 +19,28 @@
 #define RIGHT(i) (2*i + 2)
 #define PARENT(i) ((i-1)/2)
 
+//:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
+
 typedef struct node {
-  int id, parent, nbrCount, nbrCap, mstNode;
-  double key;       // used to keep track of the minimum weight
-  int *neighbors;   // adjacency list: node ids of neighbors
-  double *weights;  // corresponding weights of edges to neighbors
-  int heapIndex;    // node index in the heap
+  // graph-related fields
+  int id, parent;         // node id and parent id
+  int nbrCount, nbrCap;   // number of neighbors and adj list capacity
+  int mstNode;            // 1 if node is in the MST, 0 otherwise
+  int *neighbors;         // adjacency list: node ids of neighbors
+  double *weights;        // corresponding weights of edges to neighbors
+  // heap-related fields
+  double key;             // keeps track of the minimum weight
+  int heapIndex;          // node index in the heap
 } node;
 
 typedef struct graph {
-  int nNodes, nEdges;
-  node **vertices;  // array of pointers to nodes
+  int nNodes, nEdges;     // number of nodes and edges in the graph
+  node **vertices;        // array of pointers to nodes
 } graph;
 
 typedef struct heap {
-  node **nodes;        // array of pointers to nodes
-  int nNodes, nodeCap; // number of nodes and capacity
+  node **nodes;           // array of pointers to nodes
+  int nNodes, nodeCap;    // number of nodes and capacity
 } heap;
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
@@ -49,7 +57,7 @@ void *safeCalloc (int n, int size) {
 }
 
 void *safeRealloc (void *ptr, int newSize) {
-  // reallocates memory and checks whether the allocation was successful
+  /* reallocates memory and checks whether the allocation was successful */
   ptr = realloc(ptr, newSize);
   if (ptr == NULL) {
     printf("Error: realloc(%d) failed. Out of memory?\n", newSize);
@@ -108,8 +116,7 @@ void updateAdjList(node *n, int v, double w) {
   /* adds the edge (n,v) to the adjacency list of n */
   checkCap(n);
   n->neighbors[n->nbrCount] = v;
-  n->weights[n->nbrCount] = w;
-  n->nbrCount++;
+  n->weights[n->nbrCount++] = w;
 }
 
 void buildGraph(graph *G) {
@@ -206,7 +213,7 @@ void mstPrim(graph *G) {
       // iterate over u's neighbors and update their keys
       node *v = G->vertices[u->neighbors[i]];  
       if (!v->mstNode && u->weights[i] < v->key) {
-        v->parent = u->id;   // set the v's parent to u
+        v->parent = u->id;   // set v's parent to u
         decreaseKey(hp, v->heapIndex, u->weights[i]);
       }
     }

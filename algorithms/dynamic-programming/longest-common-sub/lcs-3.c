@@ -1,17 +1,13 @@
 /* file: lcs-3.c
-* author: David De Potter
-* description: longest common subsequence
-* Top-down approach with memoization
-* Time complexity: O(nm)
-* Space complexity: O(nm)
-* You could also choose to work as in lcs-2.c, i.e. working from the
-* start of the strings. This won't make the code easier in this case 
-* as we still need to work with indices to be able to fill the 
-* memoization table, and we still need to reconstruct the lcs afterwards
-* from the table, so we might as well work from the end of the strings.
-*
-* Note that we can now work with sequences that are much longer than
-* in the naive recursive implementation, thanks to the O(mn) running time.
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: longest common subsequence
+   Top-down approach with memoization
+   Time complexity: O(nm)
+   Space complexity: O(nm)
+   Note that we can now work with sequences that are much longer than
+   in the naive recursive implementation, thanks to the O(mn) running time.
 */ 
 
 #include <stdlib.h>

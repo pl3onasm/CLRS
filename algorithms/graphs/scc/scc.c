@@ -1,26 +1,32 @@
 /* file: scc.c
-* author: David De Potter
-* description: computes the strongly connected 
-*              components of a directed graph
-* complexity: O(n+m)
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: computes the strongly connected 
+     components of a directed graph
+   complexity: O(n+m)
 */
 
 #include <stdio.h>
 #include <stdlib.h>
 
+//:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
+
 typedef struct node {
-  int id, dTime, fTime, parent, nbrCount, nbrCap;
-  int *neighbors;   // adjacency list: node ids of neighbors
+  int id, parent;       // node id and parent id
+  int nbrCount, nbrCap; // number of neighbors and adj list capacity
+  int dTime, fTime;     // discovery and finish times
+  int *neighbors;       // adjacency list: node ids of neighbors
 } node;              
 
 typedef struct graph {
-  int nNodes, nEdges;
-  node **vertices;  // array of pointers to nodes
+  int nNodes, nEdges;   // number of nodes and edges in the graph
+  node **vertices;      // array of pointers to nodes
 } graph;
 
 typedef struct list {
-  node *n;
-  struct list *next;
+  node *n;              // pointer to node
+  struct list *next;    // pointer to next node in the list
 } list;
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
@@ -37,7 +43,7 @@ void *safeCalloc (int n, int size) {
 }
 
 void *safeRealloc (void *ptr, int newSize) {
-  // reallocates memory and checks whether the allocation was successful
+  /* reallocates memory and checks whether the allocation was successful */
   ptr = realloc(ptr, newSize);
   if (ptr == NULL) {
     printf("Error: realloc(%d) failed. Out of memory?\n", newSize);

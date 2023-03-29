@@ -1,10 +1,12 @@
 /* file: cut-rod1.c
-* author: David De Potter
-* description:
-* This is a naive recursive implementation of 
-* rod cutting. By induction we can prove T(n) = 2ⁿ, 
-* where n is the length of the rod.
-* The time complexity is therefore in O(2ⁿ).
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description:
+    This is a naive recursive implementation of 
+    rod cutting. By induction we can prove T(n) = 2ⁿ, 
+    where n is the length of the rod.
+    The time complexity is therefore in O(2ⁿ).
 */ 
 
 #include <stdio.h>

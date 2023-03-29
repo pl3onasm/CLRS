@@ -1,7 +1,9 @@
 /* file: knapsack-1.c
-* author: David De Potter
-* description: 0-1 knapsack problem
-* naive recursive implementation
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: 0-1 knapsack problem
+     naive recursive implementation
 */ 
  
 #include <stdlib.h>

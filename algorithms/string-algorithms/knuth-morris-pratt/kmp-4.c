@@ -1,9 +1,11 @@
 /* file: kmp-4.c
-* author: David De Potter
-* description: string matching using the Knuth-Morris-Pratt algorithm
-* time complexity: O(m + n) since the prefix function is computed in O(m) time
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: string matching using the Knuth-Morris-Pratt algorithm
+   time complexity: O(m + n) since the prefix function is computed in O(m) time
      and the matching is done in O(n) time
-* assumption: length of the alphabet is 256 (ASCII)
+   assumption: length of the alphabet is 256 (ASCII)
 */
 
 #include <stdio.h>

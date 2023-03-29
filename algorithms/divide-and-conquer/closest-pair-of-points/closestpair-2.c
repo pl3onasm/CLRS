@@ -1,10 +1,12 @@
 /* file: closestpair-2.c
-* author: David De Potter
-* description: closest pair of points using divide and conquer
-* This version is in O(nlogn), which is achieved by presorting
-* not only on x-coordinates but also on y-coordinates. 
-* We find T(n) = 2T(n/2) + Θ(n) = Θ(nlogn) by case 2 of 
-* the master theorem.
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: closest pair of points using divide and conquer
+   time complexity: O(nlogn), which is achieved by presorting
+     not only on x-coordinates but also on y-coordinates. 
+     We find T(n) = 2T(n/2) + Θ(n) = Θ(nlogn) by case 2 of 
+     the master theorem.
 */ 
 
 #include <stdio.h>

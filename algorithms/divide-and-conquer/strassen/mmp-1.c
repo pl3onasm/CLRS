@@ -1,5 +1,7 @@
 /* file: mmp-1.c
    author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
    description: standard matrix multiplication for input
     matrices of arbitrary size, using a divide-and-conquer approach
    time complexity: O(n³), where n is the padding size

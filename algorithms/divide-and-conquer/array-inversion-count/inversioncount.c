@@ -1,10 +1,12 @@
 /* file: inversioncount.c
    author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
    description: 
-   We want to find the number of inversions in the array. 
-   For this we simply sort the array with mergesort, and count the
-   number of inversions while merging. This approach gives a  
-   solution in O(nlogn), since it's just mergesort with a counter.
+     We want to find the number of inversions in the array. 
+     For this we simply sort the array with mergesort, and count the
+     number of inversions while merging. This approach gives a  
+     solution in O(nlogn), since it's just mergesort with a counter.
 */
 
 #include <stdio.h>

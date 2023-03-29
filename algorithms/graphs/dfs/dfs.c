@@ -1,27 +1,32 @@
 /* file: dfs.c
-* author: David De Potter
-* description: depth-first search,
-*   with a queue implemented as a circular array and a graph
-*   implemented as an array of nodes with adjacency lists
-* assumption: nodes are numbered 0..n-1
-* input: directed graph 
-* output: discovery and finish times for each node and
-*         the edge types (tree, back, forward, cross)
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: depth-first search,
+     with a queue implemented as a circular array and a graph
+     implemented as an array of nodes with adjacency lists
+   assumption: nodes are numbered 0..n-1
+   input: directed graph 
+   output: discovery and finish times for each node and
+           the edge types (tree, back, forward, cross)
 */
 
 #include <stdio.h>
 #include <stdlib.h>
 
+//:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 typedef struct node {
-  int id, dTime, fTime, parent, nbrCount, nbrCap;
-  int *neighbors;   // adjacency list: node ids of neighbors
-  char *type;       // edge type
-  char color;       // white, gray, or black
+  int id, parent;         // node id and parent id
+  int nbrCount, nbrCap;   // number of neighbors and adj list capacity
+  int dTime, fTime;       // discovery and finish times
+  int *neighbors;         // adjacency list: node ids of neighbors
+  char *type;             // edge type
+  char color;             // white, gray, or black
 } node;              
 
 typedef struct graph {
-  int nNodes, nEdges;
-  node **vertices;  // array of pointers to nodes
+  int nNodes, nEdges;     // number of nodes and edges in the graph
+  node **vertices;        // array of pointers to nodes
 } graph;
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
@@ -38,7 +43,7 @@ void *safeCalloc (int n, int size) {
 }
 
 void *safeRealloc (void *ptr, int newSize) {
-  // reallocates memory and checks whether the allocation was successful
+  /* reallocates memory and checks whether the allocation was successful */
   ptr = realloc(ptr, newSize);
   if (ptr == NULL) {
     printf("Error: realloc(%d) failed. Out of memory?\n", newSize);

@@ -1,10 +1,12 @@
 /* file: knapsack-2.c
-* author: David De Potter
-* description: 0-1 knapsack problem
-* top-down dynamic programming with memoization
-* note that we can now use an int function instead
-* of a void function, since we use a table from which
-* we can retrieve the items that were included in the knapsack
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: 0-1 knapsack problem
+     top-down dynamic programming with memoization
+     note that we can now use an int function instead
+     of a void function, since we use a table from which
+     we can retrieve the items that were included in the knapsack
 */ 
  
 #include <stdlib.h>

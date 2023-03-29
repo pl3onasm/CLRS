@@ -1,18 +1,21 @@
 /* file: polyinversioncount.c
    author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
    description: 
-   We want to find the number of inversions in an array, which
-   may contain any data type. For this we use the polymorphic
-   version of mergesort. 
-   The idea of the polymorhic version is to use a function 
-   pointer to a comparison function, which is then passed to
-   the inversion count function so as to be able to compare 
-   elements.
-   This way, we can use the same inversion count function for 
-   any data type, as long as there is a comparison function 
-   for that data type. 
-   This approach gives a solution in O(nlogn), since it's 
-   essentially just mergesort with a counter.
+     We want to find the number of inversions in an array, which
+     may contain any data type. For this we use the polymorphic
+     version of mergesort. 
+   note: 
+     The idea of the polymorhic version is to use a function 
+     pointer to a comparison function, which is then passed to
+     the inversion count function so as to be able to compare 
+     elements.
+     This way, we can use the same inversion count function for 
+     any data type, as long as there is a comparison function 
+     for that data type. 
+   time complexity: O(nlogn), since it's 
+     essentially just mergesort with a counter.
 */
 
 #include <stdlib.h>

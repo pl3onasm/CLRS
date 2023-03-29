@@ -1,12 +1,14 @@
 /* file: mcm-3.c
-  author: David De Potter
-  description:
-  Matrix chain multiplication using dynamic programming, 
-  Bottom-up approach
-  We use an example where we want to compute the minimal
-  cost of the matrix chain multiplication A₁ * ... * A₆.
-  The dimensions of the matrices are: A₁ = 30x35, 
-  A₂ = 35x15, A₃ = 15x5, A₄ = 5x10, A₅ = 10x20, A₆ = 20x25
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description:
+    Matrix chain multiplication using dynamic programming, 
+    Bottom-up approach
+    We use an example where we want to compute the minimal
+    cost of the matrix chain multiplication A₁ * ... * A₆.
+    The dimensions of the matrices are: A₁ = 30x35, 
+    A₂ = 35x15, A₃ = 15x5, A₄ = 5x10, A₅ = 10x20, A₆ = 20x25
 */
 
 #include <stdio.h>

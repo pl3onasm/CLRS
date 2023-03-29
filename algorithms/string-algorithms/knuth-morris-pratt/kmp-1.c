@@ -1,10 +1,12 @@
 /* file: kmp-1.c
-* author: David De Potter
-* description: string matching using an automaton,
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: string matching using an automaton,
      i.e. a FSM with a transition function
-* time complexity: automaton construction is in O(m³d) 
-    and matching time is in O(n) time
-* assumption: length of the alphabet is 256 (ASCII)
+   time complexity: automaton construction is in O(m³d) 
+     and matching time is in O(n) time
+   assumption: length of the alphabet is 256 (ASCII)
 */
 
 #include <stdio.h>
