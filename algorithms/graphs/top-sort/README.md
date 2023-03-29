@@ -2,7 +2,7 @@
 
 ## Problem
 
-Given an acyclic directed graph (DAG), find a topological sort of its vertices. A topological sort of a directed graph is a linear ordering of its vertices such that for every directed edge $(u,v)$ from vertex $u$ to vertex $v$, $u$ comes before $v$ in the ordering. We can think of a topological sort as a sort of flattened DAG, where the edges are removed and the vertices are ordered in such a way that the dependencies between the vertices are preserved. Note that a topological sort is not necessarily unique.
+Given a directed acyclic graph (DAG), find a topological sort of its vertices. A topological sort of a directed graph is a linear ordering of its vertices such that for every directed edge $(u,v)$ from vertex $u$ to vertex $v$, $u$ comes before $v$ in the ordering. We can think of a topological sort as a sort of flattened DAG, where the edges are removed and the vertices are ordered in such a way that the dependencies between the vertices are preserved. Note that a topological sort is not necessarily unique.
 
 ## Solution
 

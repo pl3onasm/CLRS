@@ -1,27 +1,33 @@
 /* file: bfs.c
-* author: David De Potter
-* description: breadth-first search 
-*   with a queue implemented as a circular array and a graph
-*   implemented as an array of nodes with adjacency lists
-* assumption: nodes are numbered 0..n-1
+   author: David De Potter
+   email: pl3onasm@gmail.com
+   license: MIT, see LICENSE file in repository root folder
+   description: breadth-first search 
+     with a queue implemented as a circular array and a graph
+     implemented as an array of nodes with adjacency lists
+   assumption: nodes are numbered 0..n-1
 */
 
 #include <stdio.h>
 #include <stdlib.h>
 
+//:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
+
 typedef struct node {
-  int id, dist, parent, nbrCount, nbrCap;
-  int *neighbors;   // adjacency list: node ids of neighbors
+  int id, parent;         // node id and parent id
+  int nbrCount, nbrCap;   // number of neighbors and adj list capacity
+  int dist;               // distance from source
+  int *neighbors;         // adjacency list: node ids of neighbors
 } node;
 
 typedef struct queue {
-  int front, back, size; 
-  int *array;
+  int front, back, size;  // front and back of the queue, and its size
+  int *array;             // array of elements in the queue
 } queue;
 
 typedef struct graph {
-  int nNodes, nEdges;
-  node **vertices;  // array of pointers to nodes
+  int nNodes, nEdges;     // number of nodes and edges in the graph
+  node **vertices;        // array of pointers to nodes
 } graph;
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
@@ -38,7 +44,7 @@ void *safeCalloc (int n, int size) {
 }
 
 void *safeRealloc (void *ptr, int newSize) {
-  // reallocates memory and checks whether the allocation was successful
+  /* reallocates memory and checks whether the allocation was successful */
   ptr = realloc(ptr, newSize);
   if (ptr == NULL) {
     printf("Error: realloc(%d) failed. Out of memory?\n", newSize);
@@ -64,10 +70,10 @@ queue *newQueue(int n) {
   return Q;
 }
 
-void freeQueue(queue *q) {
+void freeQueue(queue *Q) {
   /* frees all memory allocated for the queue */
-  free(q->array);
-  free(q);
+  free(Q->array);
+  free(Q);
 }
 
 void doubleQueueSize(queue *Q) {
