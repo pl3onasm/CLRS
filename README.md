@@ -29,5 +29,5 @@ All solutions to the textbook's exercises can be found on [this site](https://wa
 
 ## References
 
-CLRS³: Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2009). Introduction to algorithms. MIT press.
+CLRS³: Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2009). Introduction to algorithms. MIT press.  
 CLRS⁴: Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2022). Introduction to algorithms. MIT press.  
