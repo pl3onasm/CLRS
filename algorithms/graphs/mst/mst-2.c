@@ -15,8 +15,8 @@
 #include <stdlib.h>
 #include <float.h>
 
-#define LEFT(i)  (2*i + 1)
-#define RIGHT(i) (2*i + 2)
+#define LEFT(i)   (2*i + 1)
+#define RIGHT(i)  (2*i + 2)
 #define PARENT(i) ((i-1)/2)
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
@@ -38,7 +38,7 @@ typedef struct graph {
   node **vertices;        // array of pointers to nodes
 } graph;
 
-typedef struct heap {
+typedef struct heap {     // binary min heap
   node **nodes;           // array of pointers to nodes
   int nNodes, nodeCap;    // number of nodes and capacity
 } heap;
@@ -112,11 +112,11 @@ void freeGraph(graph *G) {
   free(G);
 }
 
-void updateAdjList(node *n, int v, double w) {
+void updateAdjList(node *u, int v, double w) {
   /* adds the edge (n,v) to the adjacency list of n */
-  checkCap(n);
-  n->neighbors[n->nbrCount] = v;
-  n->weights[n->nbrCount++] = w;
+  checkCap(u);
+  u->neighbors[u->nbrCount] = v;
+  u->weights[u->nbrCount++] = w;
 }
 
 void buildGraph(graph *G) {
@@ -146,56 +146,56 @@ heap *newHeap(graph *G) {
   return hp;
 }
 
-void freeHeap (heap *hp) {
+void freeHeap (heap *H) {
   /* frees the heap */
-  free(hp->nodes);
-  free(hp);
+  free(H->nodes);
+  free(H);
 }
 
-void swap (heap *hp, int i, int j) {
+void swap (heap *H, int i, int j) {
   /* swaps the nodes at indices i and j in the heap */
-  node *tmp = hp->nodes[i];
-  hp->nodes[i] = hp->nodes[j];
-  hp->nodes[j] = tmp;
+  node *tmp = H->nodes[i];
+  H->nodes[i] = H->nodes[j];
+  H->nodes[j] = tmp;
   // update the heapIndex fields
-  hp->nodes[i]->heapIndex = i;
-  hp->nodes[j]->heapIndex = j;
+  H->nodes[i]->heapIndex = i;
+  H->nodes[j]->heapIndex = j;
 }
 
-void minHeapify(heap *hp, int i){
+void minHeapify(heap *H, int i){
   /* restores the min heap property in a top-down manner */
   int min = i, l = LEFT(i), r = RIGHT(i);
-  if (l < hp->nNodes && hp->nodes[l]->key < hp->nodes[i]->key)
+  if (l < H->nNodes && H->nodes[l]->key < H->nodes[i]->key)
     min = l;
-  if (r < hp->nNodes && hp->nodes[r]->key < hp->nodes[min]->key)
+  if (r < H->nNodes && H->nodes[r]->key < H->nodes[min]->key)
     min = r;
   if (min != i) {
-    swap(hp, i, min); 
-    minHeapify(hp, min);
+    swap(H, i, min); 
+    minHeapify(H, min);
   }
 }
 
-void decreaseKey(heap *hp, int i, double newKey){
+void decreaseKey(heap *H, int i, double newKey){
   /* decreases the key of the node at index i to newKey */
-  hp->nodes[i]->key = newKey;
-  while (i > 0 && hp->nodes[PARENT(i)]->key > hp->nodes[i]->key) {
-    swap(hp, i, PARENT(i));
+  H->nodes[i]->key = newKey;
+  while (i > 0 && H->nodes[PARENT(i)]->key > H->nodes[i]->key) {
+    swap(H, i, PARENT(i));
     i = PARENT(i);
   }
 }
 
-node *extractMin(heap *hp) {
+node *extractMin(heap *H) {
   /* extracts the node with minimum key from the heap */
-  node *min = hp->nodes[0];
-  hp->nodes[0] = hp->nodes[--hp->nNodes];
-  minHeapify(hp, 0);
+  node *min = H->nodes[0];
+  H->nodes[0] = H->nodes[--H->nNodes];
+  minHeapify(H, 0);
   return min;
 }
 
-void initMinHeap(heap *hp){
+void initMinHeap(heap *H){
   /* initializes the min heap */
-  for (int i = hp->nNodes/2 - 1; i >= 0; i--)
-    minHeapify(hp, i);
+  for (int i = H->nNodes/2 - 1; i >= 0; i--)
+    minHeapify(H, i);
 }
 
 //::::::::::::::::::::::::: mst functions :::::::::::::::::::::::::://
@@ -203,22 +203,22 @@ void initMinHeap(heap *hp){
 void mstPrim(graph *G) {
   /* computes a minimum spanning tree of G using Prim's algorithm */
   G->vertices[0]->key = 0;  // set the key of the root to 0
-  heap *hp = newHeap(G);
-  initMinHeap(hp);
+  heap *H = newHeap(G);
+  initMinHeap(H);
   
-  while (hp->nNodes > 0) {
-    node *u = extractMin(hp);
+  while (H->nNodes > 0) {
+    node *u = extractMin(H);
     u->mstNode = 1;     // mark the extracted node as part of the MST
     for (int i = 0; i < u->nbrCount; i++) {   
       // iterate over u's neighbors and update their keys
       node *v = G->vertices[u->neighbors[i]];  
       if (!v->mstNode && u->weights[i] < v->key) {
         v->parent = u->id;   // set v's parent to u
-        decreaseKey(hp, v->heapIndex, u->weights[i]);
+        decreaseKey(H, v->heapIndex, u->weights[i]);
       }
     }
   }
-  freeHeap(hp);
+  freeHeap(H);
 }
 
 void printMST(graph *G) {

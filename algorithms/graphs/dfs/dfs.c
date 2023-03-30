@@ -118,7 +118,7 @@ void printResults(graph *G) {
          "  label        time      time\n");
   for (int i = 0; i < G->nNodes; i++) {
     node *n = G->vertices[i];
-    printf("%7d    %8d    %6d\n", n->id, n->dTime, n->fTime);
+    printf("%7d %11d %9d\n", n->id, n->dTime, n->fTime);
   }
   printf("\nEdge classification\n\n  Starting   Ending      Edge\n"
          "      node     node      type\n");
@@ -126,7 +126,7 @@ void printResults(graph *G) {
     node *n = G->vertices[i];
     for (int j = 0; j < n->nbrCount; j++) {
       node *a = G->vertices[n->neighbors[j]];
-      printf("  %8d   %6d      %4c\n", n->id, a->id, n->type[j]);
+      printf("%10d %8d %9c\n", n->id, a->id, n->type[j]);
     }
   }
 }
