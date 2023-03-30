@@ -120,7 +120,7 @@ void freeGraph(graph *G) {
 void print (graph *G, short cycle, int s) {
   /* prints the distances and parents of the nodes */
   if (cycle) {
-    printf("Negative cycle found.\n");
+    printf("Negative-weight cycle found.\n");
     return;
   }
   printf("Node   Distance   Parent\n"); 
