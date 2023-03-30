@@ -117,7 +117,7 @@ void freeGraph(graph *G) {
 
 //:::::::::::::::::::::::::: bellman-ford :::::::::::::::::::::::::://
 
-void print (graph *G, short cycle) {
+void print (graph *G, short cycle, int s) {
   /* prints the distances and parents of the nodes */
   if (cycle) {
     printf("Negative cycle found.\n");
@@ -126,7 +126,16 @@ void print (graph *G, short cycle) {
   printf("Node   Distance   Parent\n"); 
   for (int i = 0; i < G->nNodes; i++) {
     node *n = G->nodes[i];
-    printf("%4d %10.2lf %8d\n", n->id, n->dist, n->parent);
+    if (n->id == s) printf("%4s", "src");
+    else printf("%4d", n->id);
+    if (n->dist == DBL_MAX)
+      printf("%11s", "inf");
+    else printf("%11.2lf", n->dist);
+    if (n->parent == -1)
+      printf("%9s\n", "na");
+    else if (n->parent == s)
+      printf("%9s\n", "src");
+    else printf("%9d\n", n->parent);
   }
 }
 
@@ -134,8 +143,9 @@ void relax(graph *G, edge *e) {
   /* relaxes the edge e */
   node *u = G->nodes[e->u];
   node *v = G->nodes[e->v];
-  if (v->dist > u->dist + e->w) {
-    v->dist = u->dist + e->w;
+  if (u->dist == DBL_MAX) return;   // u is unreachable
+  if (v->dist > u->dist + e->w) {   // found a shorter path
+    v->dist = u->dist + e->w;       // update estimate
     v->parent = u->id;
   }
 }
@@ -172,7 +182,7 @@ int main (int argc, char *argv[]) {
   buildGraph(G);              // read edges from stdin
 
   short cycle = bFord(G, s);  // run Bellman-Ford algorithm
-  print(G, cycle);            // print results
+  print(G, cycle, s);         // print results
 
   freeGraph(G);
   return 0;
