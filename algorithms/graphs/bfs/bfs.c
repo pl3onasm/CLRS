@@ -13,21 +13,26 @@
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
+typedef struct list list;  // forward declaration
 typedef struct node {
-  int id, parent;         // node id and parent id
-  int nbrCount, nbrCap;   // number of neighbors and adj list capacity
-  int dist;               // distance from source
-  int *neighbors;         // adjacency list: node ids of neighbors
+  int id, parent;          // node id and parent id
+  int dist;                // distance from source
+  list *adj;               // adjacency list
 } node;
 
+struct list {
+  node *nbr;               // pointer to neighbor node
+  list *next;              // pointer to next node in the list
+};
+
 typedef struct queue {
-  int front, back, size;  // front and back of the queue, and its size
-  int *array;             // array of elements in the queue
+  int front, back, size;   // front and back of the queue, and its size
+  int *array;              // array of elements in the queue
 } queue;
 
 typedef struct graph {
-  int nNodes, nEdges;     // number of nodes and edges in the graph
-  node **vertices;        // array of pointers to nodes
+  int nNodes, nEdges;      // number of nodes and edges in the graph
+  node **vertices;         // array of pointers to nodes
 } graph;
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
@@ -51,6 +56,36 @@ void *safeRealloc (void *ptr, int newSize) {
     exit(EXIT_FAILURE);
   }
   return ptr;
+}
+
+//::::::::::::::::::::::::: list functions ::::::::::::::::::::::::://
+
+list *newList() {
+  /* creates an empty list */
+  return NULL;
+}
+
+void printList(list *L) {
+  /* prints the list L */
+  if (L == NULL) return;
+  printf("%d", L->nbr->id);
+  if (L->next != NULL) printf(", ");
+  printList(L->next);
+}
+
+void freeList(list *L) {
+  /* frees all memory allocated for the list */
+  if (L == NULL) return;
+  freeList(L->next);
+  free(L);
+}
+
+list *listInsert (list *L, node *n) {
+  /* inserts the node n at the beginning of the list L */
+  list *new = safeCalloc(1, sizeof(list));
+  new->nbr = n;
+  new->next = L;
+  return new;
 }
 
 //:::::::::::::::::::::::: queue functions ::::::::::::::::::::::::://
@@ -112,8 +147,7 @@ node *newNode(int id) {
   n->id = id;
   n->dist = 0;
   n->parent = -1; // -1 means no parent
-  n->nbrCount = 0;
-  n->nbrCap = 0;
+  n->adj = newList();
   return n;
 }
 
@@ -130,19 +164,11 @@ graph *newGraph(int n) {
 void freeGraph(graph *G) {
   /* frees all memory allocated for the graph */
   for (int i = 0; i < G->nNodes; i++) {
-    free(G->vertices[i]->neighbors);
+    freeList(G->vertices[i]->adj);
     free(G->vertices[i]);
   }
   free(G->vertices);
   free(G);
-}
-
-void checkCap(node *n) {
-  /* checks whether the adjacency list of n is large enough */
-  if (n->nbrCount == n->nbrCap) {
-    n->nbrCap = (n->nbrCap == 0) ? 2 : 2 * n->nbrCap;
-    n->neighbors = safeRealloc(n->neighbors, n->nbrCap * sizeof(int));
-  }
 }
 
 void buildGraph(graph *G) {
@@ -151,9 +177,7 @@ void buildGraph(graph *G) {
   while (scanf("%d %d", &u, &v) == 2) {
     node *n = G->vertices[u];
     G->nEdges++;
-    checkCap(n);
-    // add v's id to u's adjacency list
-    n->neighbors[n->nbrCount++] = v;
+    n->adj = listInsert(n->adj, G->vertices[v]);
   }
 }
 
@@ -186,8 +210,9 @@ void bfs(graph *G, int s) {
   while (!isEmpty(q)) {
     node *n = G->vertices[dequeue(q)]; 
    
-    for (int i = 0; i < n->nbrCount; i++) {   // check each neighbor
-      node *a = G->vertices[n->neighbors[i]];
+    // check each neighbor of n
+    for (list *L = n->adj; L != NULL; L = L->next) {
+      node *a = L->nbr;
       if (a->parent < 0) {
         // set parent and update distance
         a->parent = n->id;
