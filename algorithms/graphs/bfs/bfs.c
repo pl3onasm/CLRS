@@ -14,6 +14,7 @@
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
 typedef struct list list;  // forward declaration
+
 typedef struct node {
   int id, parent;          // node id and parent id
   int dist;                // distance from source
