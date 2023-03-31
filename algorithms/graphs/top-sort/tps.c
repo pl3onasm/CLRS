@@ -12,22 +12,23 @@
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
+typedef struct list list;  // forward declaration
+
 typedef struct node {
-  int id, parent;       // node id and parent id
-  int nbrCount, nbrCap; // number of neighbors and adj list capacity
-  int dTime, fTime;     // discovery and finish times
-  int *neighbors;       // adjacency list: node ids of neighbors
+  int id, parent;          // node id and parent id
+  int dTime, fTime;        // discovery and finish times
+  list *adj;               // adjacency list
 } node;              
 
-typedef struct graph {
-  int nNodes, nEdges;   // number of nodes and edges in the graph
-  node **vertices;      // array of pointers to nodes
-} graph;
+struct list {
+  node *n;                 // pointer to node in the graph
+  list *next;              // pointer to next node in the list
+};
 
-typedef struct list {
-  node *n;              // pointer to node
-  struct list *next;    // pointer to next node in the list
-} list;
+typedef struct graph {
+  int nNodes, nEdges;      // number of nodes and edges in the graph
+  node **vertices;         // array of pointers to nodes
+} graph;
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
 
@@ -50,63 +51,6 @@ void *safeRealloc (void *ptr, int newSize) {
     exit(EXIT_FAILURE);
   }
   return ptr;
-}
-
-//:::::::::::::::::::::::: graph functions ::::::::::::::::::::::::://
-
-node *newNode(int id) {
-  /* creates a node with given id */
-  node *n = safeCalloc(1, sizeof(node));
-  n->id = id;
-  n->fTime = -1;
-  n->dTime = -1; 
-  n->parent = -1; // -1 means no parent
-  n->neighbors = NULL;
-  n->nbrCount = 0;
-  n->nbrCap = 0;
-  return n;
-}
-
-void checkCap(node *n) {
-  /* checks whether the adjacency list of n is full, and if so, 
-     doubles its capacity */
-  if (n->nbrCount == n->nbrCap) {
-    n->nbrCap = (n->nbrCap == 0) ? 2 : 2*n->nbrCap;
-    n->neighbors = safeRealloc(n->neighbors, n->nbrCap*sizeof(int));
-  }
-}
-
-graph *newGraph(int n) {
-  /* creates a graph with n vertices */
-  graph *G = safeCalloc(1, sizeof(graph));
-  G->nNodes = n;
-  G->nEdges = 0;
-  G->vertices = safeCalloc(n, sizeof(node*));
-  for (int i = 0; i < n; i++)
-    G->vertices[i] = newNode(i);
-  return G;
-}
-
-void freeGraph(graph *G) {
-  /* frees all memory allocated for the graph */
-  for (int i = 0; i < G->nNodes; i++) {
-    free(G->vertices[i]->neighbors);
-    free(G->vertices[i]);
-  }
-  free(G->vertices);
-  free(G);
-}
-
-void buildGraph(graph *G) {
-  /* reads edges from stdin and adds them to the graph */
-  int u, v;
-  while (scanf("%d %d", &u, &v) == 2) {
-    node *n = G->vertices[u];
-    G->nEdges++;
-    checkCap(n);
-    // add v's id to u's adjacency list
-    n->neighbors[n->nbrCount++] = v;
-  }
 }
 
 //::::::::::::::::::::::::: list functions ::::::::::::::::::::::::://
@@ -139,13 +83,58 @@ list *listInsert (list *L, node *n) {
   return new;
 }
 
+//:::::::::::::::::::::::: graph functions ::::::::::::::::::::::::://
+
+node *newNode(int id) {
+  /* creates a node with given id */
+  node *n = safeCalloc(1, sizeof(node));
+  n->id = id;
+  n->fTime = -1;
+  n->dTime = -1; 
+  n->parent = -1; // -1 means no parent
+  n->adj = newList();
+  return n;
+}
+
+graph *newGraph(int n) {
+  /* creates a graph with n vertices */
+  graph *G = safeCalloc(1, sizeof(graph));
+  G->nNodes = n;
+  G->nEdges = 0;
+  G->vertices = safeCalloc(n, sizeof(node*));
+  for (int i = 0; i < n; i++)
+    G->vertices[i] = newNode(i);
+  return G;
+}
+
+void freeGraph(graph *G) {
+  /* frees all memory allocated for the graph */
+  for (int i = 0; i < G->nNodes; i++) {
+    freeList(G->vertices[i]->adj);
+    free(G->vertices[i]);
+  }
+  free(G->vertices);
+  free(G);
+}
+
+void buildGraph(graph *G) {
+  /* reads edges from stdin and adds them to the graph */
+  int u, v;
+  while (scanf("%d %d", &u, &v) == 2) {
+    node *n = G->vertices[u];
+    G->nEdges++;
+    // add v to u's adjacency list
+    n->adj = listInsert(n->adj, G->vertices[v]);
+  }
+}
+
 //::::::::::::::::::::::::: dfs functions :::::::::::::::::::::::::://
 
 void dfsVisit(graph *G, node *u, list **L, int *time) {
   /* visits the node u and its descendants in the graph G */
   u->dTime = ++*time;
-  for (int i = 0; i < u->nbrCount; i++) {
-    node *v = G->vertices[u->neighbors[i]];
+  for (list *l = u->adj; l != NULL; l = l->next) {
+    node *v = l->n;
     if (v->dTime < 0) {   // v is undiscovered
       v->parent = u->id;
       dfsVisit(G, v, L, time);

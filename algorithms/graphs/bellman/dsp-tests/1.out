@@ -1,0 +1,7 @@
+Node   Distance   Parent
+   0        inf       na
+ src       0.00        0
+   2       2.00      src
+   3       6.00      src
+   4       5.00        3
+   5       3.00        4
