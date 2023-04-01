@@ -1,13 +1,10 @@
-/* file: mst-3.c
+/* file: dsp.c
    author: David De Potter
    email: pl3onasm@gmail.com
    license: MIT, see LICENSE file in repository root folder
-   description: implements Prim's algorithm to compute the minimum
-     spanning tree of a graph. For this, we use a min priority queue 
-     to keep track of the edges with the smallest weight. In this
-     version, we use a Fibonacci heap to implement the priority queue.
-   complexity: O(m + n log n) where m is the number of edges 
-     and n is the number of nodes.
+   description: Dijkstra's shortest paths algorithm
+     using a fibonacci heap
+   assumption: nodes are numbered 0..n-1
 */
 
 #include <stdio.h>
@@ -17,62 +14,62 @@
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
-typedef struct list list; // forward declaration
+typedef struct list list;    // forward declaration
 
 typedef struct node {
-  // graph-related fields
-  int id, parentG;        // node id and parent id in graph
-  int mstNode;            // 1 if node is in the MST, 0 otherwise
-  list *adj;              // adjacency list
-
-  // heap-related fields
-  double key;             // key attribute to sort the nodes in the heap
-  int degree;             // number of children in the heap
-  int mark;               // keeps track of whether a node lost a child
-  struct node *parentH;   // pointer to the node's parent in the heap
-  struct node *child;     // pointer to a child of the node in the heap
-  struct node *next;      // pointer to the next node in the list
-  struct node *prev;      // pointer to the previous node in the list
+  // graph fields
+  int id, parentG;           // node id and parent id
+  double dist;               // distance from source
+  list *adj;                 // adjacency list
+  
+  // fibonacci heap fields
+  struct node *parentH;      // parent in the heap
+  struct node *child;        // first child in the heap
+  struct node *next, *prev;  // next and previous node in the heap
+  int degree;                // number of children
+  int mark;                  // whether the node has lost a child
+  double key;                // key value used to sort the heap
+  short inHeap;              // 1 if node is in the heap, 0 otherwise
 } node;
 
-struct list {
-  // linked list node
-  node *n;
-  list *next;             // pointer to the next node in the list
-  double w;               // weight of the incident edge
-};
+struct list {                
+  node *n;                   // pointer to a node in the graph
+  list *next;                // pointer to next node in the list
+  double w;                  // weight of incoming edge at node n
+};                           
+
+typedef struct heap {
+  int nNodes;                // number of elements in the heap
+  node *min;                 // pointer to the minimum node
+  node **nodes;              // array of pointers to nodes
+} heap;
 
 typedef struct graph {
-  int nNodes, nEdges;     // number of nodes and edges in the graph
-  node **vertices;        // array of pointers to nodes
+  int nNodes, nEdges;        // number of nodes and edges 
+  node **nodes;              // array of pointers to nodes
 } graph;
-
-typedef struct heap {     // min priority queue as a Fibonacci heap
-  int nNodes;             // number of nodes currently in the heap
-  node *min;              // pointer to the node with the smallest key
-} heap;
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
 
 void *safeCalloc (int n, int size) {
-  /* allocates n elements of size size, initializing them to 0, and
-     checks whether the allocation was successful */
-  void *ptr = calloc(n, size);
-  if (ptr == NULL) {
-    printf("Error: calloc(%d, %d) failed. Out of memory?\n", n, size);
-    exit(EXIT_FAILURE);
-  }
-  return ptr;
+    /* allocates n elements of size size, initializing them to 0, and
+       checks whether the allocation was successful */
+    void *ptr = calloc(n, size);
+    if (ptr == NULL) {
+        printf("Error: calloc(%d, %d) failed. Out of memory?\n", n, size);
+        exit(EXIT_FAILURE);
+    }
+    return ptr;
 }
 
 void *safeRealloc (void *ptr, int newSize) {
-  /* reallocates memory and checks whether the allocation was successful */
-  ptr = realloc(ptr, newSize);
-  if (ptr == NULL) {
-    printf("Error: realloc(%d) failed. Out of memory?\n", newSize);
-    exit(EXIT_FAILURE);
-  }
-  return ptr;
+    /* reallocates memory and checks whether the allocation was successful */
+    ptr = realloc(ptr, newSize);
+    if (ptr == NULL) {
+        printf("Error: realloc(%d) failed. Out of memory?\n", newSize);
+        exit(EXIT_FAILURE);
+    }
+    return ptr;
 }
 
 //::::::::::::::::::::::::: list functions ::::::::::::::::::::::::://
@@ -98,49 +95,46 @@ list *listInsert (list *L, node *n, double w) {
   return new;
 }
 
-//:::::::::::::::::::::::: graph functions ::::::::::::::::::::::::://
+//::::::::::::::::::::::::: graph functions :::::::::::::::::::::::://
 
 node *newNode(int id) {
-  /* creates a node with given id */
+  /* creates a new node with id id */
   node *n = safeCalloc(1, sizeof(node));
   n->id = id;
-  n->parentG = -1;    // -1 means no parent
-  n->mstNode = 0;     // 0 means not in the MST yet
+  n->parentG = -1;
+  n->dist = DBL_MAX;
   n->adj = newList();
   return n;
 }
 
-graph *newGraph(int n) {
-  /* creates a graph with n vertices */
+graph *newGraph(int nNodes) {
+  /* creates a new graph with nNodes nodes */
   graph *G = safeCalloc(1, sizeof(graph));
-  G->nNodes = n;
-  G->nEdges = 0;
-  G->vertices = safeCalloc(n, sizeof(node*));
-  for (int i = 0; i < n; i++)
-    G->vertices[i] = newNode(i);
+  G->nNodes = nNodes;
+  G->nodes = safeCalloc(nNodes, sizeof(node*));
+  for (int i = 0; i < nNodes; i++) 
+    G->nodes[i] = newNode(i);
   return G;
 }
 
-void freeGraph(graph *G) {
-  /* frees all memory allocated for the graph */
-  for (int i = 0; i < G->nNodes; i++) {
-    free(G->vertices[i]->adj);
-    free(G->vertices[i]);
-  }
-  free(G->vertices);
-  free(G);
-}
-
-void buildGraph(graph *G) {
-  /* reads undirected graph from stdin and builds the adjacency lists */
+void buildGraph (graph *G) {
+  /* builds the graph G by reading weighted edges from stdin */
   int u, v; double w;
   while (scanf("%d %d %lf", &u, &v, &w) == 3) {
-    node *n = G->vertices[u];
-    n->adj = listInsert(n->adj, G->vertices[v], w);
-    n = G->vertices[v];
-    n->adj = listInsert(n->adj, G->vertices[u], w);
+    node *n = G->nodes[u];
+    n->adj = listInsert(n->adj, G->nodes[v], w);
     G->nEdges++;
   }
+}
+
+void freeGraph(graph *G) {
+  /* frees the memory allocated to the graph G */
+  for (int i = 0; i < G->nNodes; i++) {
+    freeList(G->nodes[i]->adj);
+    free(G->nodes[i]);
+  }
+  free(G->nodes);
+  free(G);
 }
 
 //:::::::::::::::::::: fibonacci heap functions :::::::::::::::::::://
@@ -185,7 +179,7 @@ void insertNode(heap *H, node *u) {
   u->mark = 0;
   u->child = NULL;              
   u->parentH = NULL;
-  u->key = DBL_MAX;             // intialize key to infinity
+  u->key = DBL_MAX;
   if (H->min == NULL)           // if heap is empty
     makeCircularRoot(H, u);     // turn u into a circular root list
   else {
@@ -203,7 +197,7 @@ heap *newHeap(graph *G) {
   H->min = NULL;
   // insert all graph nodes into the heap
   for (int i = 0; i < G->nNodes; i++)
-    insertNode(H, G->vertices[i]);
+    insertNode(H, G->nodes[i]);
   return H;
 }
 
@@ -274,6 +268,7 @@ node *extractMin(heap *H) {
         consolidate(H);           
     }
     H->nNodes--;                // update the number of nodes 
+    z->inHeap = 0;              // z is no longer in the heap
   }
   return z;
 }
@@ -307,7 +302,7 @@ void decreaseKey(heap *H, node *u, double newKey) {
   /* decreases the key of the node to newKey */
   if (newKey > u->key) {
     printf("Error: new key is greater than current key\n");
-    return;
+    exit(EXIT_FAILURE);
   }
   u->key = newKey;              
   node *v = u->parentH;
@@ -325,55 +320,55 @@ void freeHeap(heap *H) {
   free(H);
 }
 
-//::::::::::::::::::::::::: mst functions :::::::::::::::::::::::::://
+//::::::::::::::::::::::: dijkstra functions ::::::::::::::::::::::://
 
-void mstPrim(graph *G) {
-  /* computes a minimum spanning tree of G using Prim's algorithm */
-  G->vertices[0]->key = 0;  // set the key of the root to 0
+short relax(node *u, node *v, double w) {
+  /* relaxes the edge (u,v) */
+  if (v->dist > u->dist + w) {
+    v->dist = u->dist + w;
+    v->parentG = u->id;
+    return 1;
+  }
+  return 0;
+}
+
+void dijkstra(graph *G, int s) {
+  /* computes the shortest paths from node s to all other nodes */
+  G->nodes[s]->dist = 0;
   heap *H = newHeap(G);
-  
+
   while (H->nNodes > 0) {
     node *u = extractMin(H);
-    u->mstNode = 1;  // mark the extracted node as part of the MST
 
-    // iterate over u's neighbors and update their keys
-    for (list *l = u->adj; l != NULL; l = l->next) {
-      node *v = l->n;
-      if (!v->mstNode && l->w < v->key) {
-        v->parentG = u->id; // set v's parent to u
-        decreaseKey(H, v, l->w);
-      }
+    for (list *a = u->adj; a != NULL; a = a->next){
+      node *v = a->n;
+      if (relax(u, v, a->w) && v->inHeap)
+        decreaseKey(H, v, v->dist);
     }
   }
   freeHeap(H);
 }
 
-void printMST(graph *G) {
-  /* prints the edges of the MST and its total weight */
-  double totalWeight = 0;
-  printf("MST edges:\n");
+void print(graph *G) {
+  /* prints the results of the shortest paths computation */
+  printf("Node  Distance  Parent\n");
   for (int i = 0; i < G->nNodes; i++) {
-    node *n = G->vertices[i];
-    if (n->parentG != -1 && n->mstNode) {
-      // reconstruct the edge (u, v, w) as (v.parentG, v.id, v.key)
-      printf("(%d, %d, %.2lf)\n", n->parentG, n->id, n->key);
-      totalWeight += n->key;
-    } 
+    node *n = G->nodes[i];
+    printf("%4d %9.2lf %7d\n", n->id, n->dist, n->parentG);
   }
-  printf("MST weight: %.2lf\n", totalWeight);
 }
 
 //::::::::::::::::::::::::::::: main ::::::::::::::::::::::::::::::://
 
 int main (int argc, char *argv[]) {
-  int n;                    // n = number of nodes
-  scanf("%d", &n); 
+  int n, s;                    // n = number of nodes
+  scanf("%d %d", &n, &s);      // s = source node 
 
   graph *G = newGraph(n); 
-  buildGraph(G);            // read edges from stdin
+  buildGraph(G);               // read edges from stdin
 
-  mstPrim(G);               // compute MST
-  printMST(G);              // print MST edges and weight
+  dijkstra(G, s);              // compute shortest paths from node s
+  print(G);                    // print results
 
   freeGraph(G);
   return 0;

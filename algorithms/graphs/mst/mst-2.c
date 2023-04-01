@@ -21,13 +21,14 @@
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
+typedef struct list list; // forward declaration
+
 typedef struct node {
   // graph-related fields
   int id, parent;         // node id and parent id
-  int nbrCount, nbrCap;   // number of neighbors and adj list capacity
   int mstNode;            // 1 if node is in the MST, 0 otherwise
-  int *neighbors;         // adjacency list: node ids of neighbors
-  double *weights;        // corresponding weights of edges to neighbors
+  list *adj;              // adjacency list
+
   // heap-related fields
   double key;             // keeps track of the minimum weight
   int heapIndex;          // node index in the heap
@@ -37,6 +38,13 @@ typedef struct graph {
   int nNodes, nEdges;     // number of nodes and edges in the graph
   node **vertices;        // array of pointers to nodes
 } graph;
+
+struct list {
+  // linked list node
+  node *n;
+  list *next;
+  double w;               // weight of the incident edge
+};
 
 typedef struct heap {     // binary min heap
   node **nodes;           // array of pointers to nodes
@@ -66,6 +74,29 @@ void *safeRealloc (void *ptr, int newSize) {
   return ptr;
 }
 
+//::::::::::::::::::::::::: list functions ::::::::::::::::::::::::://
+
+list *newList() {
+  /* creates an empty list */
+  return NULL;
+}
+
+void freeList(list *L) {
+  /* frees all memory allocated for the list */
+  if (L == NULL) return;
+  freeList(L->next);
+  free(L);
+}
+
+list *listInsert (list *L, node *n, double w) {
+  /* inserts the node n at the beginning of the list L */
+  list *new = safeCalloc(1, sizeof(list));
+  new->n = n;
+  new->next = L;
+  new->w = w;
+  return new;
+}
+
 //:::::::::::::::::::::::: graph functions ::::::::::::::::::::::::://
 
 node *newNode(int id) {
@@ -73,21 +104,9 @@ node *newNode(int id) {
   node *n = safeCalloc(1, sizeof(node));
   n->id = id;
   n->parent = -1;   // -1 means no parent
-  n->nbrCount = 0;
-  n->nbrCap = 0;
   n->mstNode = 0;   // 0 means not in the MST yet
-  n->key = DBL_MAX; // initialize key to infinity
+  n->adj = newList();
   return n;
-}
-
-void checkCap(node *n) {
-  /* checks whether the adjacency list of n is full, and if so, 
-     doubles capacities for neighbors and weights */
-  if (n->nbrCount == n->nbrCap) {
-    n->nbrCap = (n->nbrCap == 0) ? 2 : 2*n->nbrCap;
-    n->neighbors = safeRealloc(n->neighbors, n->nbrCap*sizeof(int));
-    n->weights = safeRealloc(n->weights, n->nbrCap*sizeof(double));
-  }
 }
 
 graph *newGraph(int n) {
@@ -104,26 +123,21 @@ graph *newGraph(int n) {
 void freeGraph(graph *G) {
   /* frees all memory allocated for the graph */
   for (int i = 0; i < G->nNodes; i++) {
-    free(G->vertices[i]->neighbors);
-    free(G->vertices[i]->weights);
+    freeList(G->vertices[i]->adj);
     free(G->vertices[i]);
   }
   free(G->vertices);
   free(G);
 }
 
-void updateAdjList(node *u, int v, double w) {
-  /* adds the edge (n,v) to the adjacency list of n */
-  checkCap(u);
-  u->neighbors[u->nbrCount] = v;
-  u->weights[u->nbrCount++] = w;
-}
-
 void buildGraph(graph *G) {
+  /* reads undirected graph from stdin and builds the adjacency lists */
   int u, v; double w;
   while (scanf("%d %d %lf", &u, &v, &w) == 3) {
-    updateAdjList(G->vertices[u], v, w);
-    updateAdjList(G->vertices[v], u, w);
+    node *n = G->vertices[u];
+    n->adj = listInsert(n->adj, G->vertices[v], w);
+    n = G->vertices[v];
+    n->adj = listInsert(n->adj, G->vertices[u], w);
     G->nEdges++;
   }
 }
@@ -138,10 +152,11 @@ heap *newHeap(graph *G) {
   hp->nodeCap = n;
   hp->nodes = safeCalloc(n, sizeof(node*));
   // make pointer copies of the graph nodes 
-  // and initialize the heapIndex fields
+  // and initialize the heap-related fields
   for (int i = 0; i < n; i++){
     hp->nodes[i] = G->vertices[i];
     hp->nodes[i]->heapIndex = i;
+    hp->nodes[i]->key = DBL_MAX;
   }
   return hp;
 }
@@ -202,19 +217,20 @@ void initMinHeap(heap *H){
 
 void mstPrim(graph *G) {
   /* computes a minimum spanning tree of G using Prim's algorithm */
-  G->vertices[0]->key = 0;  // set the key of the root to 0
   heap *H = newHeap(G);
-  initMinHeap(H);
+  G->vertices[0]->key = 0;  // set the key of the root to 0
+  initMinHeap(H);           // initialize the min heap
   
   while (H->nNodes > 0) {
     node *u = extractMin(H);
-    u->mstNode = 1;     // mark the extracted node as part of the MST
-    for (int i = 0; i < u->nbrCount; i++) {   
-      // iterate over u's neighbors and update their keys
-      node *v = G->vertices[u->neighbors[i]];  
-      if (!v->mstNode && u->weights[i] < v->key) {
+    u->mstNode = 1;  // mark the extracted node as part of the MST
+
+    // iterate over u's neighbors and update their keys
+    for (list *l = u->adj; l != NULL; l = l->next) {
+      node *v = l->n;
+      if (!v->mstNode && l->w < v->key) {
         v->parent = u->id;   // set v's parent to u
-        decreaseKey(H, v->heapIndex, u->weights[i]);
+        decreaseKey(H, v->heapIndex, l->w);
       }
     }
   }
@@ -227,7 +243,7 @@ void printMST(graph *G) {
   printf("MST edges:\n");
   for (int i = 0; i < G->nNodes; i++) {
     node *n = G->vertices[i];
-    if (n->parent != -1 && n->mstNode == 1) {
+    if (n->parent != -1 && n->mstNode) {
       // reconstruct the edge (u, v, w) as (v.parent, v.id, v.key)
       printf("(%d, %d, %.2lf)\n", n->parent, n->id, n->key);
       totalWeight += n->key;

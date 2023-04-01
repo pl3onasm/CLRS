@@ -32,8 +32,8 @@ struct list {
 };
 
 typedef struct graph {
-  int nNodes, nEdges;     // number of nodes and edges in the graph
-  node **vertices;        // array of pointers to nodes
+  int nNodes, nEdges;      // number of nodes and edges in the graph
+  node **vertices;         // array of pointers to nodes
 } graph;
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
@@ -124,7 +124,7 @@ void freeGraph(graph *G) {
 }
 
 void buildGraph(graph *G) {
-  /* reads edges from stdin and adds them to the graph */
+  /* reads edges from stdin and adds them to the directed graph */
   int u, v;
   while (scanf("%d %d", &u, &v) == 2) {
     node *n = G->vertices[u];
