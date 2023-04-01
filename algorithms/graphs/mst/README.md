@@ -22,8 +22,11 @@ Implementation: [MST - Kruskal](https://github.com/pl3onasm/AADS/blob/main/algor
 
 ## Prim's algorithm
 
-Implementation: [MST - Prim](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/mst/mst-2.c)
+In Prim's algorithm, we don't work with growing sets, but with growing (connected) trees. We start with a tree containing a single vertex, and we add edges to this tree one by one. At each step, we add the edge with the smallest weight that connects a vertex in the tree to a vertex not in the tree. This procedure results in a minimum spanning tree. Using a binary min-heap, the running time of this algorithm is $O(m \log n)$, since we need to perform $m$ operations on a binary min-heap, each of which takes $O(\log n)$ time, which in the case of dense graphs
+dominates the number of extract-min operations, which take $O(n \log n)$ time in total.
 
-We can also use a Fibonacci heap to implement Prim's algorithm. This will result in a faster algorithm, since the Fibonacci heap has a better amortized running time than the binary heap. For more information on Fibonacci heaps, see CLRS³, chapter 19. Unfortunately, they were omitted from CLRS⁴. The running time of this version of the algorithm is $O(m + n \log n)$, which is a significant improvement over the $O(m \log n)$ running time of the binary heap version, especially for dense graphs.
+Implementation: [MST - binary Prim](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/mst/mst-2.c)
+
+We can also use a Fibonacci heap to implement Prim's algorithm. This will result in a faster algorithm, since the Fibonacci heap has a better amortized running time than the binary min-heap. For more information on Fibonacci heaps, see CLRS³, chapter 19. Unfortunately, they were omitted from CLRS⁴. The running time of this version of the algorithm is $O(m + n \log n)$, which is a significant improvement over the $O(m \log n)$ running time of the binary heap version in the case of dense graphs.
 
 Implementation: [MST - Fibonacci Prim](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/mst/mst-3.c)
