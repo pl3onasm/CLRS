@@ -6,7 +6,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-typedef struct Heap {int size; int *array;} Heap;
+#define LEFT(i)   (2*i + 1)
+#define RIGHT(i)  (2*i + 2)
+
+typedef struct Heap {
+  int size; 
+  int *array;
+} Heap;
 
 void *safeMalloc (int n) {
   /* allocates n bytes of memory and checks whether the allocation
@@ -27,58 +33,58 @@ Heap *newHeap(int size) {
   return hp;
 }
 
-void freeHeap(Heap *hp) {
+void freeHeap(Heap *H) {
   /* frees the heap hp */
-  free(hp->array);
-  free(hp);
+  free(H->array);
+  free(H);
 }
 
-void showHeap(Heap *hp){
+void showHeap(Heap *H){
   /* prints the heap */
   printf("[");
-  for (int i = 0; i < hp->size; i++) {
-    printf("%d", hp->array[i]);
-    if (i < hp->size-1) printf(", ");
+  for (int i = 0; i < H->size; i++) {
+    printf("%d", H->array[i]);
+    if (i < H->size-1) printf(", ");
   }
   printf("]\n");
 }
 
-void swap (Heap *hp, int a, int b) {
+void swap (Heap *H, int a, int b) {
   /* swaps the elements at indices a and b in the heap */
-  int temp = hp->array[a]; 
-  hp->array[a] = hp->array[b]; 
-  hp->array[b] = temp;
+  int temp = H->array[a]; 
+  H->array[a] = H->array[b]; 
+  H->array[b] = temp;
 }
 
-void maxHeapify(Heap *hp, int i){
+void maxHeapify(Heap *H, int i){
   /* restores the max heap property for the heap */
-  int max = i, left = 2*i+1, right = 2*i+2;
-  if (left < hp->size && hp->array[left] > hp->array[max])
-    max = left;
-  if (right < hp->size && hp->array[right] > hp->array[max])
-    max = right;
+  int max = i, l = LEFT(i), r = RIGHT(i);
+  if (l < H->size && H->array[l] > H->array[max])
+    max = l;
+  if (r < H->size && H->array[r] > H->array[max])
+    max = r;
   if (max != i) {
-    swap(hp, i, max); 
-    maxHeapify(hp, max);
+    swap(H, i, max); 
+    maxHeapify(H, max);
   }
 }
 
-void initMaxHeap(Heap *hp){
+void initMaxHeap(Heap *H){
   /* initializes the max heap */
-  for (int i = hp->size/2; i >= 0; i--)
-    maxHeapify(hp, i);
+  for (int i = H->size/2; i >= 0; i--)
+    maxHeapify(H, i);
 }
 
-void heapsort(Heap *hp){
+void heapsort(Heap *H){
   /* sorts the heap */
-  int size = hp->size;
-  initMaxHeap(hp);
-  for (int i = hp->size - 1; i > 0; --i) {
-    swap(hp, 0, i);
-    hp->size--;
-    maxHeapify(hp, 0);
+  int size = H->size;
+  initMaxHeap(H);
+  for (int i = H->size - 1; i > 0; --i) {
+    swap(H, 0, i);
+    H->size--;
+    maxHeapify(H, 0);
   }
-  hp->size = size;
+  H->size = size;
 }
 
 Heap *readHeap (int arr[], int size) {

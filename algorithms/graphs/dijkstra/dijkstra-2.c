@@ -1,4 +1,4 @@
-/* file: dsp.c
+/* file: dijkstra-2.c
    author: David De Potter
    email: pl3onasm@gmail.com
    license: MIT, see LICENSE file in repository root folder
@@ -179,7 +179,7 @@ void insertNode(heap *H, node *u) {
   u->mark = 0;
   u->child = NULL;              
   u->parentH = NULL;
-  u->key = DBL_MAX;
+  u->key = u->dist;
   if (H->min == NULL)           // if heap is empty
     makeCircularRoot(H, u);     // turn u into a circular root list
   else {
@@ -334,7 +334,7 @@ short relax(node *u, node *v, double w) {
 
 void dijkstra(graph *G, int s) {
   /* computes the shortest paths from node s to all other nodes */
-  G->nodes[s]->dist = 0;
+  G->nodes[s]->dist = 0;   // set the distance of the source to 0
   heap *H = newHeap(G);
 
   while (H->nNodes > 0) {
@@ -349,12 +349,21 @@ void dijkstra(graph *G, int s) {
   freeHeap(H);
 }
 
-void print(graph *G) {
+void print(graph *G, int s) {
   /* prints the results of the shortest paths computation */
-  printf("Node  Distance  Parent\n");
+  printf("Node   Distance   Parent\n"); 
   for (int i = 0; i < G->nNodes; i++) {
     node *n = G->nodes[i];
-    printf("%4d %9.2lf %7d\n", n->id, n->dist, n->parentG);
+    if (n->id == s) printf("%4s", "src");
+    else printf("%4d", n->id);
+    if (n->dist == DBL_MAX)
+      printf("%11s", "inf");
+    else printf("%11.2lf", n->dist);
+    if (n->parentG == -1)
+      printf("%9s\n", "na");
+    else if (n->parentG == s)
+      printf("%9s\n", "src");
+    else printf("%9d\n", n->parentG);
   }
 }
 
@@ -368,7 +377,7 @@ int main (int argc, char *argv[]) {
   buildGraph(G);               // read edges from stdin
 
   dijkstra(G, s);              // compute shortest paths from node s
-  print(G);                    // print results
+  print(G, s);                 // print results
 
   freeGraph(G);
   return 0;
