@@ -2,13 +2,11 @@ ____________________________________
 *Single-source shortest paths (SSSP)*
 ____________________________________
 
-# Bellman-Ford algorithm (BFA)
-
 ## Problem
 
 Given a graph with $n$ vertices and $m$ edges, find the shortest paths from a given vertex $s$ to all other vertices in the graph.
 
-## Bellman-Ford algorithm
+## Bellman-Ford algorithm (BFA)
 
 The Bellman-Ford algorithm is an algorithm for finding the shortest paths in a weighted graph which may contain negative edges and negative-weight cycles. It works by repeatedly relaxing the edges of the graph. The running time of this algorithm is $O(n^2 + nm)$, which becomes $O(nm)$ if the graph is dense. The algorithm also detects negative cycles in the graph, in which case the shortest paths are undefined.
 

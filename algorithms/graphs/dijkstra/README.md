@@ -2,8 +2,6 @@ _____________________________________
 *Single-source shortest paths (SSSP)*
 _____________________________________
 
-# Dijkstra's algorithm
-
 ## Problem
 
 Given a directed graph with $m$ non-negative edge weights and a source vertex in the graph, find shortest paths from this source to all the other $n - 1$ vertices in the graph. A *shortest path* is a path from the source to a given vertex with the smallest total weight, which in itself is defined as the sum of the weights of its constituent edges.
