@@ -12,7 +12,7 @@ First of all, observe that any shortest path consists of at most $r = n-1$ edges
 If we denote the weight of the shortest path between $i$ and $j$ using at most $r$ edges by $d_{ij}^{(r)}$, then $d_{ij}^{(0)}$ is the weight of the shortest path between $i$ and $j$ using at most $0$ edges, which is $0$ if $i = j$ and $\infty$ otherwise. From this base case, we can then extend paths by adding one more edge at each step, until we reach the desired number of edges $r = n-1$. The weight of the shortest path between any two vertices $i$ and $j$ is then given by the minimum between the weight of the shortest path between $i$ and $j$ using at most $r$ edges, and the shortest path between $i$ and $k$ using at most $r-1$ edges. We thus get the following recurrence:
 
 $$
-d_{ij}^{(r)} = \min \{ d_{ik}^{(r-1)} + w_{kj} : 1 \leq k \leq n \}
+d_{ij}^{(r)} = \min \lbrace d_{ik}^{(r-1)} + w_{kj} : 1 \leq k \leq n \rbrace
 $$
 
 The solution after $n-1$ iterations is then $d_{ij}^{(n-1)}$, which is the weight of the shortest path between any two vertices $i$ and $j$. Note that for $k = 1$, we have $D^{1} = W$, which is the adjacency matrix of the graph, where each entry $w_{ij}$ equals the weight of the edge $(i, j)$, or $\infty$ if there is no edge between $i$ and $j$.
