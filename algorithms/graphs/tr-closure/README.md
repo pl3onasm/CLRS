@@ -2,7 +2,7 @@
 
 ## Problem
 
-Given a directed graph $G$ with m edges and n vertices, find the transitive closure of the graph, i.e. a matrix $M$ that indicates whether there is a path from vertex $i$ to vertex $j$ in the graph. In other words, $m_{ij}$ should show whether $j$ is reachable from $i$ or not.
+Given a directed graph $G$ with m edges and n vertices, find the transitive closure of the graph, i.e. a matrix $M$ that indicates whether there is a path from vertex $i$ to vertex $j$ in the graph. In other words, each entry $m_{ij}$ should show whether $j$ is reachable from $i$ or not.
 
 ## Solution using Floyd-Warshall algorithm
 
