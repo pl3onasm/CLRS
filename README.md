@@ -7,7 +7,7 @@
 * [String algorithms](https://github.com/pl3onasm/AADS/tree/main/algorithms/string-algorithms)
 * [Sorting](https://github.com/pl3onasm/Algorithms-and-data-structures/tree/main/algorithms/sorting)
 
-# Data structures in C
+# Data structures in C (to do)
 
 * [Stacks]()
 * [Queues]()
@@ -16,6 +16,9 @@
 * [Hash tables]()
 * [Heaps]()
 * [Red-black trees]()
+* [B-trees]()
+* [Disjoint sets]()
+* [Augmented data structures]()
 * [Tries]()
 
 ## Notes

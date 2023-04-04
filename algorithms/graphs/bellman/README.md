@@ -1,3 +1,7 @@
+____________________________________
+*Single-source shortest paths (SSSP)*
+____________________________________
+
 # Bellman-Ford algorithm (BFA)
 
 ## Problem

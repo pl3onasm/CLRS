@@ -1,3 +1,7 @@
+_____________________________________
+*Single-source shortest paths (SSSP)*
+_____________________________________
+
 # Dijkstra's algorithm
 
 ## Problem
