@@ -360,7 +360,7 @@ void print(graph *G, int s) {
       printf("%11s", "inf");
     else printf("%11.2lf", n->dist);
     if (n->parentG == -1)
-      printf("%9s\n", "na");
+      printf("%9c\n", '-');
     else if (n->parentG == s)
       printf("%9s\n", "src");
     else printf("%9d\n", n->parentG);

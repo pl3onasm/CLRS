@@ -132,7 +132,7 @@ void print (graph *G, short cycle, int s) {
       printf("%11s", "inf");
     else printf("%11.2lf", n->dist);
     if (n->parent == -1)
-      printf("%9s\n", "na");
+      printf("%9c\n", '-');
     else if (n->parent == s)
       printf("%9s\n", "src");
     else printf("%9d\n", n->parent);

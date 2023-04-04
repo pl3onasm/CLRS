@@ -1,5 +1,5 @@
 Node   Distance   Parent
-   0        inf       na
+   0        inf        -
  src       0.00        0
    2       2.00      src
    3       6.00      src
