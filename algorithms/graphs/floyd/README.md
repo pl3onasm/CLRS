@@ -15,9 +15,9 @@ $$
 d_{ij}^{(r)} = \min \lbrace d_{ik}^{(r-1)} + w_{kj} : 1 \leq k \leq n \rbrace
 $$
 
-The solution after $n-1$ iterations is then $d_{ij}^{(n-1)}$, which is the weight of the shortest path between any two vertices $i$ and $j$. Note that for $k = 1$, we have $D^{1} = W$, which is the adjacency matrix of the graph, where each entry $w_{ij}$ equals the weight of the edge $(i, j)$, or $\infty$ if there is no edge between $i$ and $j$.
+The solution after $n-1$ iterations is then $d_{ij}^{(n-1)} = \delta_{ij}$, which is the weight of the shortest path between any two vertices $i$ and $j$. Note that for $k = 1$, we have $D^{1} = W$, which is the adjacency matrix of the graph, where each entry $w_{ij}$ equals the weight of the edge $(i, j)$, or $\infty$ if there is no edge between $i$ and $j$.
 
-The resulting procedure for computing the final distance matrix D, containing all the weights of the shortest paths between any two vertices $i$ and $j$, resembles the standard matrix multiplication algorithm, but iterated $n-1$ times and for each entry $d_{ij}$ taking the minimum between the previous path weight and the weight of the extended path instead of the sum of the products of the corresponding entries. This correspondence leads to the observation that the distance matrix $D$ is in fact the $n$-th power of the adjacency matrix $W$ of the graph, i.e. $D = W^n$.  
+The resulting procedure for computing the final distance matrix D, containing all the weights of the shortest paths between any two vertices $i$ and $j$, resembles the standard matrix multiplication algorithm, but iterated $n-1$ times for each additional edge in the paths and for each entry $d_{ij}$ we take the minimum between the previous path weight and the weight of each possible extension of the path by one edge, instead of the sum of the products of the corresponding entries. This correspondence leads to the observation that the distance matrix $D$ is in fact the $n$-th power of the adjacency matrix $W$ of the graph, i.e. $D = W^n$.  
 Thus, the time complexity of the entire algorithm is $\Theta(n^4)$, since we have to repeat $n-1$ times a procedure that takes $\Theta(n^3)$ time (due to the three nested loops in the matrix multiplication algorithm).
 
 If additionally we want to know the actual vertices lying on the shortest paths between any two vertices $i$ and $j$, we also need to keep track of the consecutive choices for the vertex $k$ in order to be able to reconstruct those paths. This means we need to compute an extra predecessor matrix $P$, where $p_{ij}$ equals vertex number $k$ such that $i \leadsto k \to j$ is the shortest path between $i$ and $j$.
@@ -28,7 +28,7 @@ Implementation: [APSP - Bottom-Up DP](https://github.com/pl3onasm/AADS/blob/main
 
 ## Optimized Bottom-Up DP Solution
 
-We can optimize the above solution, which tries to extend paths by one edge at a time. The observation that the distance matrix $D$ actually is the $n$-th power of the adjacency matrix $W$, leads to the idea that we can use the technique of repeated squaring to compute the $n$-th power of $W$ in $\Theta(n^3 \log n)$ time, by multiplying it $\lceil \log_2 (n-1) \rceil$ times by the intermediate powers of itself, instead of computing it naively by multiplying it $n-1$ times by the original adjacency matrix $W$. For this, we initialize the distance matrix $D$ to $W$, and then repeatedly extend paths by powers of two, i.e. "multiply" the distance matrix $D$ by itself, until we get $D^{n-1}$, which is the distance matrix we want.  
+We can optimize the above solution, which tries to extend paths by one edge at a time. The above observation that the distance matrix $D$ actually is the $n$-th power of the adjacency matrix $W$, leads to the idea that we can use the technique of repeated squaring to compute the $n$-th power of $W$ in $\Theta(n^3 \log n)$ time, by multiplying it $\lceil \log_2 (n-1) \rceil$ times by the intermediate powers of itself, instead of computing it naively by multiplying it $n-1$ times by the original adjacency matrix $W$. For this, we initialize the distance matrix $D$ to $W$, and then repeatedly extend paths by powers of two, i.e. "multiply" the distance matrix $D$ by itself, until we get $D^{n-1}$, which is the distance matrix we want.  
 
 Note that the distance matrix $D$ will not change anymore after $n-1$ iterations, so that we can stop after *any* $k \geq n-1$ and get the same matrix $D^{n-1}$, meaning we can also conveniently stop after $k = \lceil \log_2 (n-1) \rceil$ iterations, and get the result we want in $\Theta(n^3 \log n)$ time. The predecessor matrix can be computed in the same time; we just need to initialize it differently (so that it corresponds to the initial distance matrix $D$ = $W$), and then we can also repeatedly square it, until we get $P^{n-1}$.
 
@@ -44,7 +44,7 @@ $$
 d_{ij}^{(k)} =  
 \begin{cases}
 w_{ij} & \text{if } k = 0 \\
-\min \lbrace d_{ij}^{(k-1)}, d_{ik}^{(k-1)} + d_{jk}^{(k-1)} \rbrace  & \text{if } k \geq 1
+\min \lbrace d_{ij}^{(k-1)}, d_{ik}^{(k-1)} + d_{kj}^{(k-1)} \rbrace  & \text{if } k \geq 1
 \end{cases}
 $$
 
