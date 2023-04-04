@@ -112,10 +112,10 @@ void floydWarshall (double **D, int **P, int n) {
     for (int i = 0; i < n; i++)     // for each pair of nodes (i, j)
       for (int j = 0; j < n; j++) 
         if (D[i][k] != DBL_MAX && D[k][j] != DBL_MAX) {
-          // if there is a path from i to k and from k to j
+          // if paths i⇝k and k⇝j exist
           double newDist = D[i][k] + D[k][j];
-          if (newDist < D[i][j]) {  // if i→k→j is shorter than i→j
-            D[i][j] = newDist;      // "relax" the edge i→j
+          if (newDist < D[i][j]) {  // if i⇝k⇝j is shorter than i⇝j
+            D[i][j] = newDist;      // "relax" the path i⇝j
             P[i][j] = P[k][j];      // update the predecessor matrix
           }
         }

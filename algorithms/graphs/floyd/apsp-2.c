@@ -109,14 +109,14 @@ void printPath (int **P, int i, int j) {
 
 void extendPaths (double **D, int **P, int n) {
   /* computes the all-pairs shortest paths */
-  for (int i = 0; i < n; i++)      // for each path i→j
+  for (int i = 0; i < n; i++)      // for each path i⇝j
     for (int j = 0; j < n; j++) 
-      for (int k = 0; k < n; k++)  // try to extend path i→j through k
+      for (int k = 0; k < n; k++)  // try to extend path i⇝j through k
         if (D[i][k] != DBL_MAX && D[k][j] != DBL_MAX) {
-          // if paths i→k and k→j exist
+          // if paths i⇝k and k→j exist
           double newDist = D[i][k] + D[k][j]; // D[k][j] instead of W[k][j]
-          if (newDist < D[i][j]) { // if path i→k→j is shorter than i→j
-            D[i][j] = newDist;     // "relax" the edge i→j
+          if (newDist < D[i][j]) { // if path i⇝k→j is shorter than i⇝j
+            D[i][j] = newDist;     // "relax" the path i⇝j
             P[i][j] = P[k][j];     // update with P[k][j] instead of k
           }
         }

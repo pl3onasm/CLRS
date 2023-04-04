@@ -111,12 +111,12 @@ void extendPaths (double **W, double **D,
   /* tries to extend all paths by 1 edge */
   for (int i = 0; i < n; i++) 
     for (int j = 0; j < n; j++) 
-      for (int k = 0; k < n; k++)  // try to extend path i→j through k
+      for (int k = 0; k < n; k++)  // try to extend path i⇝j through k
         if (D[i][k] != DBL_MAX || W[k][j] != DBL_MAX) { 
-          // if paths i->k and k->j exist
+          // if paths i⇝k and k→j exist
           double newDist = D[i][k] + W[k][j];
-          if (newDist < D[i][j]) { // if path i->k->j is shorter
-            D[i][j] = newDist;     // "relax" the edge i->j
+          if (newDist < D[i][j]) { // if path i⇝k→j is shorter
+            D[i][j] = newDist;     // "relax" the path i⇝j
             P[i][j] = k;           // update predecessor matrix
           }
         }
