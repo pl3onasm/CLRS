@@ -6,7 +6,7 @@ Given a directed graph $G$ with m edges and n vertices, find the transitive clos
 
 ## Solution using Floyd-Warshall algorithm
 
-We can obtain the transitive closure of a graph by running the Floyd-Warshall algorithm on the given graph. If there is a path from $i$ to $j$, then the distance between $i$ and $j$ will be finite. Otherwise, the distance will be infinite. We can even ignore the weights of the edges in the graph and assume that all the edges have weight 1. In that case, there is a path from $i$ to $j$ iff the distance between $i$ and $j$ is less than n. The result is a matrix $M$ where $m_{ij}$ is either infinite if there is no path from $i$ to $j$ or finite with the number of edges needed to go from $i$ to $j$.
+We can obtain the transitive closure of a graph by running the Floyd-Warshall algorithm on the given graph. If there is a path from $i$ to $j$, then the distance matrix $D$ will have a finite value at the position $d_{ij}$. Otherwise, the distance will be infinite. The result is a matrix $M$ where $m_{ij}$ is either infinite if there is no path from $i$ to $j$ or finite with the number of edges needed to go from $i$ to $j$.
 
 Time complexity: $O(V^3)$
 
