@@ -167,9 +167,9 @@ edge **mstKruskal(graph *G) {
 
   // add edges to the minimum spanning tree
   for (int i = 0; i < G->nEdges; i++) {
-    if (idx == n-1) break;
-    edge *e = G->edges[i];
-    int ru = find(sets, e->u);
+    if (idx == n-1) break;      // stop if the MST is complete
+    edge *e = G->edges[i];     
+    int ru = find(sets, e->u);  // find the roots of the sets
     int rv = find(sets, e->v);
     if (ru != rv) {  // add e if this does not create a cycle
       mst[idx++] = e;
@@ -183,7 +183,7 @@ edge **mstKruskal(graph *G) {
 void printMST(graph *G, edge **mst) {
   /* prints the edges of the MST and its weight */
   double min = 0;
-  printf("MST edges:\n");
+  printf("MST edges in insertion order:\n");
   for (int i = 0; i < G->nNodes-1; i++) {
     min += mst[i]->weight;
     printEdge(mst[i]);

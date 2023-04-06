@@ -24,8 +24,10 @@ typedef struct node {
   int id, parentG;        // node id and parent id in graph
   int mstNode;            // 1 if node is in the MST, 0 otherwise
   list *adj;              // adjacency list
+  short reversed;         // 1 if the MST edge has reverse input order
 
   // heap-related fields
+  short inHeap;           // 1 if node is in the heap, 0 otherwise
   double key;             // key attribute to sort the nodes in the heap
   int degree;             // number of children in the heap
   int mark;               // keeps track of whether a node lost a child
@@ -40,6 +42,7 @@ struct list {
   node *n;
   list *next;             // pointer to the next node in the list
   double w;               // weight of the incident edge
+  short reversed;         // 1 if the edge has reverse input order
 };
 
 typedef struct graph {
@@ -89,12 +92,13 @@ void freeList(list *L) {
   free(L);
 }
 
-list *listInsert (list *L, node *n, double w) {
+list *listInsert (list *L, node *n, double w, short reversed) {
   /* inserts the node n at the beginning of the list L */
   list *new = safeCalloc(1, sizeof(list));
   new->n = n;
   new->next = L;
   new->w = w;
+  new->reversed = reversed;  // 1 if the edge has reverse input order
   return new;
 }
 
@@ -136,9 +140,9 @@ void buildGraph(graph *G) {
   int u, v; double w;
   while (scanf("%d %d %lf", &u, &v, &w) == 3) {
     node *n = G->vertices[u];
-    n->adj = listInsert(n->adj, G->vertices[v], w);
+    n->adj = listInsert(n->adj, G->vertices[v], w, 0);
     n = G->vertices[v];
-    n->adj = listInsert(n->adj, G->vertices[u], w);
+    n->adj = listInsert(n->adj, G->vertices[u], w, 1);
     G->nEdges++;
   }
 }
@@ -181,6 +185,7 @@ void link(heap *H, node *u, node *v) {
 
 void insertNode(heap *H, node *u) {
   /* inserts a node into the heap */
+  u->inHeap = 1;                // u is now in the heap
   u->degree = 0;                
   u->mark = 0;
   u->child = NULL;              
@@ -274,6 +279,7 @@ node *extractMin(heap *H) {
         consolidate(H);           
     }
     H->nNodes--;                // update the number of nodes 
+    z->inHeap = 0;              // z is no longer in the heap
   }
   return z;
 }
@@ -327,38 +333,40 @@ void freeHeap(heap *H) {
 
 //::::::::::::::::::::::::: mst functions :::::::::::::::::::::::::://
 
-void mstPrim(graph *G) {
+int *mstPrim(graph *G) {
   /* computes a minimum spanning tree of G using Prim's algorithm */
+  int *M = safeCalloc(G->nNodes, sizeof(int)), idx = 0;
   G->vertices[0]->key = 0;  // set the key of the root to 0
   heap *H = newHeap(G);
   
   while (H->nNodes > 0) {
     node *u = extractMin(H);
-    u->mstNode = 1;  // mark the extracted node as part of the MST
+    if (u->parentG >= 0) M[idx++] = u->id;  // add u to the MST
 
     // iterate over u's neighbors and update their keys
     for (list *l = u->adj; l != NULL; l = l->next) {
       node *v = l->n;
-      if (!v->mstNode && l->w < v->key) {
-        v->parentG = u->id; // set v's parent to u
+      if (v->inHeap && l->w < v->key) {
+        v->parentG = u->id;         // set v's parent to u
+        v->reversed = l->reversed;  // set v's reversed flag
         decreaseKey(H, v, l->w);
       }
     }
   }
   freeHeap(H);
+  return M;
 }
 
-void printMST(graph *G) {
+void printMST(graph *G, int *M) {
   /* prints the edges of the MST and its total weight */
+  printf("MST edges in insertion order:\n");
   double totalWeight = 0;
-  printf("MST edges:\n");
-  for (int i = 0; i < G->nNodes; i++) {
-    node *n = G->vertices[i];
-    if (n->parentG != -1 && n->mstNode) {
-      // reconstruct the edge (u, v, w) as (v.parentG, v.id, v.key)
-      printf("(%d, %d, %.2lf)\n", n->parentG, n->id, n->key);
-      totalWeight += n->key;
-    } 
+  for (int i = 0; i < G->nNodes - 1; i++) {
+    node *u = G->vertices[M[i]];
+    // print the edge in the original input order
+    if (u->reversed) printf("%d %d %.2lf\n", u->id, u->parentG, u->key);
+    else printf("%d %d %.2lf\n", u->parentG, u->id, u->key);
+    totalWeight += u->key;
   }
   printf("MST weight: %.2lf\n", totalWeight);
 }
@@ -372,8 +380,8 @@ int main (int argc, char *argv[]) {
   graph *G = newGraph(n); 
   buildGraph(G);            // read edges from stdin
 
-  mstPrim(G);               // compute MST
-  printMST(G);              // print MST edges and weight
+  int *M = mstPrim(G);      // compute MST
+  printMST(G, M);           // print MST edges and weight
 
   freeGraph(G);
   return 0;
