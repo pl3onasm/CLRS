@@ -1,6 +1,7 @@
 The maximum flow from node 0 to node 5 is 23.00
 
-Edges            flow
+Edges            Flow
+---------------------
 (0, 1)          12.00
 (0, 2)          11.00
 (1, 3)          12.00

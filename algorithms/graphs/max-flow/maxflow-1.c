@@ -237,7 +237,8 @@ double edmondsKarp(graph *G, int s, int t) {
 void printFlow(graph *G, int s, int t, double maxFlow) {
   /* prints the flow on each edge of the graph G */
   printf("The maximum flow from node %d to node %d"
-         " is %.2lf\n\nEdges %15s\n", s, t, maxFlow, "flow");
+         " is %.2lf\n\nEdges %15s\n", s, t, maxFlow, "Flow");
+  printf("---------------------\n"); 
   for (int i = 0; i < G->nEdges; ++i) {
     edge *e = G->edges[i];
     if (!e->residual){
