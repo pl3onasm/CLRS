@@ -1,4 +1,4 @@
-# Maximum flow problem (Ford-Fulkerson algorithm)
+# Maximum flow problem (Ford-Fulkerson)
 
 ## Problem
 

@@ -24,7 +24,6 @@ typedef struct edge {
 } edge;
 
 typedef struct node {
-  // graph-related fields
   int id;                 // id of the node
   int *adj;               // array of adjacent nodes: edge indices
   int adjCap;             // capacity of the adjacency list
