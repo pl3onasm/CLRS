@@ -219,7 +219,7 @@ void initMinHeap(heap *H){
 
 int *mstPrim(graph *G) {
   /* computes a minimum spanning tree of G using Prim's algorithm */
-  int *M = safeCalloc(G->nNodes, sizeof(int)); int idx = 0;
+  int *M = safeCalloc(G->nNodes, sizeof(int)), idx = 0;
   heap *H = newHeap(G);
   G->vertices[0]->key = 0;  // set the key of the root to 0
   initMinHeap(H);           // initialize the min heap

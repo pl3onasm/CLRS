@@ -1,4 +1,4 @@
-MST edges:
+MST edges in insertion order:
 (6, 7, 1.70)
 (7, 8, 1.80)
 (1, 8, 2.10)
@@ -8,4 +8,4 @@ MST edges:
 (9, 5, 2.50)
 (1, 2, 2.60)
 (8, 9, 2.80)
-Total weight: 20.20
+MST weight: 20.20
