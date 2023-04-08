@@ -9,5 +9,7 @@ Implementation: [Max-flow - Edmonds-Karp](https://github.com/pl3onasm/AADS/blob/
 
 ## Capacity scaling and DFS
 
+Implementation: [Max-flow - DFS](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/max-flow/maxflow-2.c)
+
 ## Dinic's algorithm
 
