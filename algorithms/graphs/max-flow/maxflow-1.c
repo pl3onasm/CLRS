@@ -14,6 +14,9 @@
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define INF DBL_MAX
+#define true 1
+#define false 0
+#define bool short
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
@@ -21,12 +24,12 @@ typedef struct edge {
   int from, to;           // ids of the endpoints of the edge (u->v)
   double cap;             // capacity of the edge
   double flow;            // flow on the edge
-  short residual;         // 1 if the edge is a residual edge
+  bool residual;          // true if the edge is a residual edge
 } edge;
 
 typedef struct node {
   int id;                 // id of the node
-  int *adj;               // array of adjacent nodes: edge indices
+  int *adj;               // adjacency list: indices of the outgoing edges
   int adjCap;             // capacity of the adjacency list
   int nAdj;               // number of adjacent nodes
 } node;
@@ -104,7 +107,7 @@ void freeGraph(graph *G) {
   free(G);
 }
 
-edge *addEdge(graph *G, int uId, int vId, double cap, short residual) {
+edge *addEdge(graph *G, int uId, int vId, double cap, bool residual) {
   /* adds an edge from u to v with capacity cap */
   edge *e = safeCalloc(1, sizeof(edge));
   e->from = uId;
@@ -132,14 +135,14 @@ void buildGraph(graph *G) {
   /* reads undirected graph from stdin and builds the adjacency lists */
   int u, v; double cap;
   while (scanf("%d %d %lf", &u, &v, &cap) == 3) {
-    addEdge(G, u, v, cap, 0);   // add forward edge
-    addEdge(G, v, u, 0, 1);     // add residual edge
+    addEdge(G, u, v, cap, false); // add forward edge
+    addEdge(G, v, u, 0, true);    // add residual edge
   }
 }
 
 //:::::::::::::::::::::::: queue functions ::::::::::::::::::::::::://
 
-short isEmpty(queue *Q) {
+bool isEmpty(queue *Q) {
   /* returns 1 if the queue is empty, 0 otherwise */
   return Q->front == Q->back;
 }
@@ -163,9 +166,8 @@ void freeQueue(queue *Q) {
 void doubleQueueSize(queue *Q) {
   /* doubles the size of the queue */
   Q->array = safeRealloc(Q->array, 2 * Q->size * sizeof(int));
-  for (int i = 0; i < Q->back; ++i){
+  for (int i = 0; i < Q->back; ++i)
     Q->array[i + Q->size] = Q->array[i];
-  }
   Q->back += Q->size;
   Q->size *= 2;
 }
@@ -199,8 +201,8 @@ double bfs(graph *G, int s, int t, int *path) {
   while (!isEmpty(q)) {
     node *n = G->nodes[dequeue(q)]; 
    
-    // check each edge from n
-    for (int i = 0; i < n->nAdj; i++) {
+    // visit all outgoing edges from n
+    for (int i = 0; i < n->nAdj; i++) {  
       int eId = n->adj[i];
       edge *e = G->edges[eId];
       int a = e->to;

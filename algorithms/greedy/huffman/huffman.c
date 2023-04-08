@@ -11,6 +11,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define LEFT(i)   (2*i + 1)
+#define RIGHT(i)  (2*i + 2)
+#define PARENT(i) ((i-1)/2)
+
+//:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
+
 typedef struct Node {
   int freq;     // frequency of the character
   char ch;      // character
@@ -23,7 +29,7 @@ typedef struct {
   Node **nodes; // array of pointers to nodes
 } Heap;
 
-#define par(i) ((i-1)/2)  // parent of node at index i
+//::::::::::::::::::::::: memory management :::::::::::::::::::::::://
 
 void *safeMalloc (int n) {
   /* checks if memory has been allocated successfully */
@@ -34,6 +40,8 @@ void *safeMalloc (int n) {
   return p;
 }
 
+//::::::::::::::::::::::::: tree functions ::::::::::::::::::::::::://
+
 Node *newNode (char ch, int freq) {
   /* creates a new node */
   Node *node = safeMalloc(sizeof(Node));
@@ -41,15 +49,6 @@ Node *newNode (char ch, int freq) {
   node->freq = freq;
   node->left = node->right = NULL;
   return node;
-}
-
-Heap *newHeap (int size) {
-  /* creates a new heap */
-  Heap *heap = safeMalloc(sizeof(Heap));
-  heap->size = size;
-  heap->n = 0;
-  heap->nodes = safeMalloc(sizeof(Node *) * size);
-  return heap;
 }
 
 void freeTree (Node *n) {
@@ -60,81 +59,82 @@ void freeTree (Node *n) {
   free(n);
 }
 
-void freeHeap (Heap *hp) {
+//::::::::::::::::::::::::: heap functions ::::::::::::::::::::::::://
+
+Heap *newHeap (int size) {
+  /* creates a new heap */
+  Heap *heap = safeMalloc(sizeof(Heap));
+  heap->size = size;
+  heap->n = 0;
+  heap->nodes = safeMalloc(sizeof(Node *) * size);
+  return heap;
+}
+
+void freeHeap (Heap *H) {
   /* frees the heap */
-  free(hp->nodes);
-  free(hp);
+  free(H->nodes);
+  free(H);
 }
 
-void swap (Heap *hp, int i, int j) {
+void swap (Heap *H, int i, int j) {
   /* swaps the elements at indices i and j in the heap */
-  Node *tmp = hp->nodes[i];
-  hp->nodes[i] = hp->nodes[j];
-  hp->nodes[j] = tmp;
+  Node *tmp = H->nodes[i];
+  H->nodes[i] = H->nodes[j];
+  H->nodes[j] = tmp;
 }
 
-void minHeapify(Heap *hp, int i){
+void minHeapify(Heap *H, int i){
   /* restores the min heap property in a top-down manner */
-  int min = i, left = 2 * i + 1, right = 2 * i + 2;
-  if (left < hp->n && hp->nodes[left]->freq < hp->nodes[i]->freq)
-    min = left;
-  if (right < hp->n && hp->nodes[right]->freq < hp->nodes[min]->freq)
-    min = right;
+  int min = i, l = LEFT(i), r = RIGHT(i);
+  if (l < H->n && H->nodes[l]->freq < H->nodes[i]->freq)
+    min = l;
+  if (r < H->n && H->nodes[r]->freq < H->nodes[min]->freq)
+    min = r;
   if (min != i) {
-    swap(hp, i, min); 
-    minHeapify(hp, min);
+    swap(H, i, min); 
+    minHeapify(H, min);
   }
 }
 
-void minHeapInsert(Heap *hp, Node *new){
+void minHeapInsert(Heap *H, Node *new){
   /* inserts new node into the min heap and restores 
      the min heap property in a bottom-up manner */
-  int i = hp->n;
-  hp->nodes[hp->n++] = new;
-  while (i > 0 && hp->nodes[i]->freq < hp->nodes[par(i)]->freq) {
-    swap(hp, i, par(i));
-    i = par(i);
+  int i = H->n;
+  H->nodes[H->n++] = new;
+  while (i > 0 && H->nodes[i]->freq < H->nodes[PARENT(i)]->freq) {
+    swap(H, i, PARENT(i));
+    i = PARENT(i);
   }
 }
 
-Node *extractMin(Heap *hp){
+Node *extractMin(Heap *H){
   /* extracts the node with the minimum frequency */
-  Node *min = hp->nodes[0];
-  hp->nodes[0] = hp->nodes[--hp->n];
-  minHeapify(hp, 0);
+  Node *min = H->nodes[0];
+  H->nodes[0] = H->nodes[--H->n];
+  minHeapify(H, 0);
   return min;
 }
 
-void initMinHeap(Heap *hp){
+void initMinHeap(Heap *H){
   /* initializes the min heap */
-  for (int i = hp->n/2 - 1; i >= 0; i--)
-    minHeapify(hp, i);
+  for (int i = H->n/2 - 1; i >= 0; i--)
+    minHeapify(H, i);
 }
 
 Heap *readHeap (char chars[], int freq[], int len) {
   /* reads the min heap from the input */
-  Heap *hp = newHeap(len);
+  Heap *H = newHeap(len);
   for (int i = 0; i < len; i++) {
     if (freq[i] > 0) {
       Node *node = newNode(chars[i], freq[i]);
-      hp->nodes[hp->n++] = node;
+      H->nodes[H->n++] = node;
     }
   }
-  initMinHeap(hp);
-  return hp;
+  initMinHeap(H);
+  return H;
 }
 
-Node *huffman (Heap *hp) {
-  /* creates the Huffman tree */
-  while (hp->n > 1) {
-    Node *x = extractMin(hp);
-    Node *y = extractMin(hp);
-    Node *z = newNode('#', x->freq + y->freq);
-    z->left = x; z->right = y;
-    minHeapInsert(hp, z);
-  }
-  return extractMin(hp);
-}
+//:::::::::::::::::::::::: print functions ::::::::::::::::::::::::://
 
 void showArray(int arr[], int n) {
   for (int i = 0; i < n; ++i)
@@ -158,7 +158,7 @@ void showCodes(Node *n, int code[], int level) {
 }
 
 void showTree(Node *n, int level){
-  if (n == NULL) return;
+  if (!n) return;
   for (int i = 0; i < level; i++)
     printf(i == level - 1 ? "  |-" : "  ");
   if (!n->left && !n->right)  // leaf node
@@ -179,6 +179,22 @@ void printExample(Node *root, int example) {
   printf("\n");
 }
 
+//::::::::::::::::::::::: huffman functions :::::::::::::::::::::::://
+
+Node *huffman (Heap *H) {
+  /* creates the Huffman tree */
+  while (H->n > 1) {
+    Node *x = extractMin(H);
+    Node *y = extractMin(H);
+    Node *z = newNode('#', x->freq + y->freq);
+    z->left = x; z->right = y;
+    minHeapInsert(H, z);
+  }
+  return extractMin(H);
+}
+
+//::::::::::::::::::::::::::::: main ::::::::::::::::::::::::::::::://
+
 int main (int argc, char *argv[]) {
   //EXAMPLE 1: taken from the textbook
   char chars1[] = {'a','b','c','d','e','f'};
@@ -191,18 +207,18 @@ int main (int argc, char *argv[]) {
   
   int len1 = sizeof(chars1) / sizeof(chars1[0]);
   int len2 = sizeof(chars2) / sizeof(chars2[0]);
-  Heap *hp1 = readHeap(chars1, freq1, len1); 
-  Heap *hp2 = readHeap(chars2, freq2, len2);
-  Node *root1 = huffman(hp1);
-  Node *root2 = huffman(hp2);
+  Heap *H1 = readHeap(chars1, freq1, len1); 
+  Heap *H2 = readHeap(chars2, freq2, len2);
+  Node *root1 = huffman(H1);
+  Node *root2 = huffman(H2);
  
   printExample(root1, 1);
   printExample(root2, 2);
 
   freeTree(root1);
   freeTree(root2);
-  freeHeap(hp1);
-  freeHeap(hp2);
+  freeHeap(H1);
+  freeHeap(H2);
   return 0; 
 }
   

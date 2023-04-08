@@ -14,6 +14,9 @@
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define INF DBL_MAX
+#define true 1
+#define false 0
+#define bool short
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
@@ -21,15 +24,15 @@ typedef struct edge {
   int from, to;           // ids of the endpoints of the edge (u->v)
   double cap;             // capacity of the edge
   double flow;            // flow on the edge
-  short residual;         // 1 if the edge is a residual edge
+  bool residual;          // true if the edge is a residual edge
 } edge;
 
 typedef struct node {
   int id;                 // id of the node
-  int *adj;               // array of adjacent nodes: edge indices
+  int *adj;               // adjacency list: indices of the outgoing edges
   int adjCap;             // capacity of the adjacency list
   int nAdj;               // number of adjacent nodes
-  short visited;          // 1 if the node has been visited in the DFS
+  bool visited;           // true if the node has been visited in the DFS
 } node;
 
 typedef struct graph {
@@ -72,7 +75,7 @@ node *newNode(int id) {
   n->id = id;
   n->adjCap = 0;
   n->nAdj = 0;
-  n->visited = 0;
+  n->visited = false;
   return n;
 }
 
@@ -103,7 +106,7 @@ void freeGraph(graph *G) {
   free(G);
 }
 
-edge *addEdge(graph *G, int uId, int vId, double cap, short residual) {
+edge *addEdge(graph *G, int uId, int vId, double cap, bool residual) {
   /* adds an edge from u to v with capacity cap */
   edge *e = safeCalloc(1, sizeof(edge));
   e->from = uId;
@@ -132,8 +135,8 @@ void buildGraph(graph *G) {
   int u, v; double cap;
   while (scanf("%d %d %lf", &u, &v, &cap) == 3) {
     G->maxCap = MAX(G->maxCap, cap);
-    addEdge(G, u, v, cap, 0);   // add forward edge
-    addEdge(G, v, u, 0, 1);     // add residual edge
+    addEdge(G, u, v, cap, false);  // add forward edge
+    addEdge(G, v, u, 0, true);     // add residual edge
   }
 }
 
@@ -148,26 +151,25 @@ int pow2(int n) {
 
 double dfs(graph *G, int s, int t, double minFlow, int delta) {
   /* tries to find an augmenting path from s to t using DFS */
-  if (s == t) return minFlow;         // reached the sink
+  if (s == t) return minFlow;             // reached the sink
   node *u = G->nodes[s];
-  if (u->visited) return 0;           // already visited
+  if (u->visited) return 0;               // already visited
   double flow;
-  for (int i = 0; i < u->nAdj; ++i) {
-    edge *e = G->edges[u->adj[i]];
+  for (int i = 0; i < u->nAdj; ++i) {     
+    int eId = u->adj[i];
+    edge *e = G->edges[eId];
     if (e->cap > delta) {             
-      u->visited = 1;                 // mark as visited
+      u->visited = true;                  // mark as visited
       if ((flow = dfs(G, e->to, t, MIN(minFlow, e->cap), delta))) {
-        edge *r = G->edges[u->adj[i] ^ 1]; 
-        e->cap -= flow;               // update the capacity
-        e->flow += flow;              // update the flow
-        r->cap += flow;               // update the residual capacity
-        r->flow -= flow;              // update the residual flow
-        u->visited = 0;               // unmark as visited
+        edge *r = G->edges[eId ^ 1]; 
+        e->cap -= flow; e->flow += flow;  // update forward edge              
+        r->cap += flow; r->flow -= flow;  // update residual edge             
+        u->visited = false;               // mark as unvisited
         return flow;
       }               
     }
   }
-  u->visited = 0;  
+  u->visited = false; 
   return 0;
 }
 

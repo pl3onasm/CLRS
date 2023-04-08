@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <float.h>
+#define INF DBL_MAX
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
@@ -79,8 +80,8 @@ node *newNode(int id) {
   /* creates a node with given id */
   node *n = safeCalloc(1, sizeof(node));
   n->id = id;
-  n->parent = -1;       // -1 means no parent
-  n->dist = DBL_MAX;    // initially, all nodes are unreachable
+  n->parent = -1;   // -1 means no parent
+  n->dist = INF;    // initially, all nodes are unreachable
   return n;
 }
 
@@ -130,7 +131,7 @@ void print (graph *G, int s) {
     node *n = G->nodes[i];
     if (n->id == s) printf("%4s", "src");
     else printf("%4d", n->id);
-    if (n->dist == DBL_MAX)
+    if (n->dist == INF)
       printf("%11s", "inf");
     else printf("%11.2lf", n->dist);
     if (n->parent == -1)
@@ -145,7 +146,7 @@ void relax(graph *G, edge *e) {
   /* relaxes the edge e */
   node *u = G->nodes[e->u];
   node *v = G->nodes[e->v];
-  if (u->dist == DBL_MAX) return;   // u is unreachable
+  if (u->dist == INF) return;       // u is unreachable
   if (v->dist > u->dist + e->w) {   // found a shorter path
     v->dist = u->dist + e->w;       // update estimate
     v->parent = u->id;
