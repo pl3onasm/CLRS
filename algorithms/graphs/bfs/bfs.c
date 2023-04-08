@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#define bool short
+typedef short bool;
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 

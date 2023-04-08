@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#define INF INT_MAX
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
 
@@ -41,7 +42,7 @@ int **initD (int n) {
   for (int i = 0; i < n; i++){
     D[i] = safeCalloc(n, sizeof(int)); 
     for (int j = 0; j < n; j++) 
-      D[i][j] = (i == j) ? 0 : INT_MAX;
+      D[i][j] = (i == j) ? 0 : INF;
   }
   return D;
 }
@@ -50,7 +51,7 @@ void printD (int **M, int n) {
   /* prints a n x n distance matrix */
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < n; j++) {
-      if (M[i][j] == INT_MAX) printf("%3c", '-');
+      if (M[i][j] == INF) printf("%3c", '-');
       else printf("%3d", M[i][j]);
     }
     printf("\n");
@@ -77,7 +78,7 @@ void floydWarshall (int **D, int n) {
   for (int k = 0; k < n; k++)       // for each intermediate node k
     for (int i = 0; i < n; i++)     // for each pair of nodes (i, j)
       for (int j = 0; j < n; j++) 
-        if (D[i][k] != INT_MAX && D[k][j] != INT_MAX) {
+        if (D[i][k] != INF && D[k][j] != INF) {
           int d = D[i][k] + D[k][j];
           if (d < D[i][j]) D[i][j] = d;
         }

@@ -17,7 +17,7 @@
 #define INF DBL_MAX
 #define true 1
 #define false 0
-#define bool short
+typedef short bool;
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
