@@ -13,3 +13,4 @@ Implementation: [Max-flow - DFS](https://github.com/pl3onasm/AADS/blob/main/algo
 
 ## Dinic's algorithm
 
+Implementation: [Max-flow - Dinic](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/max-flow/maxflow-3.c)
