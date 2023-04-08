@@ -233,7 +233,7 @@ void dijkstra(graph *G, int s) {
   while (H->nNodes > 0) {
     node *u = extractMin(H);
 
-    for (list *a = u->adj; a != NULL; a = a->next){
+    for (list *a = u->adj; a; a = a->next){
       node *v = a->n;
       if (relax(u, v, a->w) && v->inHeap)
         decreaseKey(H, v->heapIndex, v->dist);

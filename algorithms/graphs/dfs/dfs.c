@@ -68,7 +68,7 @@ list *newList() {
 
 void printList(list *L) {
   /* prints the list L */
-  if (L == NULL) return;
+  if (!L) return;
   printf("%d", L->nbr->id);
   if (L->next != NULL) printf(", ");
   printList(L->next);
@@ -76,7 +76,7 @@ void printList(list *L) {
 
 void freeList(list *L) {
   /* frees all memory allocated for the list */
-  if (L == NULL) return;
+  if (!L) return;
   freeList(L->next);
   free(L);
 }
@@ -159,7 +159,7 @@ void dfsVisit(graph *G, node *u, int *time) {
   u->dTime = ++*time;
   u->color = 'g';
   
-  for (list *L = u->adj; L != NULL; L = L->next) {
+  for (list *L = u->adj; L; L = L->next) {
     node *v = L->nbr;
     if (v->color == 'w') {
       L->type = 'T';     // tree edge

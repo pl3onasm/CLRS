@@ -83,7 +83,7 @@ list *newList() {
 
 void freeList(list *L) {
   /* frees all memory allocated for the list */
-  if (L != NULL) {
+  if (L) {
     freeList(L->next);
     free(L);
   }
@@ -229,7 +229,7 @@ int *mstPrim(graph *G) {
     if (u->parent >= 0) M[idx++] = u->id;  // add u to the MST
    
     // iterate over u's neighbors and update their keys
-    for (list *l = u->adj; l != NULL; l = l->next) {
+    for (list *l = u->adj; l; l = l->next) {
       node *v = l->n;
       if (v->heapIndex >= 0 && l->w < v->key) {
         v->parent = u->id;            // set v's parent to u

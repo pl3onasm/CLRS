@@ -62,7 +62,7 @@ list *newList() {
 
 void printList(list *L) {
   /* prints the list L */
-  if (L == NULL) return;
+  if (!L) return;
   printf("%d", L->n->id);
   if (L->next != NULL) printf(", ");
   printList(L->next);
@@ -70,7 +70,7 @@ void printList(list *L) {
 
 void freeList(list *L) {
   /* frees all memory allocated for the list */
-  if (L == NULL) return;
+  if (!L) return;
   freeList(L->next);
   free(L);
 }
@@ -133,7 +133,7 @@ void buildGraph(graph *G) {
 void dfsVisit(graph *G, node *u, list **L, int *time) {
   /* visits the node u and its descendants in the graph G */
   u->dTime = ++*time;
-  for (list *l = u->adj; l != NULL; l = l->next) {
+  for (list *l = u->adj; l; l = l->next) {
     node *v = l->n;
     if (v->dTime < 0) {   // v is undiscovered
       v->parent = u->id;

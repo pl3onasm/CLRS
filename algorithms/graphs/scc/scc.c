@@ -63,7 +63,7 @@ list *newList() {
 void printList(list *L) {
   /* prints the list L */
   printf("{"); 
-  while (L != NULL) {
+  while (L) {
     printf("%d", L->n->id);
     if (L->next != NULL) printf(", ");
     L = L->next;
@@ -73,7 +73,7 @@ void printList(list *L) {
 
 void freeList(list *L) {
   /* frees all memory allocated for the list */
-  if (L == NULL) return;
+  if (!L) return;
   freeList(L->next);
   free(L);
 }
@@ -138,7 +138,7 @@ void buildGraphs(graph *G, graph *GT) {
 void dfsVisit(graph *G, node *u, list **L, int *time) {
   /* visits the node u and its descendants in the graph G */
   u->dTime = ++*time;
-  for (list *l = u->adj; l != NULL; l = l->next) {
+  for (list *l = u->adj; l; l = l->next) {
     node *v = l->n;
     if (v->dTime < 0) {   // v is undiscovered
       v->parent = u->id;
@@ -161,7 +161,7 @@ void dfsG(graph *G, list **L, int *time) {
 void dfsGT(graph *GT, list *L, int *time) {
   /* performs a depth-first search on the transposed graph Gᵀ and
      prints the strongly connected components of G on the fly */
-  for (list *l = L; l != NULL; l = l->next) {
+  for (list *l = L; l; l = l->next) {
     node *n = GT->vertices[l->n->id];
     if (n->dTime < 0) {  // n is undiscovered in Gᵀ
       list *component = newList();

@@ -64,15 +64,15 @@ list *newList() {
 
 void printList(list *L) {
   /* prints the list L */
-  if (L == NULL) return;
+  if (!L) return;
   printf("%d", L->n->id);
-  if (L->next != NULL) printf(", ");
+  if (!L->next) printf(", ");
   printList(L->next);
 }
 
 void freeList(list *L) {
   /* frees all memory allocated for the list */
-  if (L == NULL) return;
+  if (!L) return;
   freeList(L->next);
   free(L);
 }
@@ -128,24 +128,12 @@ void freeGraph(graph *G) {
   free(G);
 }
 
-void printGraph(graph *G) {
-  /* prints the graph G */
-  printf("Graph with %d nodes and %d edges\n", 
-          G->nNodes, G->nEdges);
-  for (int i = 0; i < G->nNodes; i++) {
-    node *n = G->nodes[i];
-    printf("Node %d: ", n->id);
-    printList(n->adj);
-    printf("\n");
-  }
-}
-
 //:::::::::::::::::::::::: topological sort :::::::::::::::::::::::://
 
 void dfsVisit(graph *G, node *u, list **L, int *time) {
   /* visits the node u and its descendants in the graph G */
   u->dTime = ++*time;
-  for (list *l = u->adj; l != NULL; l = l->next) {
+  for (list *l = u->adj; l; l = l->next) {
     node *v = l->n;
     if (v->dTime < 0) {   // v is undiscovered
       v->parent = u->id;

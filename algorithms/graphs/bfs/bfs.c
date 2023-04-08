@@ -68,7 +68,7 @@ list *newList() {
 
 void printList(list *L) {
   /* prints the list L */
-  if (L == NULL) return;
+  if (!L) return;
   printf("%d", L->nbr->id);
   if (L->next != NULL) printf(", ");
   printList(L->next);
@@ -76,7 +76,7 @@ void printList(list *L) {
 
 void freeList(list *L) {
   /* frees all memory allocated for the list */
-  if (L == NULL) return;
+  if (!L) return;
   freeList(L->next);
   free(L);
 }
@@ -212,7 +212,7 @@ void bfs(graph *G, int s) {
     node *n = G->vertices[dequeue(q)]; 
    
     // check each neighbor of n
-    for (list *L = n->adj; L != NULL; L = L->next) {
+    for (list *L = n->adj; L; L = L->next) {
       node *a = L->nbr;
       if (a->parent < 0) {
         // set parent and update distance
