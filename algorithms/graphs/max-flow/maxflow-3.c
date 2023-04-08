@@ -148,7 +148,7 @@ void buildGraph(graph *G) {
   int u, v; double cap;
   while (scanf("%d %d %lf", &u, &v, &cap) == 3) {
     addEdge(G, u, v, cap, false); // add forward edge
-    addEdge(G, v, u, 0, true);    // add backward edge
+    addEdge(G, v, u, 0, true);    // add residual edge
   }
 }
 
