@@ -137,7 +137,7 @@ void buildGraph(graph *G) {
   }
 }
 
-//::::::::::::::::::::::::: Edmonds-Karp ::::::::::::::::::::::::::://
+//:::::::::::::::::: DFS with capacity scaling ::::::::::::::::::::://
 
 int pow2(int n) {
   /* returns the largest power of 2 ≤ the max capacity */
