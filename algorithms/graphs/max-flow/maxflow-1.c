@@ -35,6 +35,7 @@ typedef struct graph {
   node **nodes;           // array of pointers to nodes
   edge **edges;           // array of pointers to edges
   int edgeCap;            // capacity of the edge array
+  double maxFlow;         // maximum flow in the graph
 } graph;
 
 typedef struct queue {
@@ -82,6 +83,7 @@ graph *newGraph(int n) {
   G->nNodes = n;
   G->nEdges = 0;
   G->edgeCap = 0;
+  G->maxFlow = 0;
   G->nodes = safeCalloc(n, sizeof(node*));
   for (int i = 0; i < n; i++)
     G->nodes[i] = newNode(i);
@@ -216,12 +218,12 @@ double bfs(graph *G, int s, int t, int *path) {
   return 0;
 }
 
-double edmondsKarp(graph *G, int s, int t) {
+void edmondsKarp(graph *G, int s, int t) {
   /* finds the maximum flow from s to t using Edmonds-Karp */
   int *path = safeCalloc(G->nNodes, sizeof(int));  
-  double maxFlow = 0, flow;
-  while (flow = bfs(G, s, t, path)) {
-    maxFlow += flow;
+  double flow;
+  while ((flow = bfs(G, s, t, path))) {
+    G->maxFlow += flow;
     // update flow on each edge in the path
     for (int i = t; i != s; i = G->edges[path[i]]->from){
       edge *e = G->edges[path[i]];
@@ -231,13 +233,12 @@ double edmondsKarp(graph *G, int s, int t) {
     }
   }
   free(path);
-  return maxFlow;
 }
 
-void printFlow(graph *G, int s, int t, double maxFlow) {
+void printFlow(graph *G, int s, int t) {
   /* prints the flow on each edge of the graph G */
   printf("The maximum flow from node %d to node %d"
-         " is %.2lf\n\nEdges %15s\n", s, t, maxFlow, "Flow");
+         " is %.2lf\n\nEdges %15s\n", s, t, G->maxFlow, "Flow");
   printf("---------------------\n"); 
   for (int i = 0; i < G->nEdges; ++i) {
     edge *e = G->edges[i];
@@ -258,8 +259,8 @@ int main (int argc, char *argv[]) {
   graph *G = newGraph(n); 
   buildGraph(G);                  // read edges from stdin
 
-  double maxFlow = edmondsKarp(G, s, t); 
-  printFlow(G, s, t, maxFlow);    // print flow values
+  edmondsKarp(G, s, t);           // find the maximum flow
+  printFlow(G, s, t);             // print flow values
 
   freeGraph(G);                   // free memory
   return 0;

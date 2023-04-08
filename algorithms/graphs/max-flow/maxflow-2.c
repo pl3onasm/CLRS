@@ -11,8 +11,11 @@
 #include <stdlib.h>
 #include <float.h>
 #include <string.h>
+#include <math.h>
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#define INF DBL_MAX
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
@@ -28,6 +31,7 @@ typedef struct node {
   int *adj;               // array of adjacent nodes: edge indices
   int adjCap;             // capacity of the adjacency list
   int nAdj;               // number of adjacent nodes
+  short visited;          // 1 if the node has been visited
 } node;
 
 typedef struct graph {
@@ -35,6 +39,8 @@ typedef struct graph {
   node **nodes;           // array of pointers to nodes
   edge **edges;           // array of pointers to edges
   int edgeCap;            // capacity of the edge array
+  double maxCap;          // maximum capacity among all edges
+  double maxFlow;         // maximum flow in the graph
 } graph;
 
 typedef struct queue {
@@ -73,6 +79,7 @@ node *newNode(int id) {
   n->id = id;
   n->adjCap = 0;
   n->nAdj = 0;
+  n->visited = 0;
   return n;
 }
 
@@ -82,6 +89,8 @@ graph *newGraph(int n) {
   G->nNodes = n;
   G->nEdges = 0;
   G->edgeCap = 0;
+  G->maxCap = 0;
+  G->maxFlow = 0;
   G->nodes = safeCalloc(n, sizeof(node*));
   for (int i = 0; i < n; i++)
     G->nodes[i] = newNode(i);
@@ -129,115 +138,60 @@ void buildGraph(graph *G) {
   /* reads undirected graph from stdin and builds the adjacency lists */
   int u, v; double cap;
   while (scanf("%d %d %lf", &u, &v, &cap) == 3) {
+    G->maxCap = MAX(G->maxCap, cap);
     addEdge(G, u, v, cap, 0);   // add forward edge
     addEdge(G, v, u, 0, 1);     // add residual edge
   }
 }
 
-//:::::::::::::::::::::::: queue functions ::::::::::::::::::::::::://
-
-short isEmpty(queue *Q) {
-  /* returns 1 if the queue is empty, 0 otherwise */
-  return Q->front == Q->back;
-}
-
-queue *newQueue(int n) {
-  /* creates a queue with n elements */
-  queue *Q = safeCalloc(1, sizeof(queue));
-  Q->array = safeCalloc(n, sizeof(int));
-  Q->front = 0;
-  Q->back = 0;
-  Q->size = n;
-  return Q;
-}
-
-void freeQueue(queue *Q) {
-  /* frees all memory allocated for the queue */
-  free(Q->array);
-  free(Q);
-}
-
-void doubleQueueSize(queue *Q) {
-  /* doubles the size of the queue */
-  Q->array = safeRealloc(Q->array, 2 * Q->size * sizeof(int));
-  for (int i = 0; i < Q->back; ++i){
-    Q->array[i + Q->size] = Q->array[i];
-  }
-  Q->back += Q->size;
-  Q->size *= 2;
-}
-
-void enqueue (queue *Q, int n) {
-  /* adds n to the back of the queue */
-  Q->array[Q->back] = n;
-  Q->back = (Q->back + 1) % Q->size;
-  if (Q->back == Q->front) doubleQueueSize(Q);
-}
-
-int dequeue (queue *Q) {
-  /* removes and returns the first element of the queue */
-  if (isEmpty(Q)) {
-    printf("Error: dequeue() called on empty queue.\n");
-    exit(EXIT_FAILURE);
-  }
-  int n = Q->array[Q->front];
-  Q->front = (Q->front + 1) % Q->size;
-  return n;
-}
-
 //::::::::::::::::::::::::: Edmonds-Karp ::::::::::::::::::::::::::://
 
-double bfs(graph *G, int s, int t, int *path) {
-  /* tries to find an augmenting path from s to t using BFS */
-  memset(path, -1, G->nNodes * sizeof(int));
-  double flow = DBL_MAX; 
-  queue *q = newQueue(G->nNodes); 
-  enqueue(q, s);    // enqueue source node
-  while (!isEmpty(q)) {
-    node *n = G->nodes[dequeue(q)]; 
-   
-    // check each edge from n
-    for (int i = 0; i < n->nAdj; i++) {
-      int eId = n->adj[i];
-      edge *e = G->edges[eId];
-      int a = e->to;
-      if (e->cap > 0 && path[a] == -1) {
-        flow = MIN(flow, e->cap);
-        path[a] = eId;
-        if (a == t) {
-          freeQueue(q);
-          return flow;
-        }
-        enqueue(q, a);
+int pow2(int n) {
+  /* returns the largest power of 2 ≤ the max capacity */
+  int p = 1;
+  while (p < n) p <<= 1;
+  return p >> 1;
+}
+
+double dfs(graph *G, int s, int t, double minFlow, int delta) {
+  /* tries to find an augmenting path from s to t using DFS */
+  if (s == t) return minFlow;         // reached the sink
+  node *u = G->nodes[s];
+  if (u->visited) return 0;           // already visited
+  double flow;
+  for (int i = 0; i < u->nAdj; ++i) {
+    edge *e = G->edges[u->adj[i]];
+    if (e->cap > delta) {             
+      u->visited = 1;                 // mark as visited
+      if ((flow = dfs(G, e->to, t, MIN(minFlow, e->cap), delta))) {
+        edge *r = G->edges[u->adj[i] ^ 1]; 
+        e->cap -= flow;               // update the capacity
+        e->flow += flow;              // update the flow
+        r->cap += flow;               // update the residual capacity
+        r->flow -= flow;              // update the residual flow
+        u->visited = 0;               // unmark as visited
+        return flow;
       }
+      u->visited = 0;                 
     }
   }
-  freeQueue(q);
   return 0;
 }
 
-double edmondsKarp(graph *G, int s, int t) {
-  /* finds the maximum flow from s to t using Edmonds-Karp */
-  int *path = safeCalloc(G->nNodes, sizeof(int));  
-  double maxFlow = 0, flow;
-  while (flow = bfs(G, s, t, path)) {
-    maxFlow += flow;
-    // update flow on each edge in the path
-    for (int i = t; i != s; i = G->edges[path[i]]->from){
-      edge *e = G->edges[path[i]];
-      edge *r = G->edges[path[i]^1];
-      e->flow += flow; e->cap -= flow;  // update forward edge
-      r->flow -= flow; r->cap += flow;  // update residual edge
-    }
+void maxFlow(graph *G, int s, int t) {
+  /* finds the maximum flow from s to t using capacity scaling */
+  double flow; 
+  int delta = pow2(G->maxCap);        // initial threshold
+  for (; delta > 0; delta >>= 1) {     
+    while ((flow = dfs(G, s, t, INF, delta)))   
+      G->maxFlow += flow;             // update the max flow
   }
-  free(path);
-  return maxFlow;
 }
 
-void printFlow(graph *G, int s, int t, double maxFlow) {
-  /* prints the flow on each edge of the graph G */
+void printFlow(graph *G, int s, int t) {
+  /* prints the flow on each edge in the graph G */
   printf("The maximum flow from node %d to node %d"
-         " is %.2lf\n\nEdges %15s\n", s, t, maxFlow, "Flow");
+         " is %.2lf\n\nEdges %15s\n", s, t, G->maxFlow, "Flow");
   printf("---------------------\n"); 
   for (int i = 0; i < G->nEdges; ++i) {
     edge *e = G->edges[i];
@@ -255,11 +209,11 @@ int main (int argc, char *argv[]) {
   int n, s, t;                    // number of nodes, source, sink
   scanf("%d %d %d", &n, &s, &t);
 
-  graph *G = newGraph(n); 
-  buildGraph(G);                  // read edges from stdin
-
-  double maxFlow = edmondsKarp(G, s, t); 
-  printFlow(G, s, t, maxFlow);    // print flow values
+  graph *G = newGraph(n);         // read edges from stdin
+  buildGraph(G);                  // and get max capacity
+                                  
+  maxFlow(G, s, t);               // find maximum flow
+  printFlow(G, s, t);             // print flow values
 
   freeGraph(G);                   // free memory
   return 0;
