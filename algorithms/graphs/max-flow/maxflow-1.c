@@ -13,6 +13,7 @@
 #include <string.h>
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
+#define INF DBL_MAX
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
@@ -192,7 +193,7 @@ int dequeue (queue *Q) {
 double bfs(graph *G, int s, int t, int *path) {
   /* tries to find an augmenting path from s to t using BFS */
   memset(path, -1, G->nNodes * sizeof(int));
-  double flow = DBL_MAX; 
+  double flow = INF;
   queue *q = newQueue(G->nNodes); 
   enqueue(q, s);    // enqueue source node
   while (!isEmpty(q)) {
