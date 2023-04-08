@@ -18,6 +18,7 @@
 #define LEFT(i)   (2*i + 1)
 #define RIGHT(i)  (2*i + 2)
 #define PARENT(i) ((i-1)/2)
+#define INF DBL_MAX
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
@@ -157,7 +158,7 @@ heap *newHeap(graph *G) {
   for (int i = 0; i < n; i++){
     hp->nodes[i] = G->vertices[i];
     hp->nodes[i]->heapIndex = i;
-    hp->nodes[i]->key = DBL_MAX;
+    hp->nodes[i]->key = INF;
   }
   return hp;
 }

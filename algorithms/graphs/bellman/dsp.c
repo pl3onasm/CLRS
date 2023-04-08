@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <float.h>
+#define INF DBL_MAX
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
@@ -62,14 +63,6 @@ list *newList() {
   return NULL;
 }
 
-void printList(list *L) {
-  /* prints the list L */
-  if (!L) return;
-  printf("%d", L->n->id);
-  if (!L->next) printf(", ");
-  printList(L->next);
-}
-
 void freeList(list *L) {
   /* frees all memory allocated for the list */
   if (!L) return;
@@ -94,7 +87,7 @@ node *newNode(int id) {
   n->id = id;
   n->parent = -1;
   n->dTime = n->fTime = -1;
-  n->dist = DBL_MAX;
+  n->dist = INF;
   n->adj = newList();
   return n;
 }
@@ -193,7 +186,7 @@ void print (graph *G, int s) {
     node *n = G->nodes[i];
     if (n->id == s) printf("%4s", "src");
     else printf("%4d", n->id);
-    if (n->dist == DBL_MAX)
+    if (n->dist == INF)
       printf("%11s", "inf");
     else printf("%11.2lf", n->dist);
     if (n->parent == -1)

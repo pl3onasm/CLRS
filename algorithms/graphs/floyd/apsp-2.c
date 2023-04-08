@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <float.h>
+#define INF DBL_MAX
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
 
@@ -43,7 +44,7 @@ double **initD (int n) {
   for (int i = 0; i < n; i++){
     D[i] = safeCalloc(n, sizeof(double)); 
     for (int j = 0; j < n; j++) 
-      D[i][j] = (i == j) ? 0 : DBL_MAX;
+      D[i][j] = (i == j) ? 0 : INF;
   }
   return D;
 }
@@ -55,7 +56,7 @@ int **initP (int n, double **D) {
   for (int i = 0; i < n; i++) {
     P[i] = safeCalloc(n, sizeof(int));
     for (int j = 0; j < n; j++) 
-      P[i][j] = (i == j || D[i][j] == DBL_MAX) ? -1 : i;
+      P[i][j] = (i == j || D[i][j] == INF) ? -1 : i;
   }
   return P;
 }
@@ -77,7 +78,7 @@ void printD (double **M, int n) {
   printf("Distance matrix D:\n");
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < n; j++) {
-      if (M[i][j] == DBL_MAX) printf("%5s ", "inf");
+      if (M[i][j] == INF) printf("%5s ", "inf");
       else printf("%5.1lf ", M[i][j]);
     }
     printf("\n");
@@ -112,7 +113,7 @@ void extendPaths (double **D, int **P, int n) {
   for (int i = 0; i < n; i++)      // for each path i⇝j
     for (int j = 0; j < n; j++) 
       for (int k = 0; k < n; k++)  // try to extend path i⇝j through k
-        if (D[i][k] != DBL_MAX && D[k][j] != DBL_MAX) {
+        if (D[i][k] != INF && D[k][j] != INF) {
           // if paths i⇝k and k→j exist
           double newDist = D[i][k] + D[k][j]; // D[k][j] instead of W[k][j]
           if (newDist < D[i][j]) { // if path i⇝k→j is shorter than i⇝j
@@ -138,7 +139,7 @@ void answerQueries (double **D, int **P) {
   printf("\nQuery results:\n");
   while (scanf("%d %d", &s, &g) == 2) {
     printf("%3d: ", ++q); 
-    if (D[s][g] == DBL_MAX) 
+    if (D[s][g] == INF) 
       printf("There is no path from %d to %d.", s, g);
     else {
       printf("Shortest path from %d to %d has length = %4.2lf\n" 

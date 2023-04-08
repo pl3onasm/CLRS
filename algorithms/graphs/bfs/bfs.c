@@ -70,7 +70,7 @@ void printList(list *L) {
   /* prints the list L */
   if (!L) return;
   printf("%d", L->nbr->id);
-  if (L->next != NULL) printf(", ");
+  if (L->next) printf(", ");
   printList(L->next);
 }
 

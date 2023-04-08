@@ -14,6 +14,7 @@
 #define LEFT(i)   (2*i + 1)
 #define RIGHT(i)  (2*i + 2)
 #define PARENT(i) ((i-1)/2)
+#define INF DBL_MAX
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
@@ -79,7 +80,7 @@ list *newList() {
 
 void freeList(list *L) {
   /* frees all memory allocated for the list */
-  if (L == NULL) return;
+  if (!L) return;
   freeList(L->next);
   free(L);
 }
@@ -100,7 +101,7 @@ node *newNode(int id) {
   node *n = safeCalloc(1, sizeof(node));
   n->id = id;
   n->parent = -1;       // -1 indicates no parent
-  n->dist = DBL_MAX;    // initialize distance to infinity
+  n->dist = INF;        // initialize distance to infinity
   n->adj = newList();
   return n;
 }
@@ -249,7 +250,7 @@ void print(graph *G, int s) {
     node *n = G->nodes[i];
     if (n->id == s) printf("%4s", "src");
     else printf("%4d", n->id);
-    if (n->dist == DBL_MAX)
+    if (n->dist == INF)
       printf("%11s", "inf");
     else printf("%11.2lf", n->dist);
     if (n->parent == -1)

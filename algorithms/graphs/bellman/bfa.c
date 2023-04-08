@@ -27,6 +27,7 @@ typedef struct graph {
   edge **edges;          // array of pointers to edges
   node **nodes;          // array of pointers to nodes
   int edgeCap;           // capacity of the edges array
+  short cycle;           // 1 if there is a negative-weight cycle
 } graph;
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
@@ -89,6 +90,7 @@ graph *newGraph(int n) {
   G->nNodes = n;
   G->nEdges = 0;
   G->edgeCap = 0;
+  G->cycle = 0;
   G->nodes = safeCalloc(n, sizeof(node*));
   for (int i = 0; i < n; i++)
     G->nodes[i] = newNode(i);
@@ -117,9 +119,9 @@ void freeGraph(graph *G) {
 
 //:::::::::::::::::::::::::: bellman-ford :::::::::::::::::::::::::://
 
-void print (graph *G, short cycle, int s) {
+void print (graph *G, int s) {
   /* prints the distances and parents of the nodes */
-  if (cycle) {
+  if (G->cycle) {
     printf("Negative-weight cycle found.\n");
     return;
   }
@@ -157,7 +159,7 @@ short containsCycle(graph *G, edge *e) {
   return v->dist > u->dist + e->w;
 }
 
-short bFord(graph *G, int s) {
+void bFord(graph *G, int s) {
   /* runs the Bellman-Ford algorithm on graph G starting from node s
       returns 1 if a negative cycle is found, 0 otherwise */
   G->nodes[s]->dist = 0;
@@ -166,10 +168,10 @@ short bFord(graph *G, int s) {
         relax(G, G->edges[j]);
 
   for (int i = 0; i < G->nEdges; i++) 
-    if (containsCycle(G, G->edges[i]))
-      return 1;
-
-  return 0;
+    if (containsCycle(G, G->edges[i])){
+      G->cycle = 1;
+      return;
+    }
 }
 
 //::::::::::::::::::::::::::::: main ::::::::::::::::::::::::::::::://
@@ -181,8 +183,8 @@ int main (int argc, char *argv[]) {
   graph *G = newGraph(n); 
   buildGraph(G);              // read edges from stdin
 
-  short cycle = bFord(G, s);  // run Bellman-Ford algorithm
-  print(G, cycle, s);         // print results
+  bFord(G, s);                // run Bellman-Ford algorithm
+  print(G, s);                // print results
 
   freeGraph(G);
   return 0;

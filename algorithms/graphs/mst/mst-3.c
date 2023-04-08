@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <float.h>
 #include <math.h>
+#define INF DBL_MAX
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
@@ -128,7 +129,7 @@ graph *newGraph(int n) {
 void freeGraph(graph *G) {
   /* frees all memory allocated for the graph */
   for (int i = 0; i < G->nNodes; i++) {
-    free(G->vertices[i]->adj);
+    freeList(G->vertices[i]->adj);
     free(G->vertices[i]);
   }
   free(G->vertices);
@@ -190,7 +191,7 @@ void insertNode(heap *H, node *u) {
   u->mark = 0;
   u->child = NULL;              
   u->parentH = NULL;
-  u->key = DBL_MAX;             // intialize key to infinity
+  u->key = INF;                 // intialize key to infinity
   if (!H->min)                  // if heap is empty
     makeCircularRoot(H, u);     // turn u into a circular root list
   else {
@@ -246,7 +247,7 @@ void consolidate(heap *H) {
   for (int i = 0; i < maxDegree; i++) {
     if (A[i]) {         
       node *w = A[i];
-      if (H->min == NULL)       // if the root list is empty
+      if (!H->min)              // if the root list is empty
         makeCircularRoot(H, w); // turn w into a circular root list
       else {
         cListInsert(w, H->min); // insert w into the root list
@@ -290,7 +291,7 @@ void cut(heap *H, node *u, node *v){
   v->degree--;                  // v has one less child
   if (v->child == u)            // update v's child pointer if necessary
     v->child = u->next;         
-  if (v->degree == 0)           // if v has no children
+  if (!v->degree)               // if v has no children
     v->child = NULL;            
   cListRemove(u);               // remove u from the child list of v
   cListInsert(u, H->min);       // add u to the root list of H
@@ -384,5 +385,6 @@ int main (int argc, char *argv[]) {
   printMST(G, M);           // print MST edges and weight
 
   freeGraph(G);
+  free(M);
   return 0;
 }

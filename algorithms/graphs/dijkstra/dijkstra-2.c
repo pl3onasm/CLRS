@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <float.h>
 #include <math.h>
+#define INF DBL_MAX
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
@@ -81,7 +82,7 @@ list *newList() {
 
 void freeList(list *L) {
   /* frees all memory allocated for the list */
-  if (L == NULL) return;
+  if (!L) return;
   freeList(L->next);
   free(L);
 }
@@ -102,7 +103,7 @@ node *newNode(int id) {
   node *n = safeCalloc(1, sizeof(node));
   n->id = id;
   n->parentG = -1;
-  n->dist = DBL_MAX;
+  n->dist = INF;
   n->adj = newList();
   return n;
 }
@@ -164,7 +165,7 @@ void makeCircularRoot (heap *H, node *u) {
 void link(heap *H, node *u, node *v) {
   /* removes u from the root list and makes it a child of v */
   cListRemove(u);               // remove u from the root list
-  if (v->child == NULL)         // if v's child list is empty
+  if (!v->child)                // if v's child list is empty
     v->child = u;               // make u the only child of v        
   else 
     cListInsert(u, v->child);   // insert u into the child list of v
@@ -180,7 +181,7 @@ void insertNode(heap *H, node *u) {
   u->child = NULL;              
   u->parentH = NULL;
   u->key = u->dist;
-  if (H->min == NULL)           // if heap is empty
+  if (!H->min)                  // if heap is empty
     makeCircularRoot(H, u);     // turn u into a circular root list
   else {
     cListInsert(u, H->min);     // insert u into the root list
@@ -216,7 +217,7 @@ void consolidate(heap *H) {
     if (u == end) stop = 1;     // only one node left for processing
     node *next = u->next;       // save the next node in the root list
     int d = u->degree;          // d is the number of children of u
-    while (A[d] != NULL) {      
+    while (A[d]) {      
       node *v = A[d];           // another node of the same degree as u
       if (u->key > v->key) {    // make sure u is the smaller node
         node *z = u;
@@ -233,9 +234,9 @@ void consolidate(heap *H) {
   // rebuild the root list from the array A
   H->min = NULL;                // clear the root list
   for (int i = 0; i < maxDegree; i++) {
-    if (A[i] != NULL) {         
+    if (A[i]) {         
       node *w = A[i];
-      if (H->min == NULL)       // if the root list is empty
+      if (!H->min)              // if the root list is empty
         makeCircularRoot(H, w); // turn w into a circular root list
       else {
         cListInsert(w, H->min); // insert w into the root list
@@ -250,7 +251,7 @@ void consolidate(heap *H) {
 node *extractMin(heap *H) {
   /* removes the node with the minimum key */
   node *z = H->min;
-  if (z != NULL) {
+  if (z) {
     node *u = z->child;
     for (int i = 0; i < z->degree; i++) {
       // add each child of z to the root list
@@ -279,7 +280,7 @@ void cut(heap *H, node *u, node *v){
   v->degree--;                  // v has one less child
   if (v->child == u)            // update v's child pointer if necessary
     v->child = u->next;         
-  if (v->degree == 0)           // if v has no children
+  if (!v->degree)               // if v has no children
     v->child = NULL;            
   cListRemove(u);               // remove u from the child list of v
   cListInsert(u, H->min);       // add u to the root list of H
@@ -289,7 +290,7 @@ void cut(heap *H, node *u, node *v){
 void cascadingCut(heap *H, node *u) {
   /* keeps cutting u's parent until u is a root or u is unmarked */
   node *z = u->parentH;
-  if (z != NULL) {
+  if (z) {
     if (!u->mark) u->mark = 1;
     else {
       cut(H, u, z);
@@ -306,7 +307,7 @@ void decreaseKey(heap *H, node *u, double newKey) {
   }
   u->key = newKey;              
   node *v = u->parentH;
-  if (v != NULL && u->key < v->key) { 
+  if (v && u->key < v->key) { 
     // if u is not a root and its key is less than 
     // its parent's key, cut u from its parent  
     cut(H, u, v);
@@ -356,7 +357,7 @@ void print(graph *G, int s) {
     node *n = G->nodes[i];
     if (n->id == s) printf("%4s", "src");
     else printf("%4d", n->id);
-    if (n->dist == DBL_MAX)
+    if (n->dist == INF)
       printf("%11s", "inf");
     else printf("%11.2lf", n->dist);
     if (n->parentG == -1)

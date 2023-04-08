@@ -70,7 +70,7 @@ void printList(list *L) {
   /* prints the list L */
   if (!L) return;
   printf("%d", L->nbr->id);
-  if (L->next != NULL) printf(", ");
+  if (L->next) printf(", ");
   printList(L->next);
 }
 
@@ -148,7 +148,7 @@ void printResults(graph *G) {
          "      node     node      type\n");
   for (int i = 0; i < G->nNodes; i++) {
     node *n = G->vertices[i];
-    for (list *a = n->adj; a != NULL; a = a->next) {
+    for (list *a = n->adj; a; a = a->next) {
       printf("%10d %8d %9c\n", n->id, a->nbr->id, a->type);
     }
   }
@@ -193,7 +193,7 @@ int main (int argc, char *argv[]) {
   scanf("%d", &n); 
 
   graph *G = newGraph(n); 
-  buildGraph(G);  // read edges from stdin
+  buildGraph(G);    // read edges from stdin
 
   dfs(G, &time);  
   printResults(G);

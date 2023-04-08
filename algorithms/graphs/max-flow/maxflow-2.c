@@ -164,10 +164,10 @@ double dfs(graph *G, int s, int t, double minFlow, int delta) {
         r->flow -= flow;              // update the residual flow
         u->visited = 0;               // unmark as visited
         return flow;
-      }
-      u->visited = 0;                 
+      }               
     }
   }
+  u->visited = 0;  
   return 0;
 }
 

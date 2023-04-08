@@ -65,7 +65,7 @@ void printList(list *L) {
   printf("{"); 
   while (L) {
     printf("%d", L->n->id);
-    if (L->next != NULL) printf(", ");
+    if (L->next) printf(", ");
     L = L->next;
   }
   printf("}\n");
