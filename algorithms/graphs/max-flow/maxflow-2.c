@@ -10,8 +10,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <float.h>
-#include <string.h>
-#include <math.h>
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
@@ -42,11 +40,6 @@ typedef struct graph {
   double maxCap;          // maximum capacity among all edges
   double maxFlow;         // maximum flow in the graph
 } graph;
-
-typedef struct queue {
-  int front, back, size;   // front and back of the queue, and its size
-  int *array;              // array of elements in the queue
-} queue;
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
 
