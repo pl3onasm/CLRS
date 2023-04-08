@@ -1,10 +1,10 @@
-/* file: maxflow-1.c  
+/* file: maxflow-2.c  
    author: David De Potter
    email: pl3onasm@gmail.com
    license: MIT, see LICENSE file in repository root folder
    description: implements Ford-Fulkerson with DFS and a
      heuristic called capacity scaling to find the maximum flow
-   time complexity: 
+   time complexity: O(log(maxCap)*E^2)
 */
 
 #include <stdio.h>
@@ -31,7 +31,7 @@ typedef struct node {
   int *adj;               // array of adjacent nodes: edge indices
   int adjCap;             // capacity of the adjacency list
   int nAdj;               // number of adjacent nodes
-  short visited;          // 1 if the node has been visited
+  short visited;          // 1 if the node has been visited in the DFS
 } node;
 
 typedef struct graph {
