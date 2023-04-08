@@ -10,6 +10,9 @@
 #include <stdlib.h>
 #include <float.h>
 #define INF DBL_MAX
+#define true 1
+#define false 0
+#define bool short
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
@@ -28,7 +31,7 @@ typedef struct graph {
   edge **edges;          // array of pointers to edges
   node **nodes;          // array of pointers to nodes
   int edgeCap;           // capacity of the edges array
-  short cycle;           // 1 if there is a negative-weight cycle
+  bool cycle;            // true if there is a negative-weight cycle
 } graph;
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
@@ -91,7 +94,7 @@ graph *newGraph(int n) {
   G->nNodes = n;
   G->nEdges = 0;
   G->edgeCap = 0;
-  G->cycle = 0;
+  G->cycle = false;
   G->nodes = safeCalloc(n, sizeof(node*));
   for (int i = 0; i < n; i++)
     G->nodes[i] = newNode(i);
@@ -153,26 +156,25 @@ void relax(graph *G, edge *e) {
   }
 }
 
-short containsCycle(graph *G, edge *e) {
+bool containsCycle(graph *G, edge *e) {
   /* checks whether the edge e belongs to a negative cycle */
   node *u = G->nodes[e->u];
   node *v = G->nodes[e->v];
-  return v->dist > u->dist + e->w;
+  G->cycle = v->dist > u->dist + e->w;
+  return G->cycle;
 }
 
 void bFord(graph *G, int s) {
   /* runs the Bellman-Ford algorithm on graph G starting from node s
-      returns 1 if a negative cycle is found, 0 otherwise */
+     returns 1 if a negative cycle is found, 0 otherwise */
   G->nodes[s]->dist = 0;
   for (int i = 0; i < G->nNodes - 1; i++) 
     for (int j = 0; j < G->nEdges; j++) 
-        relax(G, G->edges[j]);
+      relax(G, G->edges[j]);
 
   for (int i = 0; i < G->nEdges; i++) 
-    if (containsCycle(G, G->edges[i])){
-      G->cycle = 1;
+    if (containsCycle(G, G->edges[i]))
       return;
-    }
 }
 
 //::::::::::::::::::::::::::::: main ::::::::::::::::::::::::::::::://

@@ -12,6 +12,9 @@
 #include <float.h>
 #include <math.h>
 #define INF DBL_MAX
+#define true 1
+#define false 0
+#define bool short
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
@@ -28,9 +31,9 @@ typedef struct node {
   struct node *child;        // first child in the heap
   struct node *next, *prev;  // next and previous node in the heap
   int degree;                // number of children
-  int mark;                  // whether the node has lost a child
+  bool mark;                 // true if the node has lost a child
   double key;                // key value used to sort the heap
-  short inHeap;              // 1 if node is in the heap, 0 otherwise
+  bool inHeap;               // true if node is in the heap
 } node;
 
 struct list {                
@@ -171,16 +174,17 @@ void link(heap *H, node *u, node *v) {
     cListInsert(u, v->child);   // insert u into the child list of v
   u->parentH = v;               // set u's parent to v
   v->degree++;                  // v has one more child
-  u->mark = 0;                  // u is no longer marked
+  u->mark = false;              // u is no longer marked
 }
 
 void insertNode(heap *H, node *u) {
   /* inserts a node into the heap */
   u->degree = 0;                
-  u->mark = 0;
+  u->mark = false;
   u->child = NULL;              
   u->parentH = NULL;
   u->key = u->dist;
+  u->inHeap = true;
   if (!H->min)                  // if heap is empty
     makeCircularRoot(H, u);     // turn u into a circular root list
   else {
@@ -211,10 +215,10 @@ void consolidate(heap *H) {
   // A is an auxiliary array of pointers to nodes
   node **A = safeCalloc(maxDegree, sizeof(node*));  
   node *u = H->min, *end = H->min->prev;
-  short stop = 0;
+  bool stop = false;
 
   while (!stop && u != u->next) {
-    if (u == end) stop = 1;     // only one node left for processing
+    if (u == end) stop = true;  // only one node left for processing
     node *next = u->next;       // save the next node in the root list
     int d = u->degree;          // d is the number of children of u
     while (A[d]) {      
@@ -269,7 +273,7 @@ node *extractMin(heap *H) {
         consolidate(H);           
     }
     H->nNodes--;                // update the number of nodes 
-    z->inHeap = 0;              // z is no longer in the heap
+    z->inHeap = false;          // z is no longer in the heap
   }
   return z;
 }
@@ -284,14 +288,14 @@ void cut(heap *H, node *u, node *v){
     v->child = NULL;            
   cListRemove(u);               // remove u from the child list of v
   cListInsert(u, H->min);       // add u to the root list of H
-  u->mark = 0;                  // u is no longer marked
+  u->mark = false;              // u is no longer marked
 }
 
 void cascadingCut(heap *H, node *u) {
   /* keeps cutting u's parent until u is a root or u is unmarked */
   node *z = u->parentH;
   if (z) {
-    if (!u->mark) u->mark = 1;
+    if (!u->mark) u->mark = true;
     else {
       cut(H, u, z);
       cascadingCut(H, z);
@@ -323,14 +327,14 @@ void freeHeap(heap *H) {
 
 //::::::::::::::::::::::: dijkstra functions ::::::::::::::::::::::://
 
-short relax(node *u, node *v, double w) {
+bool relax(node *u, node *v, double w) {
   /* relaxes the edge (u,v) */
   if (v->dist > u->dist + w) {
     v->dist = u->dist + w;
     v->parentG = u->id;
-    return 1;
+    return true;
   }
-  return 0;
+  return false;
 }
 
 void dijkstra(graph *G, int s) {

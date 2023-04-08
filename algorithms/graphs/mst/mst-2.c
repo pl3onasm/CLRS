@@ -19,6 +19,9 @@
 #define RIGHT(i)  (2*i + 2)
 #define PARENT(i) ((i-1)/2)
 #define INF DBL_MAX
+#define true 1
+#define false 0
+#define bool short
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
@@ -28,11 +31,12 @@ typedef struct node {
   // graph-related fields
   int id, parent;         // node id and id of parent in the MST
   list *adj;              // adjacency list
-  short reversed;         // 1 if the MST edge has reverse input order
+  bool reversed;          // 1 if the MST edge has reverse input order
 
   // heap-related fields
   double key;             // keeps track of the minimum weight
   int heapIndex;          // node index in the heap
+  bool inHeap;            // true if node is in the heap
 } node;
 
 typedef struct graph {
@@ -44,7 +48,7 @@ struct list {             // adjacency list, singly linked
   node *n;                
   list *next;
   double w;               // weight of the incident edge
-  short reversed;         // 1 if the edge has reverse input order
+  bool reversed;          // 1 if the edge has reverse input order
 };
 
 typedef struct heap {     // binary min heap
@@ -90,7 +94,7 @@ void freeList(list *L) {
   }
 }
 
-list *listInsert (list *L, node *n, double w, short reversed) {
+list *listInsert (list *L, node *n, double w, bool reversed) {
   /* inserts the node n at the beginning of the list L */
   list *new = safeCalloc(1, sizeof(list));
   new->n = n;
@@ -137,9 +141,9 @@ void buildGraph(graph *G) {
   int u, v; double w;
   while (scanf("%d %d %lf", &u, &v, &w) == 3) {
     node *n = G->vertices[u];
-    n->adj = listInsert(n->adj, G->vertices[v], w, 0);
+    n->adj = listInsert(n->adj, G->vertices[v], w, false);
     n = G->vertices[v];
-    n->adj = listInsert(n->adj, G->vertices[u], w, 1);
+    n->adj = listInsert(n->adj, G->vertices[u], w, true);
     G->nEdges++;
   }
 }
@@ -159,6 +163,7 @@ heap *newHeap(graph *G) {
     hp->nodes[i] = G->vertices[i];
     hp->nodes[i]->heapIndex = i;
     hp->nodes[i]->key = INF;
+    hp->nodes[i]->inHeap = true;
   }
   return hp;
 }
@@ -206,7 +211,7 @@ node *extractMin(heap *H) {
   node *min = H->nodes[0];
   H->nodes[0] = H->nodes[--H->nNodes];
   minHeapify(H, 0);
-  min->heapIndex = -1;      // -1 means not in the heap
+  min->inHeap = false;
   return min;
 }
 
@@ -232,7 +237,7 @@ int *mstPrim(graph *G) {
     // iterate over u's neighbors and update their keys
     for (list *l = u->adj; l; l = l->next) {
       node *v = l->n;
-      if (v->heapIndex >= 0 && l->w < v->key) {
+      if (v->inHeap && l->w < v->key) {
         v->parent = u->id;            // set v's parent to u
         v->reversed = l->reversed;    // set v's reversed flag
         decreaseKey(H, v->heapIndex, l->w);

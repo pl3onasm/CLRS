@@ -15,6 +15,9 @@
 #define RIGHT(i)  (2*i + 2)
 #define PARENT(i) ((i-1)/2)
 #define INF DBL_MAX
+#define true 1
+#define false 0
+#define bool short
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
@@ -28,7 +31,7 @@ typedef struct node {
 
   // heap-related fields
   int heapIndex;             // index in the heap
-  short inHeap;              // 1 if node is in the heap, 0 otherwise
+  bool inHeap;               // true if node is in the heap
   double key;                // key used to sort the heap
 } node;
 
@@ -150,7 +153,7 @@ heap *newHeap(graph *G) {
     node *u = G->nodes[i];
     H->nodes[i] = u;
     u->heapIndex = i;
-    u->inHeap = 1;
+    u->inHeap = true;
     u->key = u->dist;
   }
   return H;
@@ -203,7 +206,7 @@ node *extractMin(heap *H) {
   node *min = H->nodes[0];
   H->nodes[0] = H->nodes[--H->nNodes];
   minHeapify(H, 0);
-  min->inHeap = 0;
+  min->inHeap = false;
   return min;
 }
 
@@ -215,14 +218,14 @@ void initMinHeap(heap *H){
 
 //::::::::::::::::::::::: dijkstra functions ::::::::::::::::::::::://
 
-short relax(node *u, node *v, double w) {
+bool relax(node *u, node *v, double w) {
   /* relaxes the edge (u,v) */
   if (v->dist > u->dist + w) {
     v->dist = u->dist + w;
     v->parent = u->id;
-    return 1;
+    return true;
   }
-  return 0;
+  return false;
 }
 
 void dijkstra(graph *G, int s) {

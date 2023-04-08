@@ -15,6 +15,9 @@
 #include <float.h>
 #include <math.h>
 #define INF DBL_MAX
+#define true 1
+#define false 0
+#define bool short
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
@@ -23,15 +26,14 @@ typedef struct list list; // forward declaration
 typedef struct node {
   // graph-related fields
   int id, parentG;        // node id and parent id in graph
-  int mstNode;            // 1 if node is in the MST, 0 otherwise
   list *adj;              // adjacency list
-  short reversed;         // 1 if the MST edge has reverse input order
+  bool reversed;          // true if the MST edge has reverse input order
 
   // heap-related fields
-  short inHeap;           // 1 if node is in the heap, 0 otherwise
+  bool inHeap;            // true if node is in the heap
   double key;             // key attribute to sort the nodes in the heap
   int degree;             // number of children in the heap
-  int mark;               // keeps track of whether a node lost a child
+  bool mark;              // true if node lost a child
   struct node *parentH;   // pointer to the node's parent in the heap
   struct node *child;     // pointer to a child of the node in the heap
   struct node *next;      // pointer to the next node in the list
@@ -43,7 +45,7 @@ struct list {
   node *n;
   list *next;             // pointer to the next node in the list
   double w;               // weight of the incident edge
-  short reversed;         // 1 if the edge has reverse input order
+  bool reversed;          // 1 if the edge has reverse input order
 };
 
 typedef struct graph {
@@ -93,7 +95,7 @@ void freeList(list *L) {
   free(L);
 }
 
-list *listInsert (list *L, node *n, double w, short reversed) {
+list *listInsert (list *L, node *n, double w, bool reversed) {
   /* inserts the node n at the beginning of the list L */
   list *new = safeCalloc(1, sizeof(list));
   new->n = n;
@@ -110,7 +112,6 @@ node *newNode(int id) {
   node *n = safeCalloc(1, sizeof(node));
   n->id = id;
   n->parentG = -1;    // -1 means no parent
-  n->mstNode = 0;     // 0 means not in the MST yet
   n->adj = newList();
   return n;
 }
@@ -141,9 +142,9 @@ void buildGraph(graph *G) {
   int u, v; double w;
   while (scanf("%d %d %lf", &u, &v, &w) == 3) {
     node *n = G->vertices[u];
-    n->adj = listInsert(n->adj, G->vertices[v], w, 0);
+    n->adj = listInsert(n->adj, G->vertices[v], w, false);
     n = G->vertices[v];
-    n->adj = listInsert(n->adj, G->vertices[u], w, 1);
+    n->adj = listInsert(n->adj, G->vertices[u], w, true);
     G->nEdges++;
   }
 }
@@ -181,14 +182,14 @@ void link(heap *H, node *u, node *v) {
     cListInsert(u, v->child);   // insert u into the child list of v
   u->parentH = v;               // set u's parent to v
   v->degree++;                  // v has one more child
-  u->mark = 0;                  // u is no longer marked
+  u->mark = false;              // u is no longer marked
 }
 
 void insertNode(heap *H, node *u) {
   /* inserts a node into the heap */
-  u->inHeap = 1;                // u is now in the heap
+  u->inHeap = true;             // u is now in the heap
   u->degree = 0;                
-  u->mark = 0;
+  u->mark = false;
   u->child = NULL;              
   u->parentH = NULL;
   u->key = INF;                 // intialize key to infinity
@@ -222,10 +223,10 @@ void consolidate(heap *H) {
   // A is an auxiliary array of pointers to nodes
   node **A = safeCalloc(maxDegree, sizeof(node*));  
   node *u = H->min, *end = H->min->prev;
-  short stop = 0;
+  bool stop = false;
 
   while (!stop && u != u->next) {
-    if (u == end) stop = 1;     // only one node left for processing
+    if (u == end) stop = true;  // only one node left for processing
     node *next = u->next;       // save the next node in the root list
     int d = u->degree;          // d is the number of children of u
     while (A[d]) {      
@@ -280,7 +281,7 @@ node *extractMin(heap *H) {
         consolidate(H);           
     }
     H->nNodes--;                // update the number of nodes 
-    z->inHeap = 0;              // z is no longer in the heap
+    z->inHeap = false;          // z is no longer in the heap
   }
   return z;
 }
@@ -295,14 +296,14 @@ void cut(heap *H, node *u, node *v){
     v->child = NULL;            
   cListRemove(u);               // remove u from the child list of v
   cListInsert(u, H->min);       // add u to the root list of H
-  u->mark = 0;                  // u is no longer marked
+  u->mark = false;              // u is no longer marked
 }
 
 void cascadingCut(heap *H, node *u) {
   /* keeps cutting u's parent until u is a root or u is unmarked */
   node *z = u->parentH;
   if (z) {
-    if (!u->mark) u->mark = 1;
+    if (!u->mark) u->mark = true;
     else {
       cut(H, u, z);
       cascadingCut(H, z);

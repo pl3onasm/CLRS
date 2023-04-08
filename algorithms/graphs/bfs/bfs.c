@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#define bool short
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
@@ -91,7 +92,7 @@ list *listInsert (list *L, node *n) {
 
 //:::::::::::::::::::::::: queue functions ::::::::::::::::::::::::://
 
-short isEmpty(queue *Q) {
+bool isEmpty(queue *Q) {
   /* returns 1 if the queue is empty, 0 otherwise */
   return Q->front == Q->back;
 }
