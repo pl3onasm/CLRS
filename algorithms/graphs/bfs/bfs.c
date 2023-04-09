@@ -93,7 +93,7 @@ list *listInsert (list *L, node *n) {
 //:::::::::::::::::::::::: queue functions ::::::::::::::::::::::::://
 
 bool isEmpty(queue *Q) {
-  /* returns 1 if the queue is empty, 0 otherwise */
+  /* returns true if the queue is empty */
   return Q->front == Q->back;
 }
 

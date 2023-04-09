@@ -25,7 +25,7 @@ typedef struct edge {
   int from, to;           // ids of the endpoints of the edge (u->v)
   double cap;             // capacity of the edge
   double flow;            // flow on the edge
-  bool residual;          // true if the edge is a residual edge
+  bool reverse;           // true if the edge is a reverse edge
 } edge;
 
 typedef struct node {
@@ -119,14 +119,14 @@ void freeGraph(graph *G) {
   free(G);
 }
 
-edge *addEdge(graph *G, int uId, int vId, double cap, bool residual) {
+edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
   /* adds an edge from u to v with capacity cap */
   edge *e = safeCalloc(1, sizeof(edge));
   e->from = uId;
   e->to = vId;
   e->cap = cap;
   e->flow = 0;
-  e->residual = residual;
+  e->reverse = reverse;
   // check if we need to resize the edge array
   if (G->edgeCap == G->nEdges) {
     G->edgeCap += 10;
@@ -147,15 +147,15 @@ void buildGraph(graph *G) {
   /* reads undirected graph from stdin and builds the adjacency lists */
   int u, v; double cap;
   while (scanf("%d %d %lf", &u, &v, &cap) == 3) {
-    addEdge(G, u, v, cap, false); // add forward edge
-    addEdge(G, v, u, 0, true);    // add residual edge
+    addEdge(G, u, v, cap, false); // add original edge
+    addEdge(G, v, u, 0, true);    // add reverse edge
   }
 }
 
 //:::::::::::::::::::::::: queue functions ::::::::::::::::::::::::://
 
 bool isEmpty(queue *Q) {
-  /* returns 1 if the queue is empty, 0 otherwise */
+  /* is true if the queue is empty */
   return Q->front == Q->back;
 }
 
@@ -241,8 +241,8 @@ double dfs(graph *G, int s, int t, double flow) {
     if (e->cap > 0 && a->level == n->level + 1) {
       double bneck = dfs(G, e->to, t, MIN(flow, e->cap));
       if (bneck > 0) {
-        e->cap -= bneck; e->flow += bneck; // adjust forward edge
-        G->edges[eId^1]->cap += bneck;     // adjust residual edge
+        e->cap -= bneck; e->flow += bneck; // adjust original edge
+        G->edges[eId^1]->cap += bneck;     // adjust reverse edge
         return bneck;
       } 
     } 
@@ -262,14 +262,14 @@ void dinic(graph *G, int s, int t) {
 void printFlow(graph *G, int s, int t) {
   /* prints the flow on each edge of the graph G */
   printf("The maximum flow from node %d to node %d"
-         " is %.2lf\n\nEdges %15s\n", s, t, G->maxFlow, "Flow");
-  printf("---------------------\n"); 
+         " is %.2lf\nFlow graph:\n\n  from     to%13s\n\n",
+          s, t, G->maxFlow, "flow");
   for (int i = 0; i < G->nEdges; ++i) {
     edge *e = G->edges[i];
-    if (!e->residual){
-      printf("(%d, %d)", e->from, e->to);
-      if (e->flow > 0) printf("%15.2lf\n", e->flow);
-      else printf("%15c\n", '-');
+    if (!e->reverse){
+      printf("%6d %6d", e->from, e->to);
+      if (e->flow > 0) printf("%13.2lf\n", e->flow);
+      else printf("%13c\n", '-');
     }
   }
 }
