@@ -149,23 +149,23 @@ int pow2(int n) {
   return p >> 1;
 }
 
-double dfs(graph *G, int s, int t, double minFlow, int delta) {
+double dfs(graph *G, int s, int t, double flow, int delta) {
   /* tries to find an augmenting path from s to t using DFS */
-  if (s == t) return minFlow;             // reached the sink
+  if (s == t) return flow;               // reached the sink
   node *u = G->nodes[s];
-  if (u->visited) return 0;               // already visited
-  double flow;
+  if (u->visited) return 0;                 // already visited
+  double bneck;
   for (int i = 0; i < u->nAdj; ++i) {     
     int eId = u->adj[i];
     edge *e = G->edges[eId];
     if (e->cap > delta) {             
-      u->visited = true;                  // mark as visited
-      if ((flow = dfs(G, e->to, t, MIN(minFlow, e->cap), delta))) {
+      u->visited = true;                    // mark as visited
+      if ((bneck = dfs(G, e->to, t, MIN(flow, e->cap), delta))) {
         edge *r = G->edges[eId ^ 1]; 
-        e->cap -= flow; e->flow += flow;  // update forward edge              
-        r->cap += flow; r->flow -= flow;  // update residual edge             
-        u->visited = false;               // mark as unvisited
-        return flow;
+        e->cap -= bneck; e->flow += bneck;  // update forward edge              
+        r->cap += bneck; r->flow -= bneck;  // update residual edge             
+        u->visited = false;                 // mark as unvisited
+        return bneck;
       }               
     }
   }
