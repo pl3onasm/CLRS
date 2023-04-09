@@ -169,9 +169,9 @@ void shortestPaths(graph *G, int s) {
   list *L = topSort(G);     // topological sort of G
   G->nodes[s]->dist = 0;    // initialize source node
 
-  for (list *l = L; l != NULL; l = l->next) {
+  for (list *l = L; l; l = l->next) {
     node *u = l->n;
-    for (list *a = u->adj; a != NULL; a = a->next) {
+    for (list *a = u->adj; a; a = a->next) {
       node *v = a->n;       // v is a successor of u
       relax(u, v, a->w);    // relax the edge (u, v)
     }
