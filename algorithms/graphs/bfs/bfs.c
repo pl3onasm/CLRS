@@ -101,8 +101,6 @@ queue *newQueue(int n) {
   /* creates a queue with n elements */
   queue *Q = safeCalloc(1, sizeof(queue));
   Q->array = safeCalloc(n, sizeof(int));
-  Q->front = 0;
-  Q->back = 0;
   Q->size = n;
   return Q;
 }
@@ -147,7 +145,6 @@ node *newNode(int id) {
   /* creates a node with given id */
   node *n = safeCalloc(1, sizeof(node));
   n->id = id;
-  n->dist = 0;
   n->parent = -1; // -1 means no parent
   n->adj = newList();
   return n;

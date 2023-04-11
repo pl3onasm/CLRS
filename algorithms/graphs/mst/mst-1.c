@@ -94,8 +94,6 @@ graph *newGraph(int n) {
   /* creates a graph with n vertices */
   graph *G = safeCalloc(1, sizeof(graph));
   G->nNodes = n;
-  G->nEdges = 0;
-  G->edgeCap = 0;
   return G;
 }
 

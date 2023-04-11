@@ -120,7 +120,6 @@ graph *newGraph(int n) {
   /* creates a graph with n vertices */
   graph *G = safeCalloc(1, sizeof(graph));
   G->nNodes = n;
-  G->nEdges = 0;
   G->vertices = safeCalloc(n, sizeof(node*));
   for (int i = 0; i < n; i++)
     G->vertices[i] = newNode(i);

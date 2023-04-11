@@ -130,11 +130,6 @@ node *newNode(int id) {
   /* creates a node with given id */
   node *n = safeCalloc(1, sizeof(node));
   n->id = id;
-  n->adjCap = 0;
-  n->nAdj = 0;
-  n->adjIdx = 0;
-  n->height = 0;
-  n->excess = 0;
   return n;
 }
 
@@ -142,9 +137,6 @@ graph *newGraph(int n) {
   /* creates a graph with n vertices */
   graph *G = safeCalloc(1, sizeof(graph));
   G->nNodes = n;
-  G->nEdges = 0;
-  G->edgeCap = 0;
-  G->maxFlow = 0;
   G->nodes = safeCalloc(n, sizeof(node*));
   for (int i = 0; i < n; i++)
     G->nodes[i] = newNode(i);
@@ -170,7 +162,6 @@ edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
   e->from = uId;
   e->to = vId;
   e->cap = cap;
-  e->flow = 0;
   e->reverse = reverse;
   // check if we need to resize the edge array
   if (G->edgeCap == G->nEdges) {
@@ -183,8 +174,8 @@ edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
     u->adjCap += 10;
     u->adj = safeRealloc(u->adj, u->adjCap * sizeof(int));
   }
-  u->adj[u->nAdj++] = G->nEdges; // add the edge index to the adj list
-  G->edges[G->nEdges++] = e;     // add the edge to the edge array
+  u->adj[u->nAdj++] = G->nEdges;  // add the edge index to the adj list
+  G->edges[G->nEdges++] = e;      // add the edge to the edge array
   return e;
 }
 
@@ -202,38 +193,38 @@ void buildGraph(graph *G) {
 void initPreflow(graph *G, int s, queue *Q) {
   /* initializes the preflow at the source s */
   node *u = G->nodes[s];
-  u->height = G->nNodes;    // set height of source to n
+  u->height = G->nNodes;          // set height of source to n
   for (int i = 0; i < u->nAdj; i++) {
     // set full flow on all edges from s
     int eId = u->adj[i];
     edge *e = G->edges[eId];
     edge *r = G->edges[eId^1];
-    e->flow = e->cap;       // set flow on original edge
-    r->flow = -e->cap;      // set flow on reverse edge
+    e->flow = e->cap;             // set flow on original edge
+    r->flow = -e->cap;            // set flow on reverse edge
     G->nodes[e->to]->excess += e->cap;
-    enqueue(Q, e->to);      // equeue all neighbors of s
+    enqueue(Q, e->to);            // equeue all neighbors of s
   }
 }
 
 bool push(graph *G, node *u, queue *Q) {
   /* pushes flow from u to its neighbors */
   for (int i = u->adjIdx; i < u->nAdj; i++) {
-    u->adjIdx = i;          // save the current adjacency index
+    u->adjIdx = i;                // save the current adj index
     edge *e = G->edges[u->adj[i]];
     edge *r = G->edges[u->adj[i]^1];
     node *v = G->nodes[e->to];
     if (e->cap - e->flow > 0 && u->height == v->height + 1) {
       double delta = MIN(u->excess, e->cap - e->flow);
-      e->flow += delta;     // update flow on original edge
-      r->flow -= delta;     // update flow on reverse edge
-      u->excess -= delta;   // update excess at u
-      v->excess += delta;   // update excess at v
+      e->flow += delta;           // update flow on original edge
+      r->flow -= delta;           // update flow on reverse edge
+      u->excess -= delta;         // update excess at u
+      v->excess += delta;         // update excess at v
       if (v->excess == delta) 
-        enqueue(Q, v->id);  // enqueue v if it was inactive
+        enqueue(Q, v->id);        // enqueue v if it was inactive
       return true;
     }
   }
-  u->adjIdx = 0;            // reset the adjacency index
+  u->adjIdx = 0;                  // reset the adjacency index
   return false;
 }
 
@@ -257,11 +248,11 @@ void maxFlow (graph *G, int s, int t) {
   
   while (!isEmpty(Q)) {
     int uId = dequeue(Q);           // get the next active node
-    node *u = G->nodes[uId];
-
-    if (u->id == t || u->id == s)   // skip the source and sink
+    if (uId == t || uId == s)       // skip the source and sink
       continue;
     
+    node *u = G->nodes[uId];
+
     if (!push(G, u, Q))             // try to push flow
       relabel(G, u, Q);             // otherwise relabel
       
@@ -290,15 +281,15 @@ void printFlow(graph *G, int s, int t) {
 //::::::::::::::::::::::::: main function :::::::::::::::::::::::::://
 
 int main (int argc, char *argv[]) {
-  int n, s, t;                    // number of nodes, source, sink
+  int n, s, t;                      // number of nodes, source, sink
   scanf("%d %d %d", &n, &s, &t);
 
   graph *G = newGraph(n); 
-  buildGraph(G);                  // read edges from stdin
+  buildGraph(G);                    // read edges from stdin
 
-  maxFlow(G, s, t);               // compute max flow
-  printFlow(G, s, t);             // print flow values
+  maxFlow(G, s, t);                 // compute max flow
+  printFlow(G, s, t);               // print flow values
 
-  freeGraph(G);                   // free memory
+  freeGraph(G);                     // free memory
   return 0;
 }

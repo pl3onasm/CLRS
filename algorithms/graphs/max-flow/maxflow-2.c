@@ -73,8 +73,6 @@ node *newNode(int id) {
   /* creates a node with given id */
   node *n = safeCalloc(1, sizeof(node));
   n->id = id;
-  n->adjCap = 0;
-  n->nAdj = 0;
   n->visited = false;
   return n;
 }
@@ -83,10 +81,6 @@ graph *newGraph(int n) {
   /* creates a graph with n vertices */
   graph *G = safeCalloc(1, sizeof(graph));
   G->nNodes = n;
-  G->nEdges = 0;
-  G->edgeCap = 0;
-  G->maxCap = 0;
-  G->maxFlow = 0;
   G->nodes = safeCalloc(n, sizeof(node*));
   for (int i = 0; i < n; i++)
     G->nodes[i] = newNode(i);
@@ -112,7 +106,6 @@ edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
   e->from = uId;
   e->to = vId;
   e->cap = cap;
-  e->flow = 0;
   e->reverse = reverse;
   // check if we need to resize the edge array
   if (G->edgeCap == G->nEdges) {
