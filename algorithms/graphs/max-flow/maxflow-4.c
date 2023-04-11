@@ -38,11 +38,6 @@ typedef struct node {
   double excess;          // excess flow at the node
 } node;
 
-typedef struct list {
-  node *n;                // pointer to the node
-  struct list *next;      // pointer to the next node in the list
-} list;
-
 typedef struct graph {
   int nNodes, nEdges;     // number of nodes and edges in the graph
   node **nodes;           // array of pointers to nodes
