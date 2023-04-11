@@ -204,18 +204,19 @@ void buildGraph(graph *G) {
 
 //::::::::::::::::::::::: push and relabel ::::::::::::::::::::::::://
 
-void initializePreflow(graph *G, int s, queue *Q) {
+void initPreflow(graph *G, int s, queue *Q) {
   /* initializes the preflow at the source s */
   node *u = G->nodes[s];
-  u->height = G->nNodes;
+  u->height = G->nNodes;    // set height of source to n
   for (int i = 0; i < u->nAdj; i++) {
+    // set full flow on all edges from s
     int eId = u->adj[i];
     edge *e = G->edges[eId];
     edge *r = G->edges[eId^1];
-    e->flow = e->cap;
-    r->flow = -e->cap;
+    e->flow = e->cap;       // set flow on original edge
+    r->flow = -e->cap;      // set flow on reverse edge
     G->nodes[e->to]->excess += e->cap;
-    enqueue(Q, e->to);
+    enqueue(Q, e->to);      // equeue all neighbors of s
   }
 }
 
@@ -228,10 +229,10 @@ bool push(graph *G, node *u, queue *Q) {
     node *v = G->nodes[e->to];
     if (e->cap - e->flow > 0 && u->height == v->height + 1) {
       double delta = MIN(u->excess, e->cap - e->flow);
-      e->flow += delta;
-      r->flow -= delta;     // reverse edge
-      u->excess -= delta;
-      v->excess += delta;
+      e->flow += delta;     // update flow on original edge
+      r->flow -= delta;     // update flow on reverse edge
+      u->excess -= delta;   // update excess at u
+      v->excess += delta;   // update excess at v
       if (v->excess == delta) 
         enqueue(Q, v->id);  // enqueue v if it was inactive
       return true;
@@ -257,7 +258,7 @@ void relabel(graph *G, node *u, queue *Q) {
 void maxFlow (graph *G, int s, int t) {
   /* computes the maximum flow from s to t */
   queue *Q = newQueue(G->nNodes);   
-  initializePreflow(G, s, Q);
+  initPreflow(G, s, Q);
   
   while (!isEmpty(Q)) {
     int uId = dequeue(Q);           // get the next active node
@@ -275,7 +276,6 @@ void maxFlow (graph *G, int s, int t) {
   G->maxFlow = G->nodes[t]->excess; // max flow is the excess at the sink
   freeQueue(Q);
 } 
-  
 
 void printFlow(graph *G, int s, int t) {
   /* prints the flow on each edge of the graph G */
