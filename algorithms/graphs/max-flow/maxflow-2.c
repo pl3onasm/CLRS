@@ -151,20 +151,21 @@ int pow2(int n) {
 
 double dfs(graph *G, int s, int t, double flow, int delta) {
   /* tries to find an augmenting path from s to t using DFS */
-  if (s == t) return flow;               // reached the sink
+  if (s == t) return flow;          // reached the sink
   node *u = G->nodes[s];
-  if (u->visited) return 0;                 // already visited
+  if (u->visited) return 0;         // already visited
   double bneck;
   for (int i = 0; i < u->nAdj; ++i) {     
     int eId = u->adj[i];
     edge *e = G->edges[eId];
-    if (e->cap > delta) {             
-      u->visited = true;                    // mark as visited
-      if ((bneck = dfs(G, e->to, t, MIN(flow, e->cap), delta))) {
+    if (e->cap - e->flow > delta) {             
+      u->visited = true;            // mark as visited
+      if ((bneck = dfs(G, e->to, t, 
+           MIN(flow, e->cap - e->flow), delta))) {
         edge *r = G->edges[eId ^ 1]; 
-        e->cap -= bneck; e->flow += bneck;  // update original edge              
-        r->cap += bneck; r->flow -= bneck;  // update reverse edge             
-        u->visited = false;                 // mark as unvisited
+        e->flow += bneck;           // update flow original edge              
+        r->flow -= bneck;           // update flow reverse edge             
+        u->visited = false;         // mark as unvisited
         return bneck;
       }               
     }
@@ -176,10 +177,10 @@ double dfs(graph *G, int s, int t, double flow, int delta) {
 void maxFlow(graph *G, int s, int t) {
   /* finds the maximum flow from s to t using capacity scaling */
   double flow; 
-  int delta = pow2(G->maxCap);        // initial threshold
+  int delta = pow2(G->maxCap);      // initial threshold
   for (; delta > 0; delta >>= 1) {     
     while ((flow = dfs(G, s, t, INF, delta)))   
-      G->maxFlow += flow;             // update the max flow
+      G->maxFlow += flow;           // update the max flow
   }
 }
 

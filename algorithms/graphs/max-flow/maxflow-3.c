@@ -82,6 +82,7 @@ node *newNode(int id) {
   n->adjCap = 0;
   n->nAdj = 0;
   n->level = -1;
+  n->adjIdx = 0;
   return n;
 }
 
@@ -217,7 +218,7 @@ bool bfs(graph *G, int s, int t) {
       int eId = n->adj[i];
       edge *e = G->edges[eId];
       node *a = G->nodes[e->to];
-      if (e->cap > 0 && a->level == -1) {
+      if (e->cap - e->flow > 0 && a->level == -1) {
         a->level = n->level + 1;           // set level of child node
         enqueue(q, a->id);                
       }
@@ -238,11 +239,11 @@ double dfs(graph *G, int s, int t, double flow) {
     int eId = n->adj[i];
     edge *e = G->edges[eId];
     node *a = G->nodes[e->to];
-    if (e->cap > 0 && a->level == n->level + 1) {
-      double bneck = dfs(G, e->to, t, MIN(flow, e->cap));
+    if (e->cap - e->flow > 0 && a->level == n->level + 1) {
+      double bneck = dfs(G, e->to, t, MIN(flow, e->cap - e->flow));
       if (bneck > 0) {
-        e->cap -= bneck; e->flow += bneck; // adjust original edge
-        G->edges[eId^1]->cap += bneck;     // adjust reverse edge
+        e->flow += bneck;                  // adjust flow original edge
+        G->edges[eId^1]->cap -= bneck;     // adjust flow reverse edge
         return bneck;
       } 
     } 

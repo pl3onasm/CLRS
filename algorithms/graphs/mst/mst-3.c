@@ -45,7 +45,7 @@ struct list {
   node *n;
   list *next;             // pointer to the next node in the list
   double w;               // weight of the incident edge
-  bool reversed;          // 1 if the edge has reverse input order
+  bool reversed;          // true if the edge has reverse input order
 };
 
 typedef struct graph {

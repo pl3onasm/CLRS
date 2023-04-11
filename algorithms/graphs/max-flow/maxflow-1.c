@@ -206,8 +206,8 @@ double bfs(graph *G, int s, int t, int *path) {
       int eId = n->adj[i];
       edge *e = G->edges[eId];
       int a = e->to;
-      if (e->cap > 0 && path[a] == -1) {
-        flow = MIN(flow, e->cap);
+      if (e->cap - e->flow > 0 && path[a] == -1) {
+        flow = MIN(flow, e->cap - e->flow);
         path[a] = eId;
         if (a == t) {
           freeQueue(q);
@@ -231,8 +231,8 @@ void edmondsKarp(graph *G, int s, int t) {
     for (int i = t; i != s; i = G->edges[path[i]]->from){
       edge *e = G->edges[path[i]];
       edge *r = G->edges[path[i]^1];
-      e->flow += flow; e->cap -= flow;  // update original edge
-      r->flow -= flow; r->cap += flow;  // update reverse edge
+      e->flow += flow;   // update flow on original edge
+      r->flow -= flow;   // update flow on reverse edge
     }
   }
   free(path);

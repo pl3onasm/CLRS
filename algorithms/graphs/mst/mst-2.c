@@ -31,7 +31,7 @@ typedef struct node {
   // graph-related fields
   int id, parent;         // node id and id of parent in the MST
   list *adj;              // adjacency list
-  bool reversed;          // 1 if the MST edge has reverse input order
+  bool reversed;          // true if the MST edge has reverse input order
 
   // heap-related fields
   double key;             // keeps track of the minimum weight
@@ -48,7 +48,7 @@ struct list {             // adjacency list, singly linked
   node *n;                
   list *next;
   double w;               // weight of the incident edge
-  bool reversed;          // 1 if the edge has reverse input order
+  bool reversed;          // true if the edge has reverse input order
 };
 
 typedef struct heap {     // binary min heap
