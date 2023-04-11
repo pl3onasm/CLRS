@@ -36,7 +36,6 @@ typedef struct node {
   int height;             // height of the node in the residual graph
   int adjIdx;             // current adjacency index 
   double excess;          // excess flow at the node
-  int minAdjH;            // minimum height of all adjacent nodes
 } node;
 
 typedef struct list {
@@ -141,7 +140,6 @@ node *newNode(int id) {
   n->adjIdx = 0;
   n->height = 0;
   n->excess = 0;
-  n->minAdjH = INF;
   return n;
 }
 
@@ -204,8 +202,6 @@ void buildGraph(graph *G) {
   }
 }
 
-
-
 //::::::::::::::::::::::: push and relabel ::::::::::::::::::::::::://
 
 void initializePreflow(graph *G, int s, queue *Q) {
@@ -248,14 +244,14 @@ bool push(graph *G, node *u, queue *Q) {
 void relabel(graph *G, node *u, queue *Q) {
   /* relabels u to the minimum height of its 
      neighbors in the residual graph */
-  u->minAdjH = INF;
+  int min = INF;
   for (int i = 0; i < u->nAdj; i++) {
     edge *e = G->edges[u->adj[i]];
     node *v = G->nodes[e->to];
-    if (e->cap - e->flow > 0 && v->height < u->minAdjH) 
-      u->minAdjH = v->height;
+    if (e->cap - e->flow > 0 && v->height < min) 
+      min = MIN(min, v->height);
   }
-  u->height = u->minAdjH + 1;
+  u->height = min + 1;
 }
 
 void maxFlow (graph *G, int s, int t) {
@@ -273,7 +269,7 @@ void maxFlow (graph *G, int s, int t) {
     if (!push(G, u, Q))             // try to push flow
       relabel(G, u, Q);             // otherwise relabel
       
-    if (u->excess > 0)              // enqueue if active
+    if (u->excess > 0)              // enqueue if still active
       enqueue(Q, uId);
   }
   G->maxFlow = G->nodes[t]->excess; // max flow is the excess at the sink
