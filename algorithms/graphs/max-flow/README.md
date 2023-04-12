@@ -9,7 +9,7 @@
 
 Implementation: [Max-flow - Edmonds-Karp](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/max-flow/maxflow-1.c)
 
-### 1.2. Capacity scaling and DFS (not in CLRS)
+### 1.2. Capacity scaling and DFS (CLRS³ ex. 26-5 and CLRS⁴ ex. 24-5)
 
 Implementation: [Max-flow - DFS](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/max-flow/maxflow-2.c)
 
