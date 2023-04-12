@@ -35,8 +35,8 @@ typedef struct node {
   int height;             // height of the node in the residual graph
   int current;            // current adjacency list index 
   double excess;          // excess flow at the node
-  struct node *next;      // pointer to the next node in the active list
-  struct node *prev;      // pointer to the previous node in the active list
+  struct node *next;      // pointer to the next node in the worklist
+  struct node *prev;      // pointer to the previous node in the worklist
 } node;
 
 typedef struct graph {
@@ -220,7 +220,7 @@ node *moveToFront(node *L, node *u) {
 void maxFlow (graph *G, int s, int t) {
   /* computes the maximum flow from s to t */
   initPreflow(G, s);                  // initialize the preflow
-  node *listHead = newList(G, s, t);  // list of all nodes except s and t
+  node *listHead = newList(G, s, t);  // make a worklist  
   node *u = listHead;
 
   while (u) {
