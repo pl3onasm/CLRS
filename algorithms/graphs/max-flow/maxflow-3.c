@@ -11,7 +11,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <float.h>
-#include <string.h>
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define INF DBL_MAX
@@ -25,12 +24,13 @@ typedef struct edge {
   int from, to;           // ids of the endpoints of the edge (u->v)
   double cap;             // capacity of the edge
   double flow;            // flow on the edge
-  bool reverse;           // true if the edge is a reverse edge
+  bool reverse;           // true if the edge is a reverse edge in Gf
+  struct edge *rev;       // pointer to edge in the reverse direction
 } edge;
 
 typedef struct node {
   int id;                 // id of the node
-  int *adj;               // adj list is an array of indices of outgoing edges
+  int *adj;               // adj list is an array of indices of edges
   int adjCap;             // capacity of the adjacency list
   int nAdj;               // number of adjacent nodes
   int level;              // level of the node in the level graph
@@ -143,6 +143,9 @@ void buildGraph(graph *G) {
   while (scanf("%d %d %lf", &u, &v, &cap) == 3) {
     addEdge(G, u, v, cap, false); // add original edge
     addEdge(G, v, u, 0, true);    // add reverse edge
+    // add pointers to the reverse edges
+    G->edges[G->nEdges-2]->rev = G->edges[G->nEdges-1];
+    G->edges[G->nEdges-1]->rev = G->edges[G->nEdges-2];
   }
 }
 
@@ -234,7 +237,7 @@ double dfs(graph *G, int s, int t, double flow) {
       double bneck = dfs(G, e->to, t, MIN(flow, e->cap - e->flow));
       if (bneck > 0) {
         e->flow += bneck;                  // adjust flow original edge
-        G->edges[eId^1]->cap -= bneck;     // adjust flow reverse edge
+        e->rev->flow -= bneck;             // adjust flow reverse edge
         return bneck;
       } 
     } 

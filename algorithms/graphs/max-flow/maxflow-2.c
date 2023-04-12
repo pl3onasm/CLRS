@@ -24,12 +24,13 @@ typedef struct edge {
   int from, to;           // ids of the endpoints of the edge (u->v)
   double cap;             // capacity of the edge
   double flow;            // flow on the edge
-  bool reverse;           // true if the edge is a reverse edge
+  bool reverse;           // true if the edge is a reverse edge in Gf
+  struct edge *rev;       // pointer to edge in the reverse direction
 } edge;
 
 typedef struct node {
   int id;                 // id of the node
-  int *adj;               // adjacency list: indices of the outgoing edges
+  int *adj;               // adjacency list: array of edge indices
   int adjCap;             // capacity of the adjacency list
   int nAdj;               // number of adjacent nodes
   bool visited;           // true if the node has been visited in the DFS
@@ -130,6 +131,9 @@ void buildGraph(graph *G) {
     G->maxCap = MAX(G->maxCap, cap);
     addEdge(G, u, v, cap, false);  // add original edge
     addEdge(G, v, u, 0, true);     // add reverse edge
+    // add pointers to the reverse edges
+    G->edges[G->nEdges-2]->rev = G->edges[G->nEdges-1];
+    G->edges[G->nEdges-1]->rev = G->edges[G->nEdges-2];
   }
 }
 
@@ -155,9 +159,8 @@ double dfs(graph *G, int s, int t, double flow, int delta) {
       u->visited = true;            // mark as visited
       if ((bneck = dfs(G, e->to, t, 
            MIN(flow, e->cap - e->flow), delta))) {
-        edge *r = G->edges[eId ^ 1]; 
         e->flow += bneck;           // update flow original edge              
-        r->flow -= bneck;           // update flow reverse edge             
+        e->rev->flow -= bneck;      // update flow reverse edge            
         u->visited = false;         // mark as unvisited
         return bneck;
       }               

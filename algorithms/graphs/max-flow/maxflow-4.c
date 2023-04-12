@@ -10,8 +10,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
-#include <float.h>
-#include <string.h>
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define INF INT_MAX
@@ -25,15 +23,16 @@ typedef struct edge {
   int from, to;           // ids of the endpoints of the edge (u->v)
   double cap;             // capacity of the edge
   double flow;            // flow on the edge
-  bool reverse;           // true if the edge is a reverse edge
+  bool reverse;           // true if the edge is a reverse edge in Gf
+  struct edge *rev;       // pointer to edge in the reverse direction
 } edge;
 
 typedef struct node {
   int id;                 // id of the node
-  int *adj;               // adj list is an array of indices of outgoing edges
+  int *adj;               // adj list is an array of indices of edges
   int adjCap;             // capacity of the adjacency list
   int nAdj;               // number of adjacent nodes
-  int height;             // height of the node in the residual graph
+  int height;             // height of the node in Gf
   int adjIdx;             // current adjacency index 
   double excess;          // excess flow at the node
 } node;
@@ -85,8 +84,6 @@ queue *newQueue(int n) {
   /* creates a queue with n elements */
   queue *Q = safeCalloc(1, sizeof(queue));
   Q->array = safeCalloc(n, sizeof(int));
-  Q->front = 0;
-  Q->back = 0;
   Q->size = n;
   return Q;
 }
@@ -185,6 +182,9 @@ void buildGraph(graph *G) {
   while (scanf("%d %d %lf", &u, &v, &cap) == 3) {
     addEdge(G, u, v, cap, false); // add original edge
     addEdge(G, v, u, 0, true);    // add reverse edge
+    // add pointers to the reverse edges
+    G->edges[G->nEdges-2]->rev = G->edges[G->nEdges-1];
+    G->edges[G->nEdges-1]->rev = G->edges[G->nEdges-2];
   }
 }
 
@@ -198,9 +198,8 @@ void initPreflow(graph *G, int s, queue *Q) {
     // set full flow on all edges from s
     int eId = u->adj[i];
     edge *e = G->edges[eId];
-    edge *r = G->edges[eId^1];
     e->flow = e->cap;             // set flow on original edge
-    r->flow = -e->cap;            // set flow on reverse edge
+    e->rev->flow = -e->cap;       // set flow on reverse edge
     G->nodes[e->to]->excess += e->cap;
     enqueue(Q, e->to);            // equeue all neighbors of s
   }
@@ -211,12 +210,11 @@ bool push(graph *G, node *u, queue *Q) {
   for (int i = u->adjIdx; i < u->nAdj; i++) {
     u->adjIdx = i;                // save the current adj index
     edge *e = G->edges[u->adj[i]];
-    edge *r = G->edges[u->adj[i]^1];
     node *v = G->nodes[e->to];
     if (e->cap - e->flow > 0 && u->height == v->height + 1) {
       double delta = MIN(u->excess, e->cap - e->flow);
       e->flow += delta;           // update flow on original edge
-      r->flow -= delta;           // update flow on reverse edge
+      e->rev->flow -= delta;      // update flow on reverse edge
       u->excess -= delta;         // update excess at u
       v->excess += delta;         // update excess at v
       if (v->excess == delta) 
@@ -252,11 +250,11 @@ void maxFlow (graph *G, int s, int t) {
       continue;
     
     node *u = G->nodes[uId];
-
-    if (!push(G, u, Q))             // try to push flow
-      relabel(G, u, Q);             // otherwise relabel
+                                    // we know u has excess flow so we 
+    if (!push(G, u, Q))             // can either try to push from u
+      relabel(G, u, Q);             // or relabel it if pushing fails
       
-    if (u->excess > 0)              // enqueue if still active
+    if (u->excess > 0)              // enqueue u if it still has excess
       enqueue(Q, uId);
   }
   G->maxFlow = G->nodes[t]->excess; // max flow is the excess at the sink

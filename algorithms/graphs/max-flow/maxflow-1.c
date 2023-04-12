@@ -24,12 +24,13 @@ typedef struct edge {
   int from, to;           // ids of the endpoints of the edge (u->v)
   double cap;             // capacity of the edge
   double flow;            // flow on the edge
-  bool reverse;           // true if the edge is a reverse edge
+  bool reverse;           // true if the edge is a reverse edge in Gf
+  struct edge *rev;       // pointer to edge in the reverse direction
 } edge;
 
 typedef struct node {
   int id;                 // id of the node
-  int *adj;               // adjacency list: indices of the outgoing edges
+  int *adj;               // adjacency list: array of edge indices
   int adjCap;             // capacity of the adjacency list
   int nAdj;               // number of adjacent nodes
 } node;
@@ -131,6 +132,9 @@ void buildGraph(graph *G) {
   while (scanf("%d %d %lf", &u, &v, &cap) == 3) {
     addEdge(G, u, v, cap, false); // add original edge
     addEdge(G, v, u, 0, true);    // add reverse edge
+    // add pointers to the reverse edges
+    G->edges[G->nEdges-2]->rev = G->edges[G->nEdges-1];
+    G->edges[G->nEdges-1]->rev = G->edges[G->nEdges-2];
   }
 }
 
@@ -222,9 +226,8 @@ void edmondsKarp(graph *G, int s, int t) {
     // update flow on each edge in the path
     for (int i = t; i != s; i = G->edges[path[i]]->from){
       edge *e = G->edges[path[i]];
-      edge *r = G->edges[path[i]^1];
-      e->flow += flow;   // update flow on original edge
-      r->flow -= flow;   // update flow on reverse edge
+      e->flow += flow;      // update flow on original edge
+      e->rev->flow -= flow; // update flow on reverse edge
     }
   }
   free(path);
