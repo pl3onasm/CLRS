@@ -20,6 +20,8 @@
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
+typedef struct node node; // forward declaration of node
+
 typedef struct edge {
   int from, to;           // ids of the endpoints of the edge (u->v)
   double cap;             // capacity of the edge
@@ -28,12 +30,12 @@ typedef struct edge {
   struct edge *rev;       // pointer to edge in the reverse direction
 } edge;
 
-typedef struct node {
+struct node {
   int id;                 // id of the node
-  int *adj;               // adjacency list: array of edge indices
+  edge **adj;             // adj list is an array of pointers to edges
   int adjCap;             // capacity of the adjacency list
   int nAdj;               // number of adjacent nodes
-} node;
+};
 
 typedef struct graph {
   int nNodes, nEdges;     // number of nodes and edges in the graph
@@ -121,20 +123,19 @@ edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
     u->adjCap += 10;
     u->adj = safeRealloc(u->adj, u->adjCap * sizeof(int));
   }
-  u->adj[u->nAdj++] = G->nEdges; // add the edge index to the adj list
-  G->edges[G->nEdges++] = e;     // add the edge to the edge array
+  u->adj[u->nAdj++] = e;       // add the edge to the adjacency list
+  G->edges[G->nEdges++] = e;   // add the edge to the edge array
   return e;
 }
 
 void buildGraph(graph *G) {
   /* reads undirected graph from stdin and builds the adjacency lists */
-  int u, v; double cap;
+  int u, v; double cap; edge *e, *r;
   while (scanf("%d %d %lf", &u, &v, &cap) == 3) {
-    addEdge(G, u, v, cap, false); // add original edge
-    addEdge(G, v, u, 0, true);    // add reverse edge
+    e = addEdge(G, u, v, cap, false); // add original edge
+    r = addEdge(G, v, u, 0, true);    // add reverse edge
     // add pointers to the reverse edges
-    G->edges[G->nEdges-2]->rev = G->edges[G->nEdges-1];
-    G->edges[G->nEdges-1]->rev = G->edges[G->nEdges-2];
+    e->rev = r; r->rev = e;
   }
 }
 
@@ -188,9 +189,9 @@ int dequeue (queue *Q) {
 
 //::::::::::::::::::::::::: Edmonds-Karp ::::::::::::::::::::::::::://
 
-double bfs(graph *G, int s, int t, int *path) {
+double bfs(graph *G, int s, int t, edge **path) {
   /* tries to find an augmenting path from s to t using BFS */
-  memset(path, -1, G->nNodes * sizeof(int));
+  memset(path, 0, G->nNodes * sizeof(edge*));
   double flow = INF;
   queue *q = newQueue(G->nNodes); 
   enqueue(q, s);    // enqueue source node
@@ -199,17 +200,15 @@ double bfs(graph *G, int s, int t, int *path) {
    
     // visit all outgoing edges from n
     for (int i = 0; i < n->nAdj; i++) {  
-      int eId = n->adj[i];
-      edge *e = G->edges[eId];
-      int a = e->to;
-      if (e->cap - e->flow > 0 && path[a] == -1) {
+      edge *e = n->adj[i];
+      if (e->cap - e->flow > 0 && !path[e->to]) {
         flow = MIN(flow, e->cap - e->flow);
-        path[a] = eId;
-        if (a == t) {
+        path[e->to] = e;
+        if (e->to == t) {
           freeQueue(q);
           return flow;
         }
-        enqueue(q, a);
+        enqueue(q, e->to);
       }
     }
   }
@@ -219,13 +218,13 @@ double bfs(graph *G, int s, int t, int *path) {
 
 void edmondsKarp(graph *G, int s, int t) {
   /* finds the maximum flow from s to t using Edmonds-Karp */
-  int *path = safeCalloc(G->nNodes, sizeof(int));  
+  edge **path = safeCalloc(G->nNodes, sizeof(edge*));  
   double flow;
   while ((flow = bfs(G, s, t, path))) {
     G->maxFlow += flow;
     // update flow on each edge in the path
-    for (int i = t; i != s; i = G->edges[path[i]]->from){
-      edge *e = G->edges[path[i]];
+    for (int i = t; i != s; i = path[i]->from){
+      edge *e = path[i];
       e->flow += flow;      // update flow on original edge
       e->rev->flow -= flow; // update flow on reverse edge
     }

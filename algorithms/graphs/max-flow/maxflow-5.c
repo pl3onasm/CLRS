@@ -19,17 +19,19 @@ typedef short bool;
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
+typedef struct node node; // forward declaration of node
+
 typedef struct edge {
-  int from, to;           // ids of the endpoints of the edge (u->v)
+  node *from, *to;        // pointers to the endpoints of the edge (u->v)
   double cap;             // capacity of the edge
   double flow;            // flow on the edge
   bool reverse;           // true if the edge is a reverse edge in Gf
   struct edge *rev;       // pointer to edge in the reverse direction
 } edge;
 
-typedef struct node {
+struct node {
   int id;                 // id of the node
-  int *adj;               // adj list is an array of edge indices
+  edge **adj;             // adjacency list: array of pointers to edges
   int adjCap;             // capacity of the adjacency list
   int nAdj;               // number of adjacent nodes
   int height;             // height of the node in the residual graph
@@ -37,7 +39,7 @@ typedef struct node {
   double excess;          // excess flow at the node
   struct node *next;      // pointer to the next node in the worklist
   struct node *prev;      // pointer to the previous node in the worklist
-} node;
+};
 
 typedef struct graph {
   int nNodes, nEdges;     // number of nodes and edges in the graph
@@ -105,8 +107,9 @@ void freeGraph(graph *G) {
 edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
   /* adds an edge from u to v with capacity cap */
   edge *e = safeCalloc(1, sizeof(edge));
-  e->from = uId;
-  e->to = vId;
+  node *u = G->nodes[uId];
+  e->to = G->nodes[vId];
+  e->from = u;
   e->cap = cap;
   e->reverse = reverse;
   // check if we need to resize the edge array
@@ -115,25 +118,23 @@ edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
     G->edges = safeRealloc(G->edges, G->edgeCap * sizeof(edge*));
   }
   // check if we need to resize the adjacency list
-  node *u = G->nodes[uId];
   if (u->adjCap == u->nAdj) {
     u->adjCap += 10;
     u->adj = safeRealloc(u->adj, u->adjCap * sizeof(int));
   }
-  u->adj[u->nAdj++] = G->nEdges;  // add the edge index to the adj list
-  G->edges[G->nEdges++] = e;      // add the edge to the edge array
+  u->adj[u->nAdj++] = e;       // add the edge to the adjacency list
+  G->edges[G->nEdges++] = e;   // add the edge to the edge array
   return e;
 }
 
 void buildGraph(graph *G) {
   /* reads undirected graph from stdin and builds the adjacency lists */
-  int u, v; double cap;
+  int u, v; double cap; edge *e, *r;
   while (scanf("%d %d %lf", &u, &v, &cap) == 3) {
-    addEdge(G, u, v, cap, false); // add original edge
-    addEdge(G, v, u, 0, true);    // add reverse edge
+    e = addEdge(G, u, v, cap, false); // add original edge
+    r = addEdge(G, v, u, 0, true);    // add reverse edge
     // add pointers to the reverse edges
-    G->edges[G->nEdges-2]->rev = G->edges[G->nEdges-1];
-    G->edges[G->nEdges-1]->rev = G->edges[G->nEdges-2];
+    e->rev = r; r->rev = e;
   }
 }
 
@@ -159,11 +160,10 @@ void initPreflow(graph *G, int s) {
   u->height = G->nNodes;      // set height of source to n
   for (int i = 0; i < u->nAdj; i++) {
     // set full flow on all edges from s
-    int eId = u->adj[i];      // get edge index from adj list
-    edge *e = G->edges[eId];
+    edge *e = u->adj[i];
     e->flow = e->cap;         // set flow on original edge
     e->rev->flow = -e->cap;   // set flow on reverse edge
-    G->nodes[e->to]->excess += e->cap;  // update excess at v
+    e->to->excess += e->cap;  // update excess at v
   }
 }
 
@@ -181,10 +181,9 @@ void relabel(graph *G, node *u) {
      neighbors in Gf plus one */
   int min = INF;
   for (int i = 0; i < u->nAdj; i++) {
-    edge *e = G->edges[u->adj[i]];
-    node *v = G->nodes[e->to];
-    if (e->cap - e->flow > 0 && v->height < min) 
-      min = MIN(min, v->height);
+    edge *e = u->adj[i];
+    if (e->cap - e->flow > 0 && e->to->height < min) 
+      min = MIN(min, e->to->height);
   }
   u->height = min + 1;
 }
@@ -194,10 +193,9 @@ void discharge(graph *G, node *u) {
      from u to its neighbors in Gf, relabeling u if needed */
   while (u->excess > 0) {
     if (u->current < u->nAdj){ // if there are still neighbors to push to
-      edge *e = G->edges[u->adj[u->current]];
-      node *v = G->nodes[e->to];
-      if (e->cap - e->flow > 0 && u->height == v->height + 1) 
-        push(G, u, v, e);
+      edge *e = u->adj[u->current];
+      if (e->cap - e->flow > 0 && u->height == e->to->height + 1) 
+        push(G, u, e->to, e);
       else u->current++;       // move to next neighbor
     } else {                   // if no neighbors can be pushed to
       relabel(G, u);           // relabel u
@@ -241,7 +239,7 @@ void printFlow(graph *G, int s, int t) {
   for (int i = 0; i < G->nEdges; ++i) {
     edge *e = G->edges[i];
     if (!e->reverse){
-      printf("%6d %6d", e->from, e->to);
+      printf("%6d %6d", e->from->id, e->to->id);
       if (e->flow > 0) printf("%13.2lf\n", e->flow);
       else printf("%13c\n", '-');
     }

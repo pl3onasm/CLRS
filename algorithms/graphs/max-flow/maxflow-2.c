@@ -20,6 +20,8 @@
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
+typedef struct node node; // forward declaration of node
+
 typedef struct edge {
   int from, to;           // ids of the endpoints of the edge (u->v)
   double cap;             // capacity of the edge
@@ -28,13 +30,13 @@ typedef struct edge {
   struct edge *rev;       // pointer to edge in the reverse direction
 } edge;
 
-typedef struct node {
+struct node {
   int id;                 // id of the node
-  int *adj;               // adjacency list: array of edge indices
+  edge **adj;             // adj list is an array of pointers to edges
   int adjCap;             // capacity of the adjacency list
   int nAdj;               // number of adjacent nodes
   bool visited;           // true if the node has been visited in the DFS
-} node;
+};
 
 typedef struct graph {
   int nNodes, nEdges;     // number of nodes and edges in the graph
@@ -119,21 +121,20 @@ edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
     u->adjCap += 10;
     u->adj = safeRealloc(u->adj, u->adjCap * sizeof(int));
   }
-  u->adj[u->nAdj++] = G->nEdges; // add the edge index to the adj list
-  G->edges[G->nEdges++] = e;     // add the edge to the edge array
+  u->adj[u->nAdj++] = e;       // add the edge to the adjacency list
+  G->edges[G->nEdges++] = e;   // add the edge to the edge array
   return e;
 }
 
 void buildGraph(graph *G) {
   /* reads undirected graph from stdin and builds the adjacency lists */
-  int u, v; double cap;
+  int u, v; double cap; edge *e, *r;
   while (scanf("%d %d %lf", &u, &v, &cap) == 3) {
-    G->maxCap = MAX(G->maxCap, cap);
-    addEdge(G, u, v, cap, false);  // add original edge
-    addEdge(G, v, u, 0, true);     // add reverse edge
+    G->maxCap = MAX(G->maxCap, cap);   // update max capacity seen so far
+    e = addEdge(G, u, v, cap, false);  // add original edge
+    r = addEdge(G, v, u, 0, true);     // add reverse edge
     // add pointers to the reverse edges
-    G->edges[G->nEdges-2]->rev = G->edges[G->nEdges-1];
-    G->edges[G->nEdges-1]->rev = G->edges[G->nEdges-2];
+    e->rev = r; r->rev = e;
   }
 }
 
@@ -153,8 +154,7 @@ double dfs(graph *G, int s, int t, double flow, int delta) {
   if (u->visited) return 0;         // already visited
   double bneck;
   for (int i = 0; i < u->nAdj; ++i) {     
-    int eId = u->adj[i];
-    edge *e = G->edges[eId];
+    edge *e = u->adj[i];  
     if (e->cap - e->flow > delta) {             
       u->visited = true;            // mark as visited
       if ((bneck = dfs(G, e->to, t, 

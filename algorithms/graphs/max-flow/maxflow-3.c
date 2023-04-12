@@ -20,22 +20,24 @@ typedef short bool;
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
+typedef struct node node; // forward declaration of node
+
 typedef struct edge {
-  int from, to;           // ids of the endpoints of the edge (u->v)
+  node *from, *to;        // pointers to the endnodes of the edge (u->v)
   double cap;             // capacity of the edge
   double flow;            // flow on the edge
   bool reverse;           // true if the edge is a reverse edge in Gf
   struct edge *rev;       // pointer to edge in the reverse direction
 } edge;
 
-typedef struct node {
+struct node {
   int id;                 // id of the node
-  int *adj;               // adj list is an array of indices of edges
+  edge **adj;             // adj list is an array of pointers to edges
   int adjCap;             // capacity of the adjacency list
   int nAdj;               // number of adjacent nodes
   int level;              // level of the node in the level graph
   int adjIdx;             // current adj list index in the DFS traversals
-} node;
+};
 
 typedef struct graph {
   int nNodes, nEdges;     // number of nodes and edges in the graph
@@ -117,8 +119,9 @@ void freeGraph(graph *G) {
 edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
   /* adds an edge from u to v with capacity cap */
   edge *e = safeCalloc(1, sizeof(edge));
-  e->from = uId;
-  e->to = vId;
+  node *u = G->nodes[uId];
+  e->to = G->nodes[vId];
+  e->from = u;
   e->cap = cap;
   e->reverse = reverse;
   // check if we need to resize the edge array
@@ -127,25 +130,23 @@ edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
     G->edges = safeRealloc(G->edges, G->edgeCap * sizeof(edge*));
   }
   // check if we need to resize the adjacency list
-  node *u = G->nodes[uId];
   if (u->adjCap == u->nAdj) {
     u->adjCap += 10;
     u->adj = safeRealloc(u->adj, u->adjCap * sizeof(int));
   }
-  u->adj[u->nAdj++] = G->nEdges; // add the edge index to the adj list
-  G->edges[G->nEdges++] = e;     // add the edge to the edge array
+  u->adj[u->nAdj++] = e;       // add the edge to the adjacency list
+  G->edges[G->nEdges++] = e;   // add the edge to the edge array
   return e;
 }
 
 void buildGraph(graph *G) {
   /* reads undirected graph from stdin and builds the adjacency lists */
-  int u, v; double cap;
+  int u, v; double cap; edge *e, *r;
   while (scanf("%d %d %lf", &u, &v, &cap) == 3) {
-    addEdge(G, u, v, cap, false); // add original edge
-    addEdge(G, v, u, 0, true);    // add reverse edge
+    e = addEdge(G, u, v, cap, false); // add original edge
+    r = addEdge(G, v, u, 0, true);    // add reverse edge
     // add pointers to the reverse edges
-    G->edges[G->nEdges-2]->rev = G->edges[G->nEdges-1];
-    G->edges[G->nEdges-1]->rev = G->edges[G->nEdges-2];
+    e->rev = r; r->rev = e;
   }
 }
 
@@ -209,12 +210,10 @@ bool bfs(graph *G, int s, int t) {
    
     // check each edge from n
     for (int i = 0; i < n->nAdj; i++) {
-      int eId = n->adj[i];
-      edge *e = G->edges[eId];
-      node *a = G->nodes[e->to];
-      if (e->cap - e->flow > 0 && a->level == -1) {
-        a->level = n->level + 1;           // set level of child node
-        enqueue(q, a->id);                
+      edge *e = n->adj[i];
+      if (e->cap - e->flow > 0 && e->to->level == -1) {
+        e->to->level = n->level + 1;       // set level of child node
+        enqueue(q, e->to->id);                
       }
     }
   }
@@ -229,12 +228,10 @@ double dfs(graph *G, int s, int t, double flow) {
   // check each edge from n and prune those that don't lead to t
   // so that we don't have to check them again in the next DFS call
   for (int i = n->adjIdx; i < n->nAdj; i++) {
-    n->adjIdx = i;                         // update current adjacency index
-    int eId = n->adj[i];
-    edge *e = G->edges[eId];
-    node *a = G->nodes[e->to];
-    if (e->cap - e->flow > 0 && a->level == n->level + 1) {
-      double bneck = dfs(G, e->to, t, MIN(flow, e->cap - e->flow));
+    n->adjIdx = i;                         // update current adj list index
+    edge *e = n->adj[i];
+    if (e->cap - e->flow > 0 && e->to->level == n->level + 1) {
+      double bneck = dfs(G, e->to->id, t, MIN(flow, e->cap - e->flow));
       if (bneck > 0) {
         e->flow += bneck;                  // adjust flow original edge
         e->rev->flow -= bneck;             // adjust flow reverse edge
@@ -262,7 +259,7 @@ void printFlow(graph *G, int s, int t) {
   for (int i = 0; i < G->nEdges; ++i) {
     edge *e = G->edges[i];
     if (!e->reverse){
-      printf("%6d %6d", e->from, e->to);
+      printf("%6d %6d", e->from->id, e->to->id);
       if (e->flow > 0) printf("%13.2lf\n", e->flow);
       else printf("%13c\n", '-');
     }
