@@ -16,6 +16,7 @@
 * [Hash tables]()
 * [Heaps]()
 * [Red-black trees]()
+* [AVL trees]()
 * [B-trees]()
 * [Disjoint sets]()
 * [Augmented data structures]()
