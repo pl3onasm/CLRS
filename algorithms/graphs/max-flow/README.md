@@ -3,26 +3,26 @@
 ## Problem
 
 
-## Ford-Fulkserson method
+## 1. Ford-Fulkserson method
 
-### 1. Edmonds-Karp algorithm (CLRS³ 26.2 and CLRS⁴ 24.2)
+### 1.1. Edmonds-Karp algorithm (CLRS³ 26.2 and CLRS⁴ 24.2)
 
 Implementation: [Max-flow - Edmonds-Karp](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/max-flow/maxflow-1.c)
 
-### 2. Capacity scaling and DFS (not in CLRS)
+### 1.2. Capacity scaling and DFS (not in CLRS)
 
 Implementation: [Max-flow - DFS](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/max-flow/maxflow-2.c)
 
-### 3. Dinic's algorithm (not in CLRS)
+### 1.3. Dinic's algorithm (not in CLRS)
 
 Implementation: [Max-flow - Dinic](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/max-flow/maxflow-3.c)
 
-## Push-relabel method (CLRS³ only)
+## 2. Push-relabel method (CLRS³ only)
 
-### 1. Generic push-relabel (CLRS³ 26.4)
+### 2.1. Generic push-relabel (CLRS³ 26.4)
 
 Implementation: [Max-flow - Push-relabel](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/max-flow/maxflow-4.c)
 
-### 2. Relabel-to-front (CLRS³ 26.5)
+### 2.2. Relabel-to-front (CLRS³ 26.5)
 
 Implementation: [Max-flow - Relabel-to-front](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/max-flow/maxflow-5.c)

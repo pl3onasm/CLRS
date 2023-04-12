@@ -1,10 +1,10 @@
-/* file: maxflow-4.c  
+/* file: maxflow-5.c  
    author: David De Potter
    email: pl3onasm@gmail.com
    license: MIT, see LICENSE file in repository root folder
-   description: implements the generic push-relabel 
+   description: implements the relabel-to-front
                 maximum flow algorithm
-   time complexity: O(E*V^2)
+   time complexity: O(V^3)
 */
 
 #include <stdio.h>
@@ -29,12 +29,14 @@ typedef struct edge {
 
 typedef struct node {
   int id;                 // id of the node
-  int *adj;               // adj list is an array of indices of edges
+  int *adj;               // adj list is an array of edge indices
   int adjCap;             // capacity of the adjacency list
   int nAdj;               // number of adjacent nodes
-  int height;             // height of the node in Gf
-  int adjIdx;             // current adjacency list index 
+  int height;             // height of the node in the residual graph
+  int current;            // current adjacency list index 
   double excess;          // excess flow at the node
+  struct node *next;      // pointer to the next node in the active list
+  struct node *prev;      // pointer to the previous node in the active list
 } node;
 
 typedef struct graph {
@@ -44,11 +46,6 @@ typedef struct graph {
   int edgeCap;            // capacity of the edge array
   double maxFlow;         // maximum flow in the graph
 } graph;
-
-typedef struct queue {
-  int front, back, size;   // front and back of the queue, and its size
-  int *array;              // array of elements in the queue
-} queue;
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
 
@@ -71,54 +68,6 @@ void *safeRealloc (void *ptr, int newSize) {
     exit(EXIT_FAILURE);
   }
   return ptr;
-}
-
-//:::::::::::::::::::::::: queue functions ::::::::::::::::::::::::://
-
-bool isEmpty(queue *Q) {
-  /* is true if the queue is empty */
-  return Q->front == Q->back;
-}
-
-queue *newQueue(int n) {
-  /* creates a queue with n elements */
-  queue *Q = safeCalloc(1, sizeof(queue));
-  Q->array = safeCalloc(n, sizeof(int));
-  Q->size = n;
-  return Q;
-}
-
-void freeQueue(queue *Q) {
-  /* frees all memory allocated for the queue */
-  free(Q->array);
-  free(Q);
-}
-
-void doubleQueueSize(queue *Q) {
-  /* doubles the size of the queue */
-  Q->array = safeRealloc(Q->array, 2 * Q->size * sizeof(int));
-  for (int i = 0; i < Q->back; ++i)
-    Q->array[i + Q->size] = Q->array[i];
-  Q->back += Q->size;
-  Q->size *= 2;
-}
-
-void enqueue (queue *Q, int n) {
-  /* adds n to the back of the queue */
-  Q->array[Q->back] = n;
-  Q->back = (Q->back + 1) % Q->size;
-  if (Q->back == Q->front) doubleQueueSize(Q);
-}
-
-int dequeue (queue *Q) {
-  /* removes and returns the first element of the queue */
-  if (isEmpty(Q)) {
-    printf("Error: dequeue() called on empty queue.\n");
-    exit(EXIT_FAILURE);
-  }
-  int n = Q->array[Q->front];
-  Q->front = (Q->front + 1) % Q->size;
-  return n;
 }
 
 //:::::::::::::::::::::::: graph functions ::::::::::::::::::::::::://
@@ -190,43 +139,44 @@ void buildGraph(graph *G) {
 
 //::::::::::::::::::::::: push and relabel ::::::::::::::::::::::::://
 
-void initPreflow(graph *G, int s, queue *Q) {
+node *newList(graph *G, int s, int t) {
+  /* makes a doubly linked worklist of all nodes in G except for  
+     s and t, by setting the next and prev pointers of each node */
+  node *L = NULL;
+  for (int i = G->nNodes-1; i >= 0; i--) 
+    if (i != s && i != t) {
+      G->nodes[i]->next = L;
+      L = G->nodes[i];
+      if (L->next != NULL)
+        L->next->prev = L;
+    }
+  return L;
+}
+
+void initPreflow(graph *G, int s) {
   /* initializes the preflow at the source s */
   node *u = G->nodes[s];
-  u->height = G->nNodes;          // set height of source to n
+  u->height = G->nNodes;      // set height of source to n
   for (int i = 0; i < u->nAdj; i++) {
     // set full flow on all edges from s
-    int eId = u->adj[i];
+    int eId = u->adj[i];      // get edge index from adj list
     edge *e = G->edges[eId];
-    e->flow = e->cap;             // set flow on original edge
-    e->rev->flow = -e->cap;       // set flow on reverse edge
-    G->nodes[e->to]->excess += e->cap;
-    enqueue(Q, e->to);            // equeue all neighbors of s
+    e->flow = e->cap;         // set flow on original edge
+    e->rev->flow = -e->cap;   // set flow on reverse edge
+    G->nodes[e->to]->excess += e->cap;  // update excess at v
   }
 }
 
-bool push(graph *G, node *u, queue *Q) {
-  /* pushes flow from u to its neighbors */
-  for (int i = u->adjIdx; i < u->nAdj; i++) {
-    u->adjIdx = i;                // save the current adj index
-    edge *e = G->edges[u->adj[i]];
-    node *v = G->nodes[e->to];
-    if (e->cap - e->flow > 0 && u->height == v->height + 1) {
-      double delta = MIN(u->excess, e->cap - e->flow);
-      e->flow += delta;           // update flow on original edge
-      e->rev->flow -= delta;      // update flow on reverse edge
-      u->excess -= delta;         // update excess at u
-      v->excess += delta;         // update excess at v
-      if (v->excess == delta) 
-        enqueue(Q, v->id);        // enqueue v if it was inactive
-      return true;
-    }
-  }
-  u->adjIdx = 0;                  // reset the adjacency index
-  return false;
+void push(graph *G, node *u, node *v, edge *e) {
+  /* pushes flow from u to v along edge e */
+  double delta = MIN(u->excess, e->cap - e->flow);
+  e->flow += delta;           // update flow on original edge
+  e->rev->flow -= delta;      // update flow on reverse edge
+  u->excess -= delta;         // update excess at u
+  v->excess += delta;         // update excess at v
 }
 
-void relabel(graph *G, node *u, queue *Q) {
+void relabel(graph *G, node *u) {
   /* relabels u to the minimum height of its 
      neighbors in Gf plus one */
   int min = INF;
@@ -239,26 +189,48 @@ void relabel(graph *G, node *u, queue *Q) {
   u->height = min + 1;
 }
 
+void discharge(graph *G, node *u) {
+  /* discharges the excess at u, i.e. pushes all excess flow 
+     from u to its neighbors in Gf, relabeling u if needed */
+  while (u->excess > 0) {
+    if (u->current < u->nAdj){ // if there are still neighbors to push to
+      edge *e = G->edges[u->adj[u->current]];
+      node *v = G->nodes[e->to];
+      if (e->cap - e->flow > 0 && u->height == v->height + 1) 
+        push(G, u, v, e);
+      else u->current++;       // move to next neighbor
+    } else {                   // if no neighbors can be pushed to
+      relabel(G, u);           // relabel u
+      u->current = 0;          // reset current adj list index 
+    }
+  }
+}
+
+node *moveToFront(node *L, node *u) {
+  /* moves node u to the front of worklist L */
+  if (u->next) u->next->prev = u->prev;
+  if (u->prev) u->prev->next = u->next;
+  else L = u->next;            // if u is the head of the worklist
+  u->prev = NULL;
+  u->next = L;
+  L->prev = u;
+  return u;
+}
+
 void maxFlow (graph *G, int s, int t) {
   /* computes the maximum flow from s to t */
-  queue *Q = newQueue(G->nNodes);   
-  initPreflow(G, s, Q);
-  
-  while (!isEmpty(Q)) {
-    int uId = dequeue(Q);           // get the next active node
-    if (uId == t || uId == s)       // skip the source and sink
-      continue;
-    
-    node *u = G->nodes[uId];
-                                    // we know u has excess flow so we 
-    if (!push(G, u, Q))             // can either try to push from u
-      relabel(G, u, Q);             // or relabel it if pushing fails
-      
-    if (u->excess > 0)              // enqueue u if it still has excess
-      enqueue(Q, uId);
+  initPreflow(G, s);                  // initialize the preflow
+  node *listHead = newList(G, s, t);  // list of all nodes except s and t
+  node *u = listHead;
+
+  while (u) {
+    int oldHeight = u->height;
+    discharge(G, u);                  // discharge the excess at u
+    if (u->height > oldHeight)        // if u was relabeled while discharging
+      listHead = moveToFront(listHead, u);  
+    u = u->next;
   }
-  G->maxFlow = G->nodes[t]->excess; // max flow is the excess at the sink
-  freeQueue(Q);
+  G->maxFlow = G->nodes[t]->excess;   // max flow is excess at t
 } 
 
 void printFlow(graph *G, int s, int t) {
@@ -279,15 +251,15 @@ void printFlow(graph *G, int s, int t) {
 //::::::::::::::::::::::::: main function :::::::::::::::::::::::::://
 
 int main (int argc, char *argv[]) {
-  int n, s, t;                      // number of nodes, source, sink
+  int n, s, t;                       // number of nodes, source, sink
   scanf("%d %d %d", &n, &s, &t);
 
   graph *G = newGraph(n); 
-  buildGraph(G);                    // read edges from stdin
+  buildGraph(G);                     // read edges from stdin
 
-  maxFlow(G, s, t);                 // compute max flow
-  printFlow(G, s, t);               // print flow values
+  maxFlow(G, s, t);                  // compute max flow
+  printFlow(G, s, t);                // print flow values
 
-  freeGraph(G);                     // free memory
+  freeGraph(G);                      // free memory
   return 0;
 }

@@ -34,7 +34,7 @@ typedef struct node {
   int adjCap;             // capacity of the adjacency list
   int nAdj;               // number of adjacent nodes
   int level;              // level of the node in the level graph
-  int adjIdx;             // current adjacency index in the DFS traversals
+  int adjIdx;             // current adj list index in the DFS traversals
 } node;
 
 typedef struct graph {
