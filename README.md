@@ -34,5 +34,5 @@ Please refer to the license if you wish to use any of the code in this repositor
 
 CLRS³: Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2009). Introduction to algorithms. MIT press.  
 CLRS⁴: Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2022). Introduction to algorithms. MIT press.  
-CP: Halim, S., Halim, S., Effendy, A., (2022) Competitive programming 4. Lulu Publishing.
-JE: Erickson, J. (2019). [Algorithms](https://github.com/jeffgerickson/algorithms). Independent Publisher.
+CP: Halim, S., Halim, S., Effendy, A., (2022) Competitive programming 4. Lulu Publishing.  
+JE: Erickson, J. (2019). [Algorithms](https://github.com/jeffgerickson/algorithms). Independent Publisher.  
