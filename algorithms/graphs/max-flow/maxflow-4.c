@@ -232,7 +232,7 @@ void relabel(graph *G, node *u, queue *Q) {
   int min = INF;
   for (int i = 0; i < u->nAdj; i++) {
     edge *e = u->adj[i];
-    if (e->cap - e->flow > 0 && e->to->height < min) 
+    if (e->cap - e->flow > 0) 
       min = MIN(min, e->to->height);
   }
   u->height = min + 1;
