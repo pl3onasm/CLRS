@@ -28,9 +28,11 @@ The aim is to implement all the algorithms and data structures discussed in the 
 
 In addition, you will also find a few other algorithms and data structures that are not discussed or merely referenced in the book. All implementations will be in C, and will follow the pseudocode—if available—in the textbook as closely as possible, unless this results in a less efficient or unnecessarily complex implementation.
 
-Please refer to the license if you wish to use any of the code in this repository. If a link does not work, this is probably because the code is not yet available. Any images were created using Photoshop. If you find any errors or have any suggestions, please let me know. All solutions to the textbook's exercises can be found on [this site](https://walkccc.me/CLRS/), although these are not always optimal or correct.
+Please refer to the license if you wish to use any of the code in this repository. If a link does not work, this is probably because the code is not yet available. Any images were created using Photoshop. If you find any errors or have any suggestions, please let me know. Some of the solutions to the textbook's exercises can be found on [this site](https://walkccc.me/CLRS/), although these are not always optimal or even correct.
 
 ## References
 
 CLRS³: Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2009). Introduction to algorithms. MIT press.  
 CLRS⁴: Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2022). Introduction to algorithms. MIT press.  
+CP: Halim, S., Halim, S., Effendy, A., (2022) Competitive programming 4. Lulu Publishing.
+JE: Erickson, J. (2019). [Algorithms](https://github.com/jeffgerickson/algorithms). Independent Publisher.
