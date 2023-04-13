@@ -164,7 +164,7 @@ bool containsCycle(graph *G, edge *e) {
 
 void bFord(graph *G, int s) {
   /* runs the Bellman-Ford algorithm on graph G starting from node s
-     returns 1 if a negative cycle is found, 0 otherwise */
+     returns true if a negative cycle is found */
   G->nodes[s]->dist = 0;
   for (int i = 0; i < G->nNodes - 1; i++) 
     for (int j = 0; j < G->nEdges; j++) 
