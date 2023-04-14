@@ -156,7 +156,7 @@ double dfs(graph *G, int s, int t, double flow, int delta) {
   double bneck;
   for (int i = 0; i < u->nAdj; ++i) {     
     edge *e = u->adj[i];  
-    if (e->cap - e->flow > delta) {             
+    if (e->cap - e->flow >= delta) {             
       u->visited = true;            // mark as visited
       if ((bneck = dfs(G, e->to, t, 
            MIN(flow, e->cap - e->flow), delta))) {
