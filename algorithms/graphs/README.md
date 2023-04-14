@@ -12,4 +12,5 @@
 | Chap 25.2 | Chap 23.2 | [APSP - Floyd-Warshall](https://github.com/pl3onasm/AADS/tree/main/algorithms/graphs/floyd)
 | Chap 25.2 | Chap 23.2 | [Transitive closure](https://github.com/pl3onasm/AADS/tree/main/algorithms/graphs/tr-closure)
 | Chap 26 | Chap 24 | [Maximum flow](https://github.com/pl3onasm/AADS/tree/main/algorithms/graphs/max-flow)
+| n/a | Chap 25 | [Bipartite graph matchings](https://github.com/pl3onasm/AADS/tree/main/algorithms/graphs/mcbm)
 | n/a | n/a | [Flood fill](https://github.com/pl3onasm/AADS/tree/main/algorithms/graphs/floodfill)
