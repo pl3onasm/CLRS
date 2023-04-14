@@ -4,7 +4,7 @@
    license: MIT, see LICENSE file in repository root folder
    description: implements the Edmonds-Karp version of the 
      max-flow algorithm. This is Ford-Fulkerson with BFS.
-   time complexity: O(V*E^2) 
+   time complexity: O(VE²) 
 */
 
 #include <stdio.h>

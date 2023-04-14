@@ -4,7 +4,7 @@
    license: MIT, see LICENSE file in repository root folder
    description: implements Ford-Fulkerson with DFS and a
      heuristic called capacity scaling to find the maximum flow
-   time complexity: O(log(maxCap)*E^2)
+   time complexity: O(E²log(maxCap))
 */
 
 #include <stdio.h>

@@ -5,7 +5,7 @@
    description: implements the Dinitz version of the 
      max-flow algorithm. This is Ford-Fulkerson with 
      level graphs and DFS.
-   time complexity: 
+   time complexity: O(V²E)
 */
 
 #include <stdio.h>

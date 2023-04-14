@@ -4,7 +4,7 @@
    license: MIT, see LICENSE file in repository root folder
    description: implements the relabel-to-front
                 maximum flow algorithm
-   time complexity: O(V^3)
+   time complexity: O(V³)
 */
 
 #include <stdio.h>

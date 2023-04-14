@@ -4,7 +4,7 @@
    license: MIT, see LICENSE file in repository root folder
    description: implements the generic push-relabel 
                 maximum flow algorithm
-   time complexity: O(E*V^2)
+   time complexity: O(V²E)
 */
 
 #include <stdio.h>
