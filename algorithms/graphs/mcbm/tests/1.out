@@ -1,0 +1,10 @@
+The maximum cardinality is 7.
+
+The following matching is possible:
+0 → 8
+1 → 7
+2 → 12
+3 → 13
+4 → 10
+5 → 9
+6 → 11

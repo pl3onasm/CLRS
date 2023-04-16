@@ -148,13 +148,13 @@ void buildGraph(graph *G, int left, int right) {
     // add pointers to the reverse edges
     e->rev = r; r->rev = e;
   }
+  // add edges from super source to left nodes
   for (int i = 0; i < left; i++) {
-    // add edge from source to u
     e = addEdge(G, n-2, i, 1, false);
     r = addEdge(G, i, n-2, 0, true);
     e->rev = r; r->rev = e;
   }
-  
+  // add edges from right nodes to super sink
   for (int i = left; i < left+right; i++) {
     // add edge from v to sink
     e = addEdge(G, i, n-1, 1, false);
