@@ -25,6 +25,7 @@ typedef struct edge {
   node *from, *to;        // pointers to the endpoints of the edge (u->v)
   double cap;             // capacity of the edge
   double flow;            // flow on the edge
+  bool reverse;           // true if the edge is a reverse edge
   struct edge *rev;       // pointer to edge in the reverse direction
 } edge;
 
@@ -97,10 +98,8 @@ void freeGraph(graph *G) {
     free(G->nodes[i]);
   }
   free(G->nodes);
-  for (int i = 0; i < G->nEdges; i++){
-    free(G->edges[i]->rev);
+  for (int i = 0; i < G->nEdges; i++)
     free(G->edges[i]);
-  }
   free(G->edges);
   free(G);
 }
@@ -112,6 +111,7 @@ edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
   e->to = G->nodes[vId];
   e->from = u;
   e->cap = cap;
+  e->reverse = reverse;
   // check if we need to resize the edge array
   if (G->edgeCap == G->nEdges) {
     G->edgeCap += 10;
@@ -123,8 +123,7 @@ edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
     u->adj = safeRealloc(u->adj, u->adjCap * sizeof(int));
   }
   u->adj[u->nAdj++] = e;       // add the edge to the adj list
-  if (!reverse)
-    G->edges[G->nEdges++] = e; // add the original edge to G
+  G->edges[G->nEdges++] = e;   // add the original edge to G
   return e;
 }
 
@@ -239,9 +238,11 @@ void printFlow(graph *G, int s, int t) {
           s, t, G->maxFlow, "flow");
   for (int i = 0; i < G->nEdges; ++i) {
     edge *e = G->edges[i];
-    printf("%6d %6d", e->from->id, e->to->id);
-    if (e->flow > 0) printf("%13.2lf\n", e->flow);
-    else printf("%13c\n", '-');
+    if (!e->reverse){
+      printf("%6d %6d", e->from->id, e->to->id);
+      if (e->flow > 0) printf("%13.2lf\n", e->flow);
+      else printf("%13c\n", '-');
+    }
   }
 }
 
