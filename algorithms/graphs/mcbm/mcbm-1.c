@@ -156,7 +156,6 @@ void buildGraph(graph *G, int left, int right) {
   }
   // add edges from right nodes to super sink
   for (int i = left; i < left+right; i++) {
-    // add edge from v to sink
     e = addEdge(G, i, n-1, 1, false);
     r = addEdge(G, n-1, i, 0, true);
     e->rev = r; r->rev = e;
