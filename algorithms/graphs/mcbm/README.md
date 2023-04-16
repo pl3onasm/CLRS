@@ -12,7 +12,7 @@ In this version of the problem, the edges are unweighted. The following algorith
 
 ### Dinic's Algorithm
 
-We can adapt the maximum flow algorithm to solve this problem. We simply add a super source vertex $s$ and a super sink vertex $t$ to the graph and then add an edge from $s$ to every vertex in $R$ and an edge from every vertex in $L$ to $t$. The capacity of each edge is set to 1. We then run Dinic's algorithm on this graph and the maximum flow is then the cardinality of the maximum matching and the edges in the residual graph that have a flow of 1 are the edges in the matching. The algorithm runs in $O(\sqrt{V} \cdot E)$ time, thanks to the fact that the graph is unweighted (i.e. all edges have unit capacity) and bipartite.
+We can solve the problem by adapting the maximum flow algorithm. We simply add a super source $s$ and a super sink $t$ to the given graph and then add an edge from $s$ to every vertex in $L$ and an edge from every vertex in $R$ to $t$. The capacity of all edges is 1. Next we run Dinic's algorithm on this graph (since it's the fastest max flow algorithm). The maximum flow is then the cardinality of the maximum matching, and the edges with a flow of 1 are the edges that are part of this matching. The algorithm runs in $O(\sqrt{V} \cdot E)$ time, thanks to the fact that the graph is unweighted (i.e. all edges have unit capacity) and bipartite.
 
 Implementation: [BCBM - Maxflow](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/mcbm/mcbm-1.c)
 
