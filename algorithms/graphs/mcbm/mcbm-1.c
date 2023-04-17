@@ -48,7 +48,7 @@ typedef struct graph {
 
 typedef struct queue {
   int front, back, size;   // front and back of the queue, and its size
-  int *array;              // array of elements in the queue
+  node **array;            // array of elements in the queue
 } queue;
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
@@ -84,8 +84,9 @@ node *newNode(int id) {
   return n;
 }
 
-graph *newGraph(int n) {
+graph *newGraph(int left, int right) {
   /* creates a graph with n vertices */
+  int n = left + right + 2;
   graph *G = safeCalloc(1, sizeof(graph));
   G->nNodes = n;
   G->nodes = safeCalloc(n, sizeof(node*));
@@ -172,7 +173,7 @@ bool isEmpty(queue *Q) {
 queue *newQueue(int n) {
   /* creates a queue with n elements */
   queue *Q = safeCalloc(1, sizeof(queue));
-  Q->array = safeCalloc(n, sizeof(int));
+  Q->array = safeCalloc(n, sizeof(node*));
   Q->size = n;
   return Q;
 }
@@ -185,68 +186,67 @@ void freeQueue(queue *Q) {
 
 void doubleQueueSize(queue *Q) {
   /* doubles the size of the queue */
-  Q->array = safeRealloc(Q->array, 2 * Q->size * sizeof(int));
+  Q->array = safeRealloc(Q->array, 2 * Q->size * sizeof(node*));
   for (int i = 0; i < Q->back; ++i)
     Q->array[i + Q->size] = Q->array[i];
   Q->back += Q->size;
   Q->size *= 2;
 }
 
-void enqueue (queue *Q, int n) {
+void enqueue (queue *Q, node *n) {
   /* adds n to the back of the queue */
   Q->array[Q->back] = n; 
   Q->back = (Q->back + 1) % Q->size;
   if (Q->back == Q->front) doubleQueueSize(Q);
 }
 
-int dequeue (queue *Q) {
+node *dequeue (queue *Q) {
   /* removes and returns the first element of the queue */
   if (isEmpty(Q)) {
     printf("Error: dequeue() called on empty queue.\n");
     exit(EXIT_FAILURE);
   }
-  int n = Q->array[Q->front];
+  node *n = Q->array[Q->front];
   Q->front = (Q->front + 1) % Q->size;
   return n;
 }
 
 //::::::::::::::::::::::::::::: Dinic :::::::::::::::::::::::::::::://
 
-bool bfs(graph *G, int s, int t) {
+bool bfs(graph *G, node *s, node *t) {
   /* builds a BFS tree from s to t and returns if there is a path */
   queue *q = newQueue(G->nNodes); 
-  enqueue(q, s);                           // enqueue source node
-  G->nodes[s]->level = 0;                  // set source level to 0
+  enqueue(q, s);                        // enqueue source node
+  s->level = 0;                         // set source level to 0
   while (!isEmpty(q)) {
-    node *n = G->nodes[dequeue(q)];
+    node *n = dequeue(q);
    
     // check each edge from n
     for (int i = 0; i < n->nAdj; i++) {
       edge *e = n->adj[i];
       if (e->cap - e->flow > 0 && e->to->level == -1) {
-        e->to->level = n->level + 1;       // set level of child node
-        enqueue(q, e->to->id);                
+        e->to->level = n->level + 1;    // set level of child node
+        enqueue(q, e->to);                
       }
     }
   }
   freeQueue(q);
-  return G->nodes[t]->level != -1;         // return if t is reachable
+  return t->level != -1;                // return if t is reachable
 }
 
-int dfs(graph *G, int s, int t, int flow) {
+int dfs(graph *G, node *s, node *t, int flow) {
   /* finds the blocking flow from s to t */
-  if (s == t) return flow;                 // reached sink
-  node *n = G->nodes[s];
+  if (s->id == t->id) return flow;      // reached sink
   // check each edge from n and prune those that don't lead to t
   // so that we don't have to check them again in the next DFS call
-  for (int i = n->adjIdx; i < n->nAdj; i++) {
-    n->adjIdx = i;                         // update current adj list index
-    edge *e = n->adj[i];
-    if (e->cap - e->flow > 0 && e->to->level == n->level + 1) {
-      int bneck = dfs(G, e->to->id, t, MIN(flow, e->cap - e->flow));
+  for (int i = s->adjIdx; i < s->nAdj; i++) {
+    s->adjIdx = i;                      // update current adj list index
+    edge *e = s->adj[i];
+    if (e->cap - e->flow > 0 && e->to->level == s->level + 1) {
+      int bneck = dfs(G, e->to, t, MIN(flow, e->cap - e->flow));
       if (bneck > 0) {
-        e->flow += bneck;                  // adjust flow original edge
-        e->rev->flow -= bneck;             // adjust flow reverse edge
+        e->flow += bneck;               // adjust flow original edge
+        e->rev->flow -= bneck;          // adjust flow reverse edge
         return bneck;
       } 
     } 
@@ -254,8 +254,10 @@ int dfs(graph *G, int s, int t, int flow) {
   return 0;
 }
 
-void dinic(graph *G, int s, int t) {
+void dinic(graph *G) {
   /* finds the maximum flow from s to t using Dinic's algorithm */
+  node *s = G->nodes[G->nNodes-2];      // super source
+  node *t = G->nodes[G->nNodes-1];      // super sink
   while (bfs(G, s, t)) {
     for (int f = dfs(G, s, t, INF); f; f = dfs(G, s, t, INF)) 
       G->maxFlow += f;
@@ -263,15 +265,15 @@ void dinic(graph *G, int s, int t) {
   }
 }
 
-void printFlow(graph *G, int s, int t) {
+void printFlow(graph *G) {
   /* prints the flow on each edge of the graph G */
   printf("Maximum matching has cardinality %d.\n", G->maxFlow);
   if (G->maxFlow == 0) return;
   printf("Possible matching:\n");
   for (int i = 0; i < G->nEdges; i++) {
     edge *e = G->edges[i];
-    if (e->from->id != s && e->to->id != t 
-        && e->flow > 0 && !e->reverse) 
+    if (e->from->id != G->nNodes-2 && e->to->id != G->nNodes-1
+        && e->flow && !e->reverse) 
       printf("%d → %d\n", e->from->id, e->to->id);
   }
 }
@@ -281,13 +283,12 @@ void printFlow(graph *G, int s, int t) {
 int main (int argc, char *argv[]) {
   int l, r;                    // cardinality of left and right sets
   scanf("%d %d", &l, &r);
-  int n = l + r + 2;           // number of nodes in the graph
 
-  graph *G = newGraph(n);      // build an unweighted graph with
+  graph *G = newGraph(l, r);   // build an unweighted graph with
   buildGraph(G, l, r);         // super source and sink at the end
 
-  dinic(G, n-2, n-1);          // find the maximum flow / matching
-  printFlow(G, n-2, n-1);      // print the maximum matching
+  dinic(G);                    // find the maximum flow / matching
+  printFlow(G);                // print the maximum matching
 
   freeGraph(G);                // free memory
   return 0;
