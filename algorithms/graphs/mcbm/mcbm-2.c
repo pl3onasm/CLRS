@@ -11,7 +11,6 @@
 #include <stdlib.h>
 #include <limits.h>
 
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define INF INT_MAX
 #define true 1
 #define false 0
@@ -233,7 +232,7 @@ void hopcroftKarp(graph *G) {
 void printMatching(graph *G) {
   /* prints the matching */
   printf("Maximum matching has cardinality %d.\n", G->nMatched);
-  if (G->nMatched == 0) return;
+  if (!G->nMatched) return;
   printf("Possible matching:\n");
   for (int i = 0; i < G->nL; i++) {
     node *u = G->nodes[i];
