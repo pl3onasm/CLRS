@@ -265,8 +265,9 @@ void dinic(graph *G, int s, int t) {
 
 void printFlow(graph *G, int s, int t) {
   /* prints the flow on each edge of the graph G */
-  printf("The maximum cardinality is %d.\n\n"
-         "The following matching is possible:\n", G->maxFlow);
+  printf("Maximum matching has cardinality %d.\n", G->maxFlow);
+  if (G->maxFlow == 0) return;
+  printf("Possible matching:\n");
   for (int i = 0; i < G->nEdges; i++) {
     edge *e = G->edges[i];
     if (e->from->id != s && e->to->id != t 

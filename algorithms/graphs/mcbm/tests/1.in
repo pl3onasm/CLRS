@@ -31,8 +31,8 @@ The numbers in L could be numbers identifying 7 persons,
 and the numbers in R could each identify books in a library 
 that are available for loan. 
 The edges in the graph could then represent the books that 
-each person would like to read. These edges are unweighted: 
-each person wants to read each book they've listed with  
-equal preference.
+each person has listed as being of interest to them.
+These edges are unweighted: each person wants to read each 
+book they've listed with equal preference.
 The maximum cardinality matching ensures that as many 
-persons as possible get a book they want to read.
+people as possible get a book they want to read.

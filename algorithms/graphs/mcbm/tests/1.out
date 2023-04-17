@@ -1,6 +1,5 @@
-The maximum cardinality is 7.
-
-The following matching is possible:
+Maximum matching has cardinality 7.
+Possible matching:
 0 → 8
 1 → 7
 2 → 12
