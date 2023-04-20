@@ -23,9 +23,12 @@ Such a path is also called an M-alternating path, since it needs to start from a
 
 Implementation: [MCBM - Hopcroft-Karp](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/mcbm/mcbm-2.c)
 
-## Unweighted complete MCBM (CLRS⁴ 25.2)
+## Unweighted complete preferred MCBM (CLRS⁴ 25.2)
 
-In this version of the problem, we are given an unweighted complete bipartite graph $G = (R \cup L, E)$, where $|R| = |L| = n$. The fact that the graph is complete means that there is an edge between every pair of vertices in $R$ and $L$. The goal is to find a perfect matching, which is a matching that contains exactly $n$ edges.
+In this version of the problem, we are given an unweighted *complete* bipartite graph $G = (R \cup L, E)$. The fact that the graph is complete means that there is an edge from every vertex in $L$ to every vertex in $R$. We are also given a preference list for each vertex in $L$ that specifies the order in which the vertices in $R$ are preferred by the vertex in $L$, and we are given a preference list for each vertex in $R$ that specifies the order in which the vertices in $L$ are preferred by the vertex in $R$. The goal is to find a maximum cardinality matching $M$ such that the preference list of each vertex in $L$ and $R$ is satisfied. A matching is said to be *stable* if there is no better matching that can be found by swapping two edges in $M$, i.e. all preference lists are satisfied. The aim is to find a maximum cardinality stable matching, and this can be done using a greedy algorithm that is known as the Gale-Shapley algorithm.  
+It is based on the idea of *proposals* and *rejections*. We start with an empty matching and then we repeatedly propose to each vertex in $L$ the vertex in $R$ that is at the top of its preference list. If the vertex in $R$ is unmatched, then it accepts the proposal and the matching is updated accordingly. If the vertex in $R$ is matched, then it checks if the vertex in $L$ that proposed to it is preferred over the vertex in $L$ that is currently matched to it. If this is the case, then the vertex in $R$ rejects the proposal. If the vertex in $L$ that proposed to it is not preferred over the vertex in $L$ that is currently matched to it, then the vertex in $R$ accepts the proposal and the matching is updated accordingly. This process is repeated until no more proposals can be made and the matching is stable. The algorithm runs in $O(VE)$ time, since each vertex in $L$ proposes to a vertex in $R$ at most once and each vertex in $R$ accepts or rejects a candidate at most once.
+
+Implementation: [MCBM - Gale-Shapley](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/mcbm/mcbm-3.c)
 
 ## Weighted MCBM
 
