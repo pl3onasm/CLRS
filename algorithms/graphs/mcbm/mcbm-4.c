@@ -26,7 +26,6 @@ typedef struct edge {
   short cap;              // capacity of the edge (0 or 1)
   short flow;             // flow on the edge
   double cost;            // cost of the edge when flow is 1
-  bool visited;           // true if the edge is visited in DFS
   bool reverse;           // true if the edge is a reverse edge
   struct edge *rev;       // pointer to edge in the reverse direction
 } edge;
@@ -103,10 +102,9 @@ graph *newGraph(int left, int right, char *type) {
 }
 
 void loopReset(graph *G) {
-  /* resets all nodes in the graph for the next iteration */
+  /* resets the adjacency list indices and distances of all nodes */
   for (int i = 0; i < G->nNodes; i++){
     G->nodes[i]->dist = INF;
-    G->nodes[i]->visited = false;
     G->nodes[i]->adjIdx = 0;
   }
 }
@@ -224,7 +222,7 @@ void dinic(graph *G) {
   while (bFord(G, s, t)) {              // while t is reachable
     while (dfs(G, s, t, INF))           // while an augmenting path exists
       G->maxCard++;                     // increment cardinality of M
-    loopReset(G);  // reset visited flags and adj list indices
+    loopReset(G);  // reset distances and adj list indices for next bFord
   }
 }
 
