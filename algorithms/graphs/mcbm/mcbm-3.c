@@ -9,7 +9,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
 
 #define true 1
 #define false 0
@@ -182,7 +181,7 @@ void galeShapley (graph *G) {
     node *u = dequeue(Q);
     if (u->adjIndex == u->nAdj) continue;  // u has no more preferences
     node *v = G->nodes[u->adj[u->adjIndex++]];
-    if (v->matched == NULL) {
+    if (!v->matched) {
       // v is unmatched, so match u and v
       u->matched = v;
       v->matched = u;
