@@ -50,11 +50,6 @@ typedef struct graph {
   bool costType;          // true if min-cost, false if max-cost 
 } graph;
 
-typedef struct queue {
-  int front, back, size;   // front and back of the queue, and its size
-  node **array;            // array of elements in the queue
-} queue;
-
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
 
 void *safeCalloc (int n, int size) {
