@@ -1,8 +1,8 @@
-/* file: mcbm-1.c  
+/* file: mcbm-4.c  
    author: David De Potter
    email: pl3onasm@gmail.com
    license: MIT, see LICENSE file in repository root folder
-   description: weighted MCBM using min-cost max-flow
+   description: weighted MCBM using min/max-cost max-flow
    time complexity: O(V²E²)
 */
 
@@ -119,7 +119,7 @@ void freeGraph(graph *G) {
 
 edge *addEdge(graph *G, int uId, int vId, double cost, 
   int cap, bool reverse) {
-  /* adds an edge from u to v with capacity cap */
+  /* adds an edge from u to v with given capacity and cost to the graph */
   edge *e = safeCalloc(1, sizeof(edge));
   node *u = G->nodes[uId];
   e->to = G->nodes[vId];
@@ -143,7 +143,7 @@ edge *addEdge(graph *G, int uId, int vId, double cost,
 }
 
 void buildGraph(graph *G, int left, int right) {
-  /* reads undirected graph from stdin and builds the adjacency lists */
+  /* reads directed graph from stdin and builds the adjacency lists */
   int u, v; double c;  edge *e, *r;
   int n = G->nNodes;
   while (scanf("%d %d %lf", &u, &v, &c) == 3) {

@@ -140,7 +140,7 @@ edge *addEdge(graph *G, int uId, int vId, int cap, bool reverse) {
 }
 
 void buildGraph(graph *G, int left, int right) {
-  /* reads undirected graph from stdin and builds the adjacency lists */
+  /* reads directed graph from stdin and builds the adjacency lists */
   int u, v; edge *e, *r;
   int n = G->nNodes;
   while (scanf("%d %d", &u, &v) == 2) {
