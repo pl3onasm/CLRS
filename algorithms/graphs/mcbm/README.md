@@ -25,7 +25,7 @@ Implementation: [MCBM - Hopcroft-Karp](https://github.com/pl3onasm/AADS/blob/mai
 
 ## Unweighted preferred MCBM (CLRS⁴ 25.2)
 
-In this version of the problem, we are given an unweighted *complete* bipartite graph $G = (R \cup L, E)$, meaning that there is an edge from every vertex in $L$ to every vertex in $R$. We are also given a preference list for each vertex $u$ in $L \cup R$ which specifies the order in which the vertices in the vertex set other than the one that $u$ itself belongs to are preferred by $u$. The goal then is to find a maximum cardinality matching $M$ such that the preference list of each vertex in $L$ and $R$ is satisfied. A matching is said to be *stable* if no better matching can be found by swapping two edges in $M$, i.e. all preference lists are satisfied. The aim is to find a maximum cardinality stable matching, and this can be done using a greedy algorithm known as the Gale-Shapley algorithm.  
+In this version of the problem, we are given an unweighted *complete* bipartite graph $G = (R \cup L, E)$, meaning that there is an edge from every vertex in $L$ to every vertex in $R$. We are also given a preference list for each vertex $u$ in $L \cup R$ which specifies the order in which the vertices in the vertex set different from the one that $u$ itself belongs to are preferred by $u$. The goal then is to find a maximum cardinality matching $M$ such that the preference list of each vertex in $L$ and $R$ is satisfied. A matching is said to be *stable* if no better matching can be found by swapping two edges in $M$, i.e. all preference lists are satisfied. The aim is to find a maximum cardinality stable matching, and this can be done using an algorithm known as the Gale-Shapley algorithm.  
 
 The algorithm is based on the idea of *proposals* and *rejections*. We start with an empty matching and then we repeatedly propose to each vertex in $L$ a candidate from $R$ that is at the top of its preference list. If the vertex in $R$ is unmatched, then it accepts the proposal and the matching is updated accordingly. If the vertex in $R$ is already matched, then it checks if the vertex in $L$ that proposed to it is preferred over the vertex in $L$ that it is currently matched to. If this is the case, then the vertex in $R$ accepts the proposal and the matching is updated accordingly, otherwise the proposal is rejected. This process is repeated until no more proposals can be made and the matching is stable. The algorithm runs in $O(VE)$ time, since each vertex in $L$ proposes to a vertex in $R$ at most once and each vertex in $R$ accepts or rejects a candidate at most once.
 
@@ -33,10 +33,15 @@ Implementation: [MCBM - Gale-Shapley](https://github.com/pl3onasm/AADS/blob/main
 
 ## Weighted MCBM
 
-### Min-cost Max-flow Algorithm (CP 9.25)
+In this version of the problem, the edges come with a cost and we are asked to find a maximum cardinality matching $M$ such that the total cost of the edges in $M$ is minimized or maximized. The following algorithms can be used to solve this problem.
 
-Implementation: [MCBM - Min-cost max-flow](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/mcbm/mcbm-3.c)
+### Min/max-cost Max-flow Algorithm (CP 9.25)
+
+We can solve the problem by using the min/max-cost max-flow algorithm. For this, we simply add a super source $s$ and a super sink $t$ to the given graph and then add an edge from $s$ to every vertex in $L$ and an edge from every vertex in $R$ to $t$. The capacity of all edges is set to 1 and the cost of each given edge is set to its weight, while the cost of the edges from $s$ to $L$ and from $R$ to $t$ is set to 0.  
+The get the min/max-cost max-flow algorithm we then simply replace the BFS in Dinic's algorithm with a Bellman-Ford algorithm, which can handle negative edge weights. The resulting maximum flow is then the cardinality of the maximum matching, and the edges with flow are the edges that are part of this matching. In order to compute the maximum cost instead of the minimum cost, we simply negate the cost of each given edge. The algorithm runs in $O(V^2 E^2)$ time, since the Bellman-Ford algorithm runs in $O(VE)$ time and the DFS that updates the matching runs in $O(VE)$ time as well, thanks to the speedup by remembering the adjacency lists indices which allows to prune the search space of each DFS.
+
+Implementation: [MCBM - Min/max-cost max-flow](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/mcbm/mcbm-4.c)
 
 ### Hungarian Algorithm (Kuhn-Munkres Algorithm) (CLRS⁴ 25.3)
 
-Implementation: [MCBM - Kuhn-Munkres](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/mcbm/mcbm-4.c)
+Implementation: [MCBM - Kuhn-Munkres](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/mcbm/mcbm-5.c)
