@@ -244,8 +244,9 @@ double dfs(graph *G, int s, int t, double flow) {
 
 void dinic(graph *G, int s, int t) {
   /* finds the maximum flow from s to t using Dinic's algorithm */
+  double f;
   while (bfs(G, s, t)) {
-    for (double f = dfs(G, s, t, INF); f; f = dfs(G, s, t, INF)) 
+    while (f = dfs(G, s, t, INF))  // while there is a blocking flow
       G->maxFlow += f;
     loopReset(G);  // reset all levels and current adjList indices
   }

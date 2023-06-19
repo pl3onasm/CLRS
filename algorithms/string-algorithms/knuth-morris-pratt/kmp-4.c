@@ -72,7 +72,8 @@ void matcher (char *pattern, uint pLen, char *text, uint tLen) {
   uint *pi = computePrefixFunction(pattern, pLen);
   short found = 0;
   for (uint i = 0, q = 0; i < tLen; i++) {
-    while (q > 0 && pattern[q] != text[i]) q = pi[q-1];
+    while (q > 0 && pattern[q] != text[i]) q = pi[q-1];   // note that pi stores prefix lengths, not indices, 
+                                                          // so we need to subtract 1 to get the string index
     if (pattern[q] == text[i]) q++;
     if (q == pLen) {
       if (!found) {

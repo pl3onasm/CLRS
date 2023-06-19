@@ -174,7 +174,7 @@ queue *initQueue(graph *G) {
     if (u->matched == G->nil) {
       u->dist = 0;
       enqueue(Q, u);
-    } else u->dist = INF;
+    } else u->dist = INF;   // u is already part of the matching
   }
   G->nil->dist = INF; 
   return Q;
@@ -182,26 +182,26 @@ queue *initQueue(graph *G) {
 
 bool bfs(graph *G) {
   /* finds shortest alternating paths from L to R
-     using BFS while updating the distance of each node */
+     using BFS while updating the distance labels (levels) */
   queue *Q = initQueue(G);
   while (!isEmpty(Q)) {
     node *u = dequeue(Q);
-    if (u == G->nil) break;
+    if (u == G->nil) break; // reached the dummy node in R; level graph is complete
     for (int i = 0; i < u->nAdj; i++) {
       node *v = u->adj[i];
-      if (v->matched->dist == INF) {
+      if (v->matched->dist == INF) { // if edge v->u is in matching
         v->matched->dist = u->dist + 1;
         enqueue(Q, v->matched);
       }
     }
   }
   freeQueue(Q);
-  return G->nil->dist != INF;
+  return G->nil->dist != INF;        // true if we found an augmenting path
 }
 
 bool dfs(graph *G, node *u) {
   /* finds an augmenting path from u to a node in R
-     using DFS while updating the matching */
+     using DFS while updating the matching if one is found */
   if (u != G->nil) {
     for (int i = 0; i < u->nAdj; i++) {
       node *v = u->adj[i];

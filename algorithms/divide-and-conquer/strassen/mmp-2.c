@@ -110,7 +110,7 @@ void strassen(int **A, int **B, int **C, int sz) {
 }
 
 int pow2(int m, int l) {
-  /* computes the next power of 2 ≥ n and l */
+  /* computes the next power of 2 ≥ m and l */
   if (m < l) m = l;
   int p = 1;
   while (p < m) p <<= 1;
