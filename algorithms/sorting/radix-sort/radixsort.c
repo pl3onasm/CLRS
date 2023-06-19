@@ -30,14 +30,13 @@ int *readDates (int n, char *example[]) {
   return dates;
 }
 
-void printArray (int *arr, int n) {
-  // prints an array of size n
-  printf("[");
+void printDates (int *dates, int n) {
+  /* prints the sorted dates in the format YYYY-MM-DD */
+  char buffer[11];
   for (int i = 0; i < n; i++) {
-    printf("%d", arr[i]);
-    if (i < n-1) printf(", ");
+    sprintf(buffer, "%d", dates[i]);
+    printf("%.4s-%.2s-%.2s\n", buffer, buffer + 4, buffer + 6);
   }
-  printf("]\n");
 }
 
 void countingSort(int size, int *arr, int base) {
@@ -64,15 +63,6 @@ void radixSort (int *dates, int size) {
   /* sorts the dates in ascending order */
   for (int i = 0; i < 8; i++) 
     countingSort(size, dates, pow(10, i)); 
-}
-
-void printDates (int *dates, int n) {
-  /* prints the sorted dates in the format YYYY-MM-DD */
-  char buffer[11];
-  for (int i = 0; i < n; i++) {
-    sprintf(buffer, "%d", dates[i]);
-    printf("%.4s-%.2s-%.2s\n", buffer, buffer + 4, buffer + 6);
-  }
 }
 
 int main (int argc, char *argv[]){
