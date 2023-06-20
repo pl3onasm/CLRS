@@ -6,9 +6,9 @@
     using student records as data.
     The student records are stored in a file, one record per line.
     This file is read into a binary search tree, and the user can
-    then search for a student by name, delete or insert a student,
-    or print all existing records in the tree. Since only student
-    numbers are unique, the tree is ordered by student number.
+    then search for a student by id, delete or insert a student,
+    or print all existing records in the tree. 
+    The tree is ordered by student number.
 */
 
 #include <stdio.h>
