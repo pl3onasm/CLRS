@@ -5,74 +5,46 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
-#include <string.h>
 
-void *safeMalloc (int n) {
-  /* allocates n bytes of memory and checks whether the allocation
-     was successful */
-  void *ptr = malloc(n);
-  if (ptr == NULL) {
-    printf("Error: malloc(%d) failed. Out of memory?\n", n);
-    exit(EXIT_FAILURE);
-  }
-  return ptr;
-}
-
-int *readDates (int n, char *example[]) {
-  /* reads n dates and stores them as integers in an array */
-  int *dates = safeMalloc(n * sizeof(int));
-  for (int i = 0; i < n; i++) {
-    int year, month, day;
-    sscanf(example[i], "%d-%d-%d", &year, &month, &day);
-    dates[i] = year * 10000 + month * 100 + day;
-  }
-  return dates;
-}
-
-void printDates (int *dates, int n) {
+void printDates (char *dates[], int n) {
   /* prints the sorted dates in the format YYYY-MM-DD */
-  char buffer[11];
-  for (int i = 0; i < n; i++) {
-    sprintf(buffer, "%d", dates[i]);
-    printf("%.4s-%.2s-%.2s\n", buffer, buffer + 4, buffer + 6);
-  }
+  for (int i = 0; i<n; i++) 
+    printf("%s\n", dates[i]);
 }
 
-void countingSort(int size, int *arr, int base) {
+void countingSort(int size, char *arr[], int d) {
   int count[10] = {0};
-  int *sorted = safeMalloc(size * sizeof(int));
+  char *sorted[25];
   for (int i = 0; i < size; i++) 
-    count[(arr[i] / base) % 10]++;
+    count[(arr[i][d] - '0')]++;
   
   for (int i = 1; i < 10; i++) 
     count[i] += count[i - 1];
   
   for (int i = size - 1; i >= 0; i--) {
-    int digit = (arr[i] / base) % 10;
+    int digit = arr[i][d] - '0';
     sorted[count[digit] - 1] = arr[i];
     count[digit]--;
   }
 
   for (int i = 0; i < size; i++) 
     arr[i] = sorted[i];
-  free(sorted);
 }
 
-void radixSort (int *dates, int size) {
+void radixSort (char *dates[], int size) {
   /* sorts the dates in ascending order */
+  int digits[8] = {9,8,6,5,3,2,1,0};
   for (int i = 0; i < 8; i++) 
-    countingSort(size, dates, pow(10, i)); 
+    countingSort(size, dates, digits[i]);
 }
 
 int main (int argc, char *argv[]){
-  char *example [25] = {"2020-03-10", "2023-01-02", "2015-10-03", 
+  char *dates [25] = {"2020-03-10", "2023-01-02", "2015-10-03", 
   "2019-01-28", "2019-01-05", "2019-04-06", "2021-08-07", "2019-01-08", 
   "2019-08-10", "2019-11-11", "2019-01-12", "2019-02-13", "2020-01-14", 
   "2021-01-19", "2019-01-16", "2021-11-17", "2019-02-18", "2020-12-19", 
   "2018-07-20", "2010-02-09", "2013-04-06", "2018-06-20", "2019-02-08",
   "2020-10-25", "2019-07-20"};
-  int *dates = readDates(25, example);
   radixSort(dates, 25);
   printDates(dates, 25);
   return 0;
