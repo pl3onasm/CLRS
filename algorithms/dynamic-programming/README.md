@@ -19,5 +19,5 @@ Dynamic programming is most suited for optimization problems. Such problems shou
 | Ex 15.4-4,5 | Ex 14.4-4,5 |[Longest Increasing Subsequence](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/longest-increasing-sub)
 | Ex 16.2-2 | Ex 15.2-2 | [0-1 Knapsack Problem](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/knapsack)
 | n/a | n/a | [Minimal Palindromic Partitioning](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/min-pal-part)
-| Prob 15-5| Prob 14-5 | [Minimum Edit Distance](https://github.com/pl3onasm/AADS/tree/main/algorithms/string-algorithms/min-edit-dist)
+| Prob 15-5| Prob 14-5 | [Minimum Edit Distance](https://github.com/pl3onasm/AADS/tree/main/algorithms/dynamic-programming/min-edit-dist)
 | Chap 25.2 | Chap 23.2 | [Floyd-Warshall](https://github.com/pl3onasm/AADS/tree/main/algorithms/graphs/floyd)

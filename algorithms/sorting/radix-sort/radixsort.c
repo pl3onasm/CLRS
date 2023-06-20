@@ -13,6 +13,7 @@ void printDates (char *dates[], int n) {
 }
 
 void countingSort(int size, char *arr[], int d) {
+  /* sorts the dates on the digit with index d */
   int count[10] = {0};
   char *sorted[25];
   for (int i = 0; i < size; i++) 
