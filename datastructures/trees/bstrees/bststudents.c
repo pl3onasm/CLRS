@@ -180,12 +180,22 @@ void printStudent (student *s) {
   printf("%d %s %.2lf %s %s\n", s->id, s->dob, s->gpa, s->fname, s->lname);
 }
 
-void printInorder (node *x) {
-  /* prints the student records in the BST in order */
+void printInorder (node *x, short *count) {
+  /* prints the student records in order of student number to a string */
+  char buffer[1024], c;
   if (x != NULL) {
-    printInorder(x->left);
-    printStudent(x->student);
-    printInorder(x->right);
+    printInorder(x->left, count);
+    if (*count < 20){
+      printStudent(x->student);
+      *count += 1;
+    } else if (*count == 20){
+      *count = 0;
+      printf("Print 20 more? (y/n): ");
+      fgets (buffer, 1024, stdin);
+      if (sscanf(buffer, "%c", &c) != 1 || c != 'y')
+        return;
+    }
+    printInorder(x->right, count);
   }
 }
 
@@ -260,7 +270,7 @@ void readFromFile (bst *tree, char *filename) {
 int main (int argc, char *argv[]) {
   FILE *fp; node *n;
   char buffer[1024];
-  short c;
+  short c, d, count = 0;
 
   if (argc != 2) {
     printf("Usage: %s <student records file>\n", argv[0]);
@@ -269,27 +279,28 @@ int main (int argc, char *argv[]) {
   bst *tree = newBST();
   readFromFile(tree, argv[1]);
 
-  while (1) {
-    printf("Enter command: \n"
+  while (true) {
+    
+    printf("\nEnter command: \n"
             "(1) insert\n"
             "(2) delete\n"
             "(3) search\n"
             "(4) print\n"
-            "(5) exit\n\n");
+            "(5) store and exit\n\n");
 
-    if (scanf("%hd", &c) != 1) {
-      printf("Error: invalid command\n");
-      fgets(buffer, 1024, stdin);
+    fgets(buffer, 1024, stdin);
+    if (sscanf(buffer, "%hd %hd", &c, &d) != 1) {
+      printf("Error: invalid command\n"); 
       continue;
     }
-
+    
     switch (c) {
       case 1:
         printf("Enter student id, dob, gpa, first name, last name: ");
         student *s = newStudent();
-        if (scanf("%d %s %lf %s %s", &s->id, s->dob, &s->gpa, s->fname, s->lname) != 5
-           || !validStudent(s)) {
-          fgets(buffer, 1024, stdin);
+        fgets(buffer, 1024, stdin);
+        if (sscanf(buffer, "%d %s %lf %s %s", &s->id, s->dob, &s->gpa, 
+            s->fname, s->lname) != 5 || !validStudent(s)) {
           printf("Error: invalid student record\n");
           free(s);
           continue;
@@ -307,8 +318,8 @@ int main (int argc, char *argv[]) {
       case 2:
         printf("Enter student id: ");
         int id;
-        if (scanf("%d", &id) != 1) {
-          fgets(buffer, 1024, stdin);
+        fgets(buffer, 1024, stdin);
+        if (sscanf(buffer, "%d", &id) != 1 || id < 1000000 || id > 9999999) {
           printf("Error: invalid id\n");
           continue;
         }
@@ -322,8 +333,8 @@ int main (int argc, char *argv[]) {
         break;
       case 3:
         printf("Enter student id: ");
-        if (scanf("%d", &id) != 1 || id < 1000000 || id > 9999999) {
-          fgets(buffer, 1024, stdin);
+        fgets(buffer, 1024, stdin);
+        if (sscanf(buffer, "%d", &id) != 1 || id < 1000000 || id > 9999999) {
           printf("Error: invalid id\n");
           continue;
         }
@@ -334,7 +345,8 @@ int main (int argc, char *argv[]) {
           printf("Error: student with id %d not found\n", id);
         break;
       case 4:
-        printInorder(tree->root);
+        printInorder(tree->root, &count);
+        count = 0;
         break;
       case 5:
         // overwrite student records file with updated BST
@@ -350,8 +362,6 @@ int main (int argc, char *argv[]) {
       default:
         printf("Error: invalid command\n");
     }
-    printf("\n");
   }
-
   return 0;
 }
