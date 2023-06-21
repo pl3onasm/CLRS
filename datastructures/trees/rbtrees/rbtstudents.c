@@ -1,18 +1,17 @@
-/* file: bststudents.c
+/* file: rbtstudents.c
    author: David De Potter
    email: pl3onasm@gmail.com
    license: MIT, see LICENSE file in repository root folder
-   description: this is a simple example of a binary search tree
+   description: this is a simple example of a red-black tree
     using student records as data.
     The student records are stored in a file, one record per line.
-    This file is read into a binary search tree, and the user can
+    This file is read into a red-black tree, and the user can
     then search for a student by id, delete or insert a student,
     or print all existing records in the tree. 
     The tree is ordered by student number.
    time complexity: all operations are in O(h), where h is the height
-    of the tree. If the tree is balanced, this is O(lg n), where n
-    is the number of nodes in the tree. If the tree is unbalanced,
-    this is O(n) in the worst case.
+    of the tree. Since the tree is always balanced, this is O(lg n),
+    where n is the number of nodes in the tree.
 */
 
 #include <stdio.h>
@@ -20,10 +19,13 @@
 #include <string.h>
 
 #define MAX_NAME_LEN 30
-#define ROOT   tree->root
-typedef short  bool;
-#define true   1
-#define false  0
+#define RED   'R'
+#define BLACK 'B'
+#define NIL   tree->nil
+#define ROOT  tree->root
+typedef short bool;
+#define true 1
+#define false 0
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
@@ -37,14 +39,15 @@ typedef struct {
 
 typedef struct node {
   student *student;
+  char color;
   struct node *parent;
   struct node *left;
   struct node *right;
 } node;
 
 typedef struct {
-  node *root;
-} bst;
+  node *root, *nil;
+} rbt; 
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
 
@@ -65,16 +68,21 @@ student *newStudent () {
   return s;
 }
 
-node *newNode (student *s) {
+node *newNode (student *s, rbt *tree) {
   /* allocates memory for a new node */
   node *n = safeCalloc(1, sizeof(node));
   n->student = s;
+  n->color = RED;
+  n->parent = n->left = n->right = NIL;
   return n;
 }
 
-bst *newBST (void) {
-  /* allocates memory for a new BST */
-  bst *tree = safeCalloc(1, sizeof(bst));
+rbt *newRBT (void) {
+  /* allocates memory for a new RBT */
+  rbt *tree = safeCalloc(1, sizeof(rbt));
+  NIL = newNode(NULL, tree);
+  NIL->color = BLACK;
+  ROOT = NIL;
   return tree;
 }
 
@@ -84,86 +92,224 @@ void freeNode (node *n) {
   free(n);
 }
 
-void freeNodes (node *x) {
+void freeNodes (node *x, node *nil) {
   /* frees all nodes in the subtree rooted at x */
-  if (x != NULL) {
-    freeNodes(x->left);
-    freeNodes(x->right);
+  if (x != nil) {
+    freeNodes(x->left, nil);
+    freeNodes(x->right, nil);
     freeNode(x);
   }
 }
 
-void freeBST (bst *tree) {
+void freeRBT (rbt *tree) {
   /* entirely frees a binary search tree */
-  if (tree != NULL)
-    freeNodes(ROOT);
+  freeNodes(ROOT, NIL);
+  free(NIL);
   free(tree);
 }
 
-//::::::::::::::::::::::::: BST operations :::::::::::::::::::::::::://
+//::::::::::::::::::::::::: RBT operations :::::::::::::::::::::::::://
 
-void insert (bst *tree, student *s) {
-  /* inserts a student record into the BST */
-  node *n = newNode(s);
-  node *y = NULL;
-  node *x = ROOT;
-
-  while (x != NULL) {
-    y = x;
-    if (s->id < x->student->id)
-      x = x->left;
-    else
-      x = x->right;
-  }
-
-  n->parent = y;
-  if (y == NULL)
-    ROOT = n;
-  else if (s->id < y->student->id)
-    y->left = n;
-  else
-    y->right = n;
-}
-
-node *search (node *x, int id) {
-  /* searches for a student record in the BST */
-  if (x == NULL || id == x->student->id)
-    return x;
-  if (id < x->student->id)
-    return search(x->left, id);
-  else
-    return search(x->right, id);
-}
-
-void transplant (bst *tree, node *u, node *v) {
-  /* replaces node u with node v in the BST */
-  if (u->parent == NULL)
-    ROOT = v;
-  else if (u == u->parent->left)
-    u->parent->left = v;
-  else
-    u->parent->right = v;
-  if (v != NULL)
-    v->parent = u->parent;
-}
-
-node *minimum (node *x) {
-  /* returns the node with the smallest key in 
-  the subtree rooted at x */
+node *treeMinimum (node *x) {
+  /* returns the node with the smallest key in the subtree rooted at x */
   while (x->left != NULL)
     x = x->left;
   return x;
 }
 
-void delete (bst *tree, node *z) {
-  /* deletes a node from the BST */
-  if (z->left == NULL)
+node *search (rbt *tree, int id) {
+  /* searches for a student record in the RBT */
+  node *x = ROOT;
+  while (x != NIL && x->student->id != id) {
+    if (id < x->student->id)
+      x = x->left;
+    else
+      x = x->right;
+  }
+  return x;
+}
+
+void leftRotate (rbt *tree, node *x) {
+  /* performs a left rotation on the subtree rooted at x */
+  node *y = x->right;
+  x->right = y->left;
+  if (y->left != NIL)
+    y->left->parent = x;
+  y->parent = x->parent;
+  if (x->parent == NIL)
+    ROOT = y;
+  else if (x == x->parent->left)
+    x->parent->left = y;
+  else 
+    x->parent->right = y;
+  y->left = x;
+  x->parent = y;
+}
+
+void rightRotate (rbt *tree, node *x) {
+  /* performs a right rotation on the subtree rooted at x */
+  node *y = x->left;
+  x->left = y->right;
+  if (y->right != NIL)
+    y->right->parent = x;
+  y->parent = x->parent;
+  if (x->parent == NIL)
+    ROOT = y;
+  else if (x == x->parent->right)
+    x->parent->right = y;
+  else 
+    x->parent->left = y;
+  y->right = x;
+  x->parent = y;
+}
+
+void insertFixup (rbt *tree, node *z) {
+  /* restores the red-black properties after insertion of z */
+  while (z->parent->color == RED) {
+    if (z->parent == z->parent->parent->left) {
+      node *y = z->parent->parent->right;
+      if (y->color == RED) {
+        z->parent->color = BLACK;
+        y->color = BLACK;
+        z->parent->parent->color = RED;
+        z = z->parent->parent;
+      } else {
+        if (z == z->parent->right) {
+          z = z->parent;
+          leftRotate(tree, z);
+        }
+        z->parent->color = BLACK;
+        z->parent->parent->color = RED;
+        rightRotate(tree, z->parent->parent);
+      }
+    } else {
+      node *y = z->parent->parent->left;
+      if (y->color == RED) {
+        z->parent->color = BLACK;
+        y->color = BLACK;
+        z->parent->parent->color = RED;
+        z = z->parent->parent;
+      } else {
+        if (z == z->parent->left) {
+          z = z->parent;
+          rightRotate(tree, z);
+        }
+        z->parent->color = BLACK;
+        z->parent->parent->color = RED;
+        leftRotate(tree, z->parent->parent);
+      }
+    }
+  }
+  ROOT->color = BLACK;
+}
+
+void insert (rbt *tree, student *s) {
+  /* inserts a student record into the RBT */
+  node *z = newNode(s, tree);
+  node *y = NIL;
+  node *x = ROOT;
+  while (x != NIL) {
+    y = x;
+    if (z->student->id < x->student->id)
+      x = x->left;
+    else
+      x = x->right;
+  }
+  z->parent = y;
+  if (y == NIL)
+    ROOT = z;
+  else if (z->student->id < y->student->id)
+    y->left = z;
+  else
+    y->right = z;
+  insertFixup(tree, z);
+}
+
+void transplant (rbt *tree, node *u, node *v) {
+  /* replaces the subtree rooted at u with the subtree rooted at v */
+  if (u->parent == NIL)
+    ROOT = v;
+  else if (u == u->parent->left)
+    u->parent->left = v;
+  else 
+    u->parent->right = v;
+  v->parent = u->parent;
+}
+
+void deleteFixup (rbt *tree, node *x) {
+  /* restores the red-black properties after deletion of x */
+  while (x != ROOT && x->color == BLACK) {
+    if (x == x->parent->left) {
+      node *w = x->parent->right;
+      if (w->color == RED) {
+        w->color = BLACK;
+        x->parent->color = RED;
+        leftRotate(tree, x->parent);
+        w = x->parent->right;
+      }
+      if (w->left->color == BLACK && w->right->color == BLACK) {
+        w->color = RED;
+        x = x->parent;
+      } else {
+        if (w->right->color == BLACK) {
+          w->left->color = BLACK;
+          w->color = RED;
+          rightRotate(tree, w);
+          w = x->parent->right;
+        }
+        w->color = x->parent->color;
+        x->parent->color = BLACK;
+        w->right->color = BLACK;
+        leftRotate(tree, x->parent);
+        x = ROOT;
+      }
+    } else {
+      node *w = x->parent->left;
+      if (w->color == RED) {
+        w->color = BLACK;
+        x->parent->color = RED;
+        rightRotate(tree, x->parent);
+        w = x->parent->left;
+      }
+      if (w->right->color == BLACK && w->left->color == BLACK) {
+        w->color = RED;
+        x = x->parent;
+      } else {
+        if (w->left->color == BLACK) {
+          w->right->color = BLACK;
+          w->color = RED;
+          leftRotate(tree, w);
+          w = x->parent->left;
+        }
+        w->color = x->parent->color;
+        x->parent->color = BLACK;
+        w->left->color = BLACK;
+        rightRotate(tree, x->parent);
+        x = ROOT;
+      }
+    }
+  }
+  x->color = BLACK;
+}
+
+void delete (rbt *tree, node *z) {
+  /* deletes a student record from the RBT */
+  node *y = z;
+  node *x;
+  char y_originalColor = y->color;
+  if (z->left == NIL) {
+    x = z->right;
     transplant(tree, z, z->right);
-  else if (z->right == NULL)
+  } else if (z->right == NIL) {
+    x = z->left;
     transplant(tree, z, z->left);
-  else {
-    node *y = minimum(z->right);
-    if (y->parent != z) {
+  } else {
+    y = treeMinimum(z->right);
+    y_originalColor = y->color;
+    x = y->right;
+    if (y->parent == z)
+      x->parent = y;
+    else {
       transplant(tree, y, y->right);
       y->right = z->right;
       y->right->parent = y;
@@ -171,7 +317,10 @@ void delete (bst *tree, node *z) {
     transplant(tree, z, y);
     y->left = z->left;
     y->left->parent = y;
+    y->color = z->color;
   }
+  if (y_originalColor == BLACK)
+    deleteFixup(tree, x);
   freeNode(z);
 }
 
@@ -182,11 +331,11 @@ void printStudent (student *s) {
   printf("%d %s %.2lf %s %s\n", s->id, s->dob, s->gpa, s->fname, s->lname);
 }
 
-void printInorder (node *x, short *count) {
+void printInorder (node *nil, node *x, short *count) {
   /* prints the student records in order of student number 20 at a time */
   char buffer[1024], c;
-  if (x != NULL) {
-    printInorder(x->left, count);
+  if (x != nil) {
+    printInorder(nil, x->left, count);
     if (*count < 20){
       printStudent(x->student);
       *count += 1;
@@ -197,7 +346,7 @@ void printInorder (node *x, short *count) {
       sscanf(buffer, "%c", &c) != 1) || c != 'y')
         return;
     }
-    printInorder(x->right, count);
+    printInorder(nil, x->right, count);
   }
 }
 
@@ -232,18 +381,18 @@ bool validStudent (student *s) {
 
 //:::::::::::::::::::::::::: file operations :::::::::::::::::::::::://
 
-void writeToFile (node *x, FILE *fp) {
-  /* prints the student records in the BST in order to given file */
-  if (x != NULL) {
-    writeToFile(x->left, fp);
+void writeToFile (node *nil, node *x, FILE *fp) {
+  /* prints the student records in the RBT in order to given file */
+  if (x != nil) {
+    writeToFile(nil, x->left, fp);
     fprintf(fp, "%d %s %.2lf %s %s\n", x->student->id, x->student->dob,
             x->student->gpa, x->student->fname, x->student->lname);
-    writeToFile(x->right, fp);
+    writeToFile(nil, x->right, fp);
   }
 }
 
-void readFromFile (bst *tree, char *filename) {
-  /* reads student records from input file and inserts them into the BST */
+void readFromFile (rbt *tree, char *filename) {
+  /* reads student records from input file and inserts them into the RBT */
   FILE *fp; char buffer[1024], c;
   student *s = newStudent();
 
@@ -278,7 +427,7 @@ int main (int argc, char *argv[]) {
     printf("Usage: %s <student records file>\n", argv[0]);
     exit(EXIT_FAILURE);
   }
-  bst *tree = newBST();
+  rbt *tree = newRBT();
   readFromFile(tree, argv[1]);
 
   while (true) {
@@ -305,9 +454,9 @@ int main (int argc, char *argv[]) {
           free(s);
           continue;
         }
-        n = search(ROOT, s->id);
-        if (!n) {
-          // insert into BST  
+        n = search(tree, s->id);
+        if (n == NIL) {
+          // insert into RBT  
           insert(tree, s);
           printf("Inserted student with id %d\n", s->id);
         } else {
@@ -323,9 +472,9 @@ int main (int argc, char *argv[]) {
           printf("Error: invalid id\n");
           continue;
         }
-        n = search(ROOT, id);
-        if (n != NULL) {
-          // delete from BST
+        n = search(tree, id);
+        if (n != NIL) {
+          // delete from RBT
           delete(tree, n);
           printf("Deleted student with id %d\n", id);
         } else
@@ -338,26 +487,26 @@ int main (int argc, char *argv[]) {
           printf("Error: invalid id\n");
           continue;
         }
-        n = search(ROOT, id);
+        n = search(tree, id);
         if (n != NULL)
           printStudent(n->student);
         else
           printf("Error: student with id %d not found\n", id);
         break;
       case 4:
-        printInorder(ROOT, &count);
+        printInorder(NIL, ROOT, &count);
         count = 0;
         break;
       case 5:
-        // overwrite student records file with updated BST
+        // overwrite student records file with updated RBT
         fp = fopen(argv[1], "w+");
         if (fp == NULL) {
           printf("Error: could not open file %s\n", argv[1]);
           exit(EXIT_FAILURE);
         }
-        writeToFile(ROOT, fp);
+        writeToFile(NIL, ROOT, fp);
         fclose(fp);
-        freeBST(tree);
+        freeRBT(tree);
         exit(EXIT_SUCCESS);
       default:
         printf("Error: invalid command\n");
