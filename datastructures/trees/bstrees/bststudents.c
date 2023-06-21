@@ -9,6 +9,10 @@
     then search for a student by id, delete or insert a student,
     or print all existing records in the tree. 
     The tree is ordered by student number.
+   time complexity: all operations are in O(h), where h is the height
+    of the tree. If the tree is balanced, this is O(lg n), where n
+    is the number of nodes in the tree. If the tree is unbalanced,
+    this is O(n) in the worst case.
 */
 
 #include <stdio.h>
@@ -69,7 +73,7 @@ node *newNode (student *s) {
 }
 
 bst *newBST (void) {
-  /* allocates memory for a new binary search tree */
+  /* allocates memory for a new BST */
   bst *tree = safeCalloc(1, sizeof(bst));
   return tree;
 }
@@ -122,7 +126,7 @@ void insert (bst *tree, student *s) {
 }
 
 node *search (bst *tree, int id) {
-  /* searches for a student record in the binary search tree */
+  /* searches for a student record in the BST */
   node *x = tree->root;
   while (x != NULL && id != x->student->id) {
     if (id < x->student->id)
@@ -181,7 +185,7 @@ void printStudent (student *s) {
 }
 
 void printInorder (node *x, short *count) {
-  /* prints the student records in order of student number to a string */
+  /* prints the student records in order of student number 20 at a time */
   char buffer[1024], c;
   if (x != NULL) {
     printInorder(x->left, count);
@@ -191,8 +195,8 @@ void printInorder (node *x, short *count) {
     } else if (*count == 20){
       *count = 0;
       printf("Print 20 more? (y/n): ");
-      fgets (buffer, 1024, stdin);
-      if (sscanf(buffer, "%c", &c) != 1 || c != 'y')
+      if ((fgets (buffer, 1024, stdin) && 
+      sscanf(buffer, "%c", &c) != 1) || c != 'y')
         return;
     }
     printInorder(x->right, count);
@@ -242,7 +246,7 @@ void writeToFile (node *x, FILE *fp) {
 
 void readFromFile (bst *tree, char *filename) {
   /* reads student records from input file and inserts them into the BST */
-  FILE *fp;
+  FILE *fp; char buffer[1024], c;
   student *s = newStudent();
 
   fp = fopen(filename, "r");
@@ -251,10 +255,10 @@ void readFromFile (bst *tree, char *filename) {
     exit(EXIT_FAILURE);
   }
 
-  while (fscanf(fp, "%d %s %lf %s %s", &s->id, s->dob, &s->gpa, 
-                s->fname, s->lname) != EOF) {
-    if (!validStudent(s)) {
-      printStudent(s);
+  while (fgets(buffer, 1024, fp) != NULL) {
+    if (sscanf(buffer, "%d %s %lf %s %s %c", &s->id, s->dob, &s->gpa,
+               s->fname, s->lname, &c) != 5 || !validStudent(s)) {
+      fputs(buffer, stdout);
       printf("Error: invalid student record\n");
       exit(EXIT_FAILURE);
     }
@@ -288,8 +292,7 @@ int main (int argc, char *argv[]) {
             "(4) print\n"
             "(5) store and exit\n\n");
 
-    fgets(buffer, 1024, stdin);
-    if (sscanf(buffer, "%hd %hd", &c, &d) != 1) {
+    if (fgets(buffer, 1024, stdin) && sscanf(buffer, "%hd %hd", &c, &d) != 1) {
       printf("Error: invalid command\n"); 
       continue;
     }
@@ -298,9 +301,8 @@ int main (int argc, char *argv[]) {
       case 1:
         printf("Enter student id, dob, gpa, first name, last name: ");
         student *s = newStudent();
-        fgets(buffer, 1024, stdin);
-        if (sscanf(buffer, "%d %s %lf %s %s", &s->id, s->dob, &s->gpa, 
-            s->fname, s->lname) != 5 || !validStudent(s)) {
+        if ((fgets(buffer, 1024, stdin) && sscanf(buffer, "%d %s %lf %s %s", 
+        &s->id, s->dob, &s->gpa, s->fname, s->lname) != 5) || !validStudent(s)) {
           printf("Error: invalid student record\n");
           free(s);
           continue;
@@ -318,8 +320,8 @@ int main (int argc, char *argv[]) {
       case 2:
         printf("Enter student id: ");
         int id;
-        fgets(buffer, 1024, stdin);
-        if (sscanf(buffer, "%d", &id) != 1 || id < 1000000 || id > 9999999) {
+        if ((fgets(buffer, 1024, stdin) && sscanf(buffer, "%d", &id) != 1)
+        || id < 1000000 || id > 9999999) {
           printf("Error: invalid id\n");
           continue;
         }
@@ -333,8 +335,8 @@ int main (int argc, char *argv[]) {
         break;
       case 3:
         printf("Enter student id: ");
-        fgets(buffer, 1024, stdin);
-        if (sscanf(buffer, "%d", &id) != 1 || id < 1000000 || id > 9999999) {
+        if ((fgets(buffer, 1024, stdin) && sscanf(buffer, "%d", &id) != 1)
+        || id < 1000000 || id > 9999999) {
           printf("Error: invalid id\n");
           continue;
         }
