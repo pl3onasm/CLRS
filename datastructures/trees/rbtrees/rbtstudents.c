@@ -154,7 +154,7 @@ int main (int argc, char *argv[]) {
           continue;
         }
         n = search(tree, id);
-        if (n != NULL)
+        if (n != NIL)
           printStudent(n->student);
         else
           printf("Error: student with id %d not found\n", id);

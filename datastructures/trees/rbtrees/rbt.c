@@ -281,7 +281,7 @@ void delete (rbt *tree, node *z) {
 
 void printStudent (student *s) {
   /* prints a student record */
-  printf("%d %s %.2lf %s %s\n", s->id, s->dob, s->gpa, s->fname, s->lname);
+  printf("%d | %s | %.2lf | %s %s\n", s->id, s->dob, s->gpa, s->fname, s->lname);
 }
 
 void printRBT (node *nil, node *x, short *count) {

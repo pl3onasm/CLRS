@@ -136,7 +136,7 @@ void delete (bst *tree, node *z) {
 
 void printStudent (student *s) {
   /* prints a student record */
-  printf("%d %s %.2lf %s %s\n", s->id, s->dob, s->gpa, s->fname, s->lname);
+  printf("%d | %s | %.2lf | %s %s\n", s->id, s->dob, s->gpa, s->fname, s->lname);
 }
 
 void printInorder (node *x, short *count) {
