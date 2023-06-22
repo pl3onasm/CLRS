@@ -148,11 +148,12 @@ void printInorder (node *x, short *count) {
       printStudent(x->student);
       *count += 1;
     } else if (*count == 20){
-      *count = 0;
       printf("Print 20 more? (y/n): ");
       if ((fgets (buffer, 1024, stdin) && 
       sscanf(buffer, "%c", &c) != 1) || c != 'y')
-        return;
+        *count = 21;
+      else
+        *count = 0;
     }
     printInorder(x->right, count);
   }

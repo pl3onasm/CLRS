@@ -160,7 +160,7 @@ int main (int argc, char *argv[]) {
           printf("Error: student with id %d not found\n", id);
         break;
       case 4:
-        printRBT(NIL, ROOT, &count);
+        printRBT(tree, ROOT, &count);
         count = 0;
         break;
       case 5:

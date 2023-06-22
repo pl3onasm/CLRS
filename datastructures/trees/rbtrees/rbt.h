@@ -46,7 +46,7 @@ node *treeMinimum (node *x);
 node *search (rbt *tree, int id);
 void insert (rbt *tree, student *s);
 void printStudent (student *s);
-void printRBT (node *nil, node *root, short *count);
+void printRBT (rbt *tree, node *root, short *count);
 void delete (rbt *tree, node *z);
 
 #endif

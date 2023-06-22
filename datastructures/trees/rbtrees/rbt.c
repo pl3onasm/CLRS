@@ -284,21 +284,22 @@ void printStudent (student *s) {
   printf("%d | %s | %.2lf | %s %s\n", s->id, s->dob, s->gpa, s->fname, s->lname);
 }
 
-void printRBT (node *nil, node *x, short *count) {
+void printRBT (rbt *tree, node *x, short *count) {
   /* prints the student records in order of student number 20 at a time */
   char buffer[1024], c;
-  if (x != nil) {
-    printRBT(nil, x->left, count);
+  if (x != NIL) {
+    printRBT(tree, x->left, count);
     if (*count < 20){
       printStudent(x->student);
       *count += 1;
     } else if (*count == 20){
-      *count = 0;
       printf("Print 20 more? (y/n): ");
       if ((fgets (buffer, 1024, stdin) && 
       sscanf(buffer, "%c", &c) != 1) || c != 'y')
-        return;
+        *count = 21;
+      else 
+        *count = 0;
     }
-    printRBT(nil, x->right, count);
+    printRBT(tree, x->right, count);
   }
 }
