@@ -12,9 +12,7 @@
 #include <limits.h>
 
 typedef struct {
-  int low;
-  int high;
-  int sum;
+  int low, high, sum;
 } Sub;
 
 void printResult (int arr[], Sub max) {

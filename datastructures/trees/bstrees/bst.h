@@ -8,11 +8,7 @@
 #define MAX_NAME_LEN 30
 #define ROOT   tree->root
 
-typedef short  bool;
-#define true   1
-#define false  0
-
-// data structures
+// data structures and types
 typedef struct {
   int id;
   double gpa;
@@ -32,15 +28,20 @@ typedef struct {
   node *root;
 } bst;
 
+typedef enum {
+  false = 0,
+  true = 1
+} bool;
+
 // function prototypes
 student *newStudent (void);
 bst *newBST (void);
-void insert (bst *tree, student *s);
+void BSTinsert (bst *tree, student *s);
 void freeBST (bst *tree);
-node *search (node *x, int id);
-void delete (bst *tree, node *z);
-node *minimum (node *x);
+node *BSTsearch (node *x, int id);
+void BSTdelete (bst *tree, node *z);
+node *BSTminimum (node *x);
 void printStudent (student *s);
-void printInorder (node *x, short *count);
+void printBST (node *x, short *count);
 
 #endif

@@ -79,7 +79,7 @@ void readFromFile (bst *tree, char *filename) {
       printf("Error: invalid student record\n");
       exit(EXIT_FAILURE);
     }
-    insert(tree, s);
+    BSTinsert(tree, s);
     s = newStudent();
   }
   free(s);
@@ -107,7 +107,7 @@ int main (int argc, char *argv[]) {
             "(2) delete\n"
             "(3) search\n"
             "(4) print\n"
-            "(5) store and exit\n\n");
+            "(5) save and exit\n\n");
 
     if (fgets(buffer, 1024, stdin) && sscanf(buffer, "%hd %hd", &c, &d) != 1) {
       printf("Error: invalid command\n"); 
@@ -124,10 +124,10 @@ int main (int argc, char *argv[]) {
           free(s);
           continue;
         }
-        n = search(ROOT, s->id);
+        n = BSTsearch(ROOT, s->id);
         if (!n) {
           // insert into BST  
-          insert(tree, s);
+          BSTinsert(tree, s);
           printf("Inserted student with id %d\n", s->id);
         } else {
           printf("Error: student with id %d already exists\n", s->id);
@@ -142,10 +142,10 @@ int main (int argc, char *argv[]) {
           printf("Error: invalid id\n");
           continue;
         }
-        n = search(ROOT, id);
+        n = BSTsearch(ROOT, id);
         if (n != NULL) {
           // delete from BST
-          delete(tree, n);
+          BSTdelete(tree, n);
           printf("Deleted student with id %d\n", id);
         } else
           printf("Error: student with id %d not found\n", id);
@@ -157,14 +157,14 @@ int main (int argc, char *argv[]) {
           printf("Error: invalid id\n");
           continue;
         }
-        n = search(ROOT, id);
+        n = BSTsearch(ROOT, id);
         if (n != NULL)
           printStudent(n->student);
         else
           printf("Error: student with id %d not found\n", id);
         break;
       case 4:
-        printInorder(ROOT, &count);
+        printBST(ROOT, &count);
         count = 0;
         break;
       case 5:
@@ -184,3 +184,5 @@ int main (int argc, char *argv[]) {
   }
   return 0;
 }
+
+

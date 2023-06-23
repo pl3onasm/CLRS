@@ -59,7 +59,7 @@ void freeBST (bst *tree) {
 
 //::::::::::::::::::::::::: BST operations :::::::::::::::::::::::::://
 
-void insert (bst *tree, student *s) {
+void BSTinsert (bst *tree, student *s) {
   /* inserts a student record into the BST */
   node *n = newNode(s);
   node *y = NULL;
@@ -82,17 +82,17 @@ void insert (bst *tree, student *s) {
     y->right = n;
 }
 
-node *search (node *x, int id) {
+node *BSTsearch (node *x, int id) {
   /* searches for a student record in the BST */
   if (x == NULL || id == x->student->id)
     return x;
   if (id < x->student->id)
-    return search(x->left, id);
+    return BSTsearch(x->left, id);
   else
-    return search(x->right, id);
+    return BSTsearch(x->right, id);
 }
 
-void transplant (bst *tree, node *u, node *v) {
+void BSTtransplant (bst *tree, node *u, node *v) {
   /* replaces node u with node v in the BST */
   if (u->parent == NULL)
     ROOT = v;
@@ -104,7 +104,7 @@ void transplant (bst *tree, node *u, node *v) {
     v->parent = u->parent;
 }
 
-node *minimum (node *x) {
+node *BSTminimum (node *x) {
   /* returns the node with the smallest key in 
   the subtree rooted at x */
   while (x->left != NULL)
@@ -112,20 +112,20 @@ node *minimum (node *x) {
   return x;
 }
 
-void delete (bst *tree, node *z) {
+void BSTdelete (bst *tree, node *z) {
   /* deletes a node from the BST */
   if (z->left == NULL)
-    transplant(tree, z, z->right);
+    BSTtransplant(tree, z, z->right);
   else if (z->right == NULL)
-    transplant(tree, z, z->left);
+    BSTtransplant(tree, z, z->left);
   else {
-    node *y = minimum(z->right);
+    node *y = BSTminimum(z->right);
     if (y->parent != z) {
-      transplant(tree, y, y->right);
+      BSTtransplant(tree, y, y->right);
       y->right = z->right;
       y->right->parent = y;
     }
-    transplant(tree, z, y);
+    BSTtransplant(tree, z, y);
     y->left = z->left;
     y->left->parent = y;
   }
@@ -139,11 +139,11 @@ void printStudent (student *s) {
   printf("%d | %s | %.2lf | %s %s\n", s->id, s->dob, s->gpa, s->fname, s->lname);
 }
 
-void printInorder (node *x, short *count) {
-  /* prints the student records in order of student number 20 at a time */
+void printBST (node *x, short *count) {
+  /* prints the student records in order of student ID, 20 at a time */
   char buffer[1024], c;
   if (x != NULL) {
-    printInorder(x->left, count);
+    printBST(x->left, count);
     if (*count < 20){
       printStudent(x->student);
       *count += 1;
@@ -155,6 +155,6 @@ void printInorder (node *x, short *count) {
       else
         *count = 0;
     }
-    printInorder(x->right, count);
+    printBST(x->right, count);
   }
 }

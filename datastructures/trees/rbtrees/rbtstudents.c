@@ -75,7 +75,7 @@ void readFromFile (rbt *tree, char *filename) {
       printf("Error: invalid student record\n");
       exit(EXIT_FAILURE);
     }
-    insert(tree, s);
+    RBTinsert(tree, s);
     s = newStudent();
   }
   free(s);
@@ -103,7 +103,7 @@ int main (int argc, char *argv[]) {
             "(2) delete\n"
             "(3) search\n"
             "(4) print\n"
-            "(5) store and exit\n\n");
+            "(5) save and exit\n\n");
 
     if (fgets(buffer, 1024, stdin) && sscanf(buffer, "%hd %hd", &c, &d) != 1) {
       printf("Error: invalid command\n"); 
@@ -120,10 +120,10 @@ int main (int argc, char *argv[]) {
           free(s);
           continue;
         }
-        n = search(tree, s->id);
+        n = RBTsearch(tree, s->id);
         if (n == NIL) {
           // insert into RBT  
-          insert(tree, s);
+          RBTinsert(tree, s);
           printf("Inserted student with id %d\n", s->id);
         } else {
           printf("Error: student with id %d already exists\n", s->id);
@@ -138,10 +138,10 @@ int main (int argc, char *argv[]) {
           printf("Error: invalid id\n");
           continue;
         }
-        n = search(tree, id);
+        n = RBTsearch(tree, id);
         if (n != NIL) {
           // delete from RBT
-          delete(tree, n);
+          RBTdelete(tree, n);
           printf("Deleted student with id %d\n", id);
         } else
           printf("Error: student with id %d not found\n", id);
@@ -153,7 +153,7 @@ int main (int argc, char *argv[]) {
           printf("Error: invalid id\n");
           continue;
         }
-        n = search(tree, id);
+        n = RBTsearch(tree, id);
         if (n != NIL)
           printStudent(n->student);
         else

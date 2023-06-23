@@ -13,13 +13,15 @@
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define INF INT_MAX
-#define true 1
-#define false 0
-typedef short bool;
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
 typedef struct node node; // forward declaration of node
+
+typedef enum {            // definition for boolean type
+  false = 0,
+  true = 1
+} bool;
 
 typedef struct edge {
   node *from, *to;        // pointers to the endpoints of the edge (u->v)

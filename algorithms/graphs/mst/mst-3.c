@@ -15,13 +15,15 @@
 #include <float.h>
 #include <math.h>
 #define INF DBL_MAX
-#define true 1
-#define false 0
-typedef short bool;
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
 typedef struct list list; // forward declaration
+
+typedef enum {            // definition for boolean type
+  false = 0,
+  true = 1
+} bool;
 
 typedef struct node {
   // graph-related fields

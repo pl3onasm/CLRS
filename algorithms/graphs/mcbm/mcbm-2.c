@@ -12,11 +12,13 @@
 #include <limits.h>
 
 #define INF INT_MAX
-#define true 1
-#define false 0
-typedef short bool;
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
+
+typedef enum {            // definition for boolean type
+  false = 0,
+  true = 1
+} bool;
 
 typedef struct node {
   int id;                 // id of the node

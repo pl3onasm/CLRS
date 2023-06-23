@@ -10,7 +10,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-typedef short bool;
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
@@ -36,6 +35,11 @@ typedef struct graph {
   int nNodes, nEdges;      // number of nodes and edges in the graph
   node **vertices;         // array of pointers to nodes
 } graph;
+
+typedef enum {
+  false = 0,
+  true = 1
+} bool;
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
 

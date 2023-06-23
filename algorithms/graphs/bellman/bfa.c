@@ -10,9 +10,6 @@
 #include <stdlib.h>
 #include <float.h>
 #define INF DBL_MAX
-#define true 1
-#define false 0
-typedef short bool;
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
@@ -25,6 +22,11 @@ typedef struct node {
   int id, parent;        // node id and predecessor
   double dist;           // distance to the source 
 } node;
+
+typedef enum {
+  false = 0,
+  true = 1
+} bool;
 
 typedef struct graph {
   int nNodes, nEdges;    // number of nodes and edges

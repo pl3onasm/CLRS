@@ -1,6 +1,0 @@
-Node   Distance   Parent
- src       0.00        -
-   1       8.00        3
-   2       9.00        1
-   3       5.00      src
-   4       7.00        3

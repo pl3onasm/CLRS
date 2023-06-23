@@ -7,15 +7,10 @@
 
 // constants and macros
 #define MAX_NAME_LEN 30
-#define RED   'R'
-#define BLACK 'B'
 #define NIL   tree->nil
 #define ROOT  tree->root
-typedef short bool;
-#define true 1
-#define false 0
 
-// data structures
+// data structures and types
 typedef struct {
   int id;
   double gpa;
@@ -26,7 +21,7 @@ typedef struct {
 
 typedef struct node {
   student *student;
-  char color;
+  enum {RED, BLACK} color;
   struct node *parent;
   struct node *left;
   struct node *right;
@@ -36,17 +31,20 @@ typedef struct {
   node *root, *nil;
 } rbt; 
 
+typedef enum {
+  false = 0,
+  true = 1
+} bool;
 
 // function prototypes
 student *newStudent (void);
 rbt *newRBT (void);
-void insert (rbt *tree, student *s);
+void RBTinsert (rbt *tree, student *s);
 void freeRBT (rbt *tree);
-node *treeMinimum (node *x);
-node *search (rbt *tree, int id);
-void insert (rbt *tree, student *s);
+node *RBTminimum (node *x);
+node *RBTsearch (rbt *tree, int id);
 void printStudent (student *s);
 void printRBT (rbt *tree, node *root, short *count);
-void delete (rbt *tree, node *z);
+void RBTdelete (rbt *tree, node *z);
 
 #endif

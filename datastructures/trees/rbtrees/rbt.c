@@ -63,14 +63,14 @@ void freeRBT (rbt *tree) {
 
 //::::::::::::::::::::::::: RBT operations :::::::::::::::::::::::::://
 
-node *treeMinimum (node *x) {
+node *RBTminimum (node *x) {
   /* returns the node with the smallest key in the subtree rooted at x */
   while (x->left != NULL)
     x = x->left;
   return x;
 }
 
-node *search (rbt *tree, int id) {
+node *RBTsearch (rbt *tree, int id) {
   /* searches for a student record in the RBT */
   node *x = ROOT;
   while (x != NIL && x->student->id != id) {
@@ -156,7 +156,7 @@ void insertFixup (rbt *tree, node *z) {
   ROOT->color = BLACK;
 }
 
-void insert (rbt *tree, student *s) {
+void RBTinsert (rbt *tree, student *s) {
   /* inserts a student record into the RBT */
   node *z = newNode(s, tree);
   node *y = NIL;
@@ -178,7 +178,7 @@ void insert (rbt *tree, student *s) {
   insertFixup(tree, z);
 }
 
-void transplant (rbt *tree, node *u, node *v) {
+void RBTtransplant (rbt *tree, node *u, node *v) {
   /* replaces the subtree rooted at u with the subtree rooted at v */
   if (u->parent == NIL)
     ROOT = v;
@@ -245,29 +245,29 @@ void deleteFixup (rbt *tree, node *x) {
   x->color = BLACK;
 }
 
-void delete (rbt *tree, node *z) {
+void RBTdelete (rbt *tree, node *z) {
   /* deletes a student record from the RBT */
   node *y = z;
   node *x;
   char y_originalColor = y->color;
   if (z->left == NIL) {
     x = z->right;
-    transplant(tree, z, z->right);
+    RBTtransplant(tree, z, z->right);
   } else if (z->right == NIL) {
     x = z->left;
-    transplant(tree, z, z->left);
+    RBTtransplant(tree, z, z->left);
   } else {
-    y = treeMinimum(z->right);
+    y = RBTminimum(z->right);
     y_originalColor = y->color;
     x = y->right;
     if (y->parent == z)
       x->parent = y;
     else {
-      transplant(tree, y, y->right);
+      RBTtransplant(tree, y, y->right);
       y->right = z->right;
       y->right->parent = y;
     }
-    transplant(tree, z, y);
+    RBTtransplant(tree, z, y);
     y->left = z->left;
     y->left->parent = y;
     y->color = z->color;

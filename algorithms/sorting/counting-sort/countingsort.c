@@ -7,7 +7,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#define PTRDIFF_MAX     0x7FFFFFFFL
 
 void *safeCalloc (int n, int size) {
   /* allocates n elements of size size, initializing them to 0, and
@@ -37,8 +36,8 @@ int *createIntArray (int size) {
 }
 
 void countingSort(int arr[], int n) {
-  int max = 0, *count, *sorted;
-  for (int i = 0; i < n; i++) {
+  int max = arr[0], *count, *sorted;
+  for (int i = 1; i < n; i++) {
     if (arr[i] > max) max = arr[i];
   }
   count = createIntArray(max+1);
