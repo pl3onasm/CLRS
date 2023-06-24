@@ -190,7 +190,7 @@ void RBTtransplant (rbt *tree, node *u, node *v) {
 }
 
 void deleteFixup (rbt *tree, node *x) {
-  /* restores the red-black properties after deletion of x */
+  /* restores the red-black properties after deletion */
   while (x != ROOT && x->color == BLACK) {
     if (x == x->parent->left) {
       node *w = x->parent->right;
@@ -285,7 +285,7 @@ void printStudent (student *s) {
 }
 
 void printRBT (rbt *tree, node *x, short *count) {
-  /* prints the student records in order of student number 20 at a time */
+  /* prints the student records in order of student ID, 20 at a time */
   char buffer[1024], c;
   if (x != NIL) {
     printRBT(tree, x->left, count);
