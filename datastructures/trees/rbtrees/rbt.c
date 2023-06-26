@@ -44,18 +44,18 @@ void freeNode (node *n) {
   free(n);
 }
 
-void freeNodes (node *x, node *nil) {
+void freeNodes (node *x, rbt *tree) {
   /* frees all nodes in the subtree rooted at x */
-  if (x != nil) {
-    freeNodes(x->left, nil);
-    freeNodes(x->right, nil);
+  if (x != NIL) {
+    freeNodes(x->left, tree);
+    freeNodes(x->right, tree);
     freeNode(x);
   }
 }
 
 void freeRBT (rbt *tree) {
   /* entirely frees a binary search tree */
-  freeNodes(ROOT, NIL);
+  freeNodes(ROOT, tree);
   free(NIL);
   free(tree);
 }
@@ -63,9 +63,9 @@ void freeRBT (rbt *tree) {
 
 //::::::::::::::::::::::::: RBT operations :::::::::::::::::::::::::://
 
-node *RBTminimum (node *x) {
+node *RBTminimum (rbt *tree, node *x) {
   /* returns the node with the smallest key in the subtree rooted at x */
-  while (x->left != NULL)
+  while (x->left != NIL)
     x = x->left;
   return x;
 }
@@ -257,7 +257,7 @@ void RBTdelete (rbt *tree, node *z) {
     x = z->left;
     RBTtransplant(tree, z, z->left);
   } else {
-    y = RBTminimum(z->right);
+    y = RBTminimum(tree, z->right);
     y_originalColor = y->color;
     x = y->right;
     if (y->parent == z)

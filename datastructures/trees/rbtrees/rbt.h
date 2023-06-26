@@ -41,7 +41,7 @@ student *newStudent (void);
 rbt *newRBT (void);
 void RBTinsert (rbt *tree, student *s);
 void freeRBT (rbt *tree);
-node *RBTminimum (node *x);
+node *RBTminimum (rbt *tree, node *x);
 node *RBTsearch (rbt *tree, int id);
 void printStudent (student *s);
 void printRBT (rbt *tree, node *root, short *count);
