@@ -47,8 +47,8 @@ int main (int argc, char *argv[]) {
   char *a = "ACCGATATCAGGATCGGAC", 
        *b = "GTAGTAATTACGAACA";
   int la = strlen(a), lb = strlen(b);
-  char *lcs = safeCalloc(la < lb ? lb+1 : la+1, sizeof(char));
-  char *maxlcs = safeCalloc(la < lb ? lb+1 : la+1, sizeof(char));
+  char *lcs = safeCalloc(la < lb ? la+1:lb+1, sizeof(char));
+  char *maxlcs = safeCalloc(la < lb ? la+1:lb+1, sizeof(char));
   int maxlen = 0;
   
   computeLcs(a, b, lcs, 0, &maxlen, maxlcs);
