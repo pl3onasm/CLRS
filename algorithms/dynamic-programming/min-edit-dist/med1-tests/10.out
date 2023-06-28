@@ -1,11 +1,12 @@
 Task: source -> target
-      'afflictions' -> 'failures'
+Source: afflictions
+Target: failures
 
 Costs: copy = 5, insert = 3, delete = 6,
        replace = 8, twiddle = 0, kill = 4
 
 Edit sequence:
-  - Source:           'afflictions'
+  - Source:           afflictions
   - Twiddle f and a:  fa-flictions
   - Delete f:         fa-lictions
   - Twiddle i and l:  fail-ctions
@@ -14,6 +15,6 @@ Edit sequence:
   - Insert e:         failure-ctions
   - Insert s:         failures-ctions
   - Kill 06 chars:    failures-
-  - Result:           'failures'
+  - Result:           failures
 
 Minimum edit distance: 22

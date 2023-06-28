@@ -1,11 +1,12 @@
 Task: source -> target
-      'intrusion' -> 'conclusion'
+Source: intrusion
+Target: conclusion
 
 Costs: copy = 1, insert = 3, delete = 1,
        replace = 2, twiddle = 0, kill = 4
 
 Edit sequence:
-  - Source:           'intrusion'
+  - Source:           intrusion
   - Replace i -> c:   c-ntrusion
   - Insert o:         co-ntrusion
   - Copy n:           con-trusion
@@ -16,6 +17,6 @@ Edit sequence:
   - Copy i:           conclusi-on
   - Copy o:           conclusio-n
   - Copy n:           conclusion-
-  - Result:           'conclusion'
+  - Result:           conclusion
 
 Minimum edit distance: 15

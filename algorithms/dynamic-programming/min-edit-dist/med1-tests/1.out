@@ -1,11 +1,12 @@
 Task: source -> target
-      'algorithm' -> 'altruistic'
+Source: algorithm
+Target: altruistic
 
 Costs: copy = 0, insert = 3, delete = 3,
        replace = 3, twiddle = 2, kill = 15
 
 Edit sequence:
-  - Source:           'algorithm'
+  - Source:           algorithm
   - Copy a:           a-lgorithm
   - Copy l:           al-gorithm
   - Replace g -> t:   alt-orithm
@@ -17,6 +18,6 @@ Edit sequence:
   - Copy t:           altruist-hm
   - Replace h -> i:   altruisti-m
   - Replace m -> c:   altruistic-
-  - Result:           'altruistic'
+  - Result:           altruistic
 
 Minimum edit distance: 18

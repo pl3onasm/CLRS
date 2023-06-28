@@ -1,11 +1,12 @@
 Task: source -> target
-      'algorithm' -> ''
+Source: algorithm
+Target:
 
 Costs: copy = 1, insert = 2, delete = 3,
        replace = 1, twiddle = 0, kill = 5
 
 Edit sequence:
-  - Source:           'algorithm'
+  - Source:           algorithm
   - Delete a:         -lgorithm
   - Delete l:         -gorithm
   - Delete g:         -orithm
@@ -15,6 +16,6 @@ Edit sequence:
   - Delete t:         -hm
   - Delete h:         -m
   - Delete m:         -
-  - Result:           ''
+  - Result:
 
 Minimum edit distance: 27

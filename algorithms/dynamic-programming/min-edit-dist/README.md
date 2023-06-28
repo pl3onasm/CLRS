@@ -24,6 +24,6 @@ Implementation: [MED - DP Bottom-up](https://github.com/pl3onasm/AADS/blob/main/
 
 ## Variant: Levenshtein distance
 
-What is known as the Levenshtein distance is actually a simplified variant of the MED problem: it works with only four operations (copy, insert, delete and replace) and the cost of each operation is 1. The Levenshtein distance is also known as the edit distance.
+What is known as the Levenshtein distance is actually a simplified variant of the MED problem: it works with only four operations (copy, insert, delete and replace) and the cost of each operation is 1.
 
 Implementation: [MED - Levenshtein variant](https://github.com/pl3onasm/AADS/blob/main/algorithms/dynamic-programming/min-edit-dist/med-2.c)

@@ -1,11 +1,12 @@
 Task: source -> target
-      'exuberant' -> 'exorbitant'
+Source: exuberant
+Target: exorbitant
 
 Costs: copy = 2, insert = 3, delete = 3,
        replace = 2, twiddle = 1, kill = 4
 
 Edit sequence:
-  - Source:           'exuberant'
+  - Source:           exuberant
   - Copy e:           e-xuberant
   - Copy x:           ex-uberant
   - Replace u -> o:   exo-berant
@@ -16,6 +17,6 @@ Edit sequence:
   - Copy a:           exorbita-nt
   - Copy n:           exorbitan-t
   - Copy t:           exorbitant-
-  - Result:           'exorbitant'
+  - Result:           exorbitant
 
 Minimum edit distance: 21
