@@ -60,10 +60,10 @@ void med(int **dp, char *s1, char *s2, int len1, int len2) {
   for (int i = 1; i <= len1; ++i){
     for (int j = 1; j <= len2; ++j){
 
-      // if the last chars are equal, no operation is needed
+      // if the chars are equal, no operation is needed
       if (s1[i-1] == s2[j-1]) dp[i][j] = dp[i-1][j-1];
       
-      // if the last chars are different, we need to find the minimum
+      // if the chars are different, we need to find the minimum
       // of the costs of the three possible operations
       else dp[i][j] = 1 + MIN(dp[i-1][j-1], MIN(dp[i-1][j], dp[i][j-1]));
     }  
