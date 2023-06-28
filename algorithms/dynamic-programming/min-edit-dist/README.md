@@ -31,6 +31,7 @@ This leads to the following recurrence relation:
 $$
 T[i,j] = \begin{cases}
 \max(i,j) & \text{if } \min(i,j) = 0 \\
+\\
 \min \begin{cases}
 T[i-1,j] + 1 \\
 T[i,j-1] + 1 \\
