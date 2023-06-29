@@ -2,7 +2,7 @@
 
 ## Problem
 
-Given is a set of $n$ competing activities $A = \{a_1, a_2, \dots, a_n\}$, where each activity $a_i$ is defined by a pair of integers $(s_i, f_i)$, where $s_i$ is the start time and $f_i$ is the finish time. The problem is to select a maximum-size subset of mutually compatible activities. Two activities $a_i$ and $a_j$ are compatible if the intervals $[s_i, f_i)$ and $[s_j, f_j)$ don't overlap, i.e. $s_j \geq f_i$ or $s_i \geq f_j$. We assume that the activities are already sorted by their finish time $f_i$.
+Given is a set of $n$ competing activities $A = \{a_1, a_2, \dots, a_n\}$, where each activity $a_i$ is defined by a pair of integers $(s_i, f_i)$, where $s_i$ is the start time and $f_i$ is the finish time. The problem is to select a maximum-size subset of mutually compatible activities. Two activities $a_i$ and $a_j$ are compatible if the intervals $[s_i, f_i)$ and $[s_j, f_j)$ don't overlap, i.e. $s_j \geq f_i$ or $s_i \geq f_j$. We assume that the activities are already sorted by monotonically increasing finish time $f_i$.
 
 ## DP solution (CLRS Ex 15.1-1)
 
@@ -24,7 +24,7 @@ $$
 
 where $k$ is the index of the activity that we choose to include in the solution. As noted above, we need to try all possible values of $k$ in order to find the optimal solution.
 
-For the implementation, we need to add two sentinel activities, one with start time $0$ and finish time $0$, and another one with start time $\infty$ and finish time $\infty$, in order to simplify the implementation. We use the example from section 15.1 of the textbook to illustrate the implementation. The example contains the following set of activities:
+In order to simplify the implementation, we need to add two sentinel activities, one with start time $0$ and finish time $0$, and another one with start time $\infty$ and finish time $\infty$. We use the example from section 15.1 of the textbook to illustrate the implementation. It contains the following set of activities:
 
 | Activity | Start time | Finish time |
 | :--- | :--- | :--- |
@@ -49,13 +49,13 @@ The time complexity in both cases is the same: $O(n^3)$.
 
 ## Greedy solution
 
-We actually don't need to try all possible values of $k$ in order to find the optimal solution. Each time we select an activity, we can make the *greedy choice* of selecting the activity that finishes first, and then continue to solve the subproblem of selecting a maximum-size subset of mutually compatible activities from the set of activities that start after the selected activity finishes. We can prove that this greedy choice is optimal. It also leads to a linear-time solution, since we only need to scan each activity once, due to the fact that the activities are sorted by their finish time.  
+We actually don't need to try all possible values of $k$ in order to find the optimal solution. Each time we select an activity, we can make the *greedy choice* of selecting the activity that finishes first, and then continue to solve the subproblem of selecting a maximum-size subset of mutually compatible activities from the set of activities that start after the selected activity finishes. We can prove that this greedy choice is optimal. It also leads to a linear-time solution, since we only need to scan each activity once, thanks to the fact that the activities are ordered by monotonically increasing finish time.
 
 Impementing the greedy algorithm can be done using a top-down approach, as opposed to the bottom-up approach used for the DP solution. This is because any solution will include the first activity, since it finishes first, and then we can recursively solve the subproblem of selecting a maximum-size subset of mutually compatible activities from the set of activities that start after the first activity finishes.  
 
 A top-down design is typical for greedy algorithms: we can just make the greedy choice, the one that seems optimal locally, and then recursively solve the remaining subproblem to get the global optimal solution. This is in contrast to the bottom-up approach used for DP, where we start by solving the smallest subproblems, so we can make an optimal choice based on the optimal solutions to the subproblems, and thus build our way up to an optimal solution for the entire problem.
 
-Just as before, we assume that the activities are sorted by their finish time $f_i$. This time, we only need to add one sentinel activity for the recursive version (one with start time $0$ and finish time $0$ for the recursive version), and none for the iterative version. We use the same example as before to illustrate the implementation. The time complexity is $O(n)$, which is a big improvement over the $O(n^3)$ time complexity of the DP solution.  
+Just as before, we assume that the activities are sorted by their finish time $f_i$. This time, we only need to add one sentinel activity for the recursive version (one with start time $0$ and finish time $0$ for the recursive version), and none for the iterative version. We use the same example as before to illustrate the implementation. The time complexity is $\bigtheta(n)$, which is a big improvement over the $O(n^3)$ time complexity of the DP solution.  
 
 Recursive implementation using the greedy approach: [ASP - Recursive top-down greedy](https://github.com/pl3onasm/AADS/blob/main/algorithms/greedy/activity-selection/asp-2.c)  
 

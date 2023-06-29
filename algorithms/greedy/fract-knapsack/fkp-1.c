@@ -10,14 +10,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct {
-  int index;          // index of the item
-  double weight;      // weight of the item
-  double value;       // value of the item
-  double unitValue;   // unit value of the item
-} Item;
+//:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
-typedef struct Heap {int size; Item *items;} Heap;
+typedef struct {
+  int index;          // index of the item as given in the input
+  double weight;      // total weight of the item
+  double value;       // total value of the item
+  double unitValue;   // value per unit of weight of the item
+} item;
+
+typedef struct {
+  int size;           // actual size of the heap
+  int capacity;       // maximum size of the heap
+  item *items;
+} heap;
+
+//::::::::::::::::::::::: memory management :::::::::::::::::::::::://
 
 void *safeCalloc (int n, int size) {
   /* allocates n elements of size size, initializing them to 0, and
@@ -30,21 +38,41 @@ void *safeCalloc (int n, int size) {
   return ptr;
 }
 
-Heap *newHeap(int size) {
+void *safeRealloc (void *ptr, int newSize) {
+  /* reallocates memory and checks whether the allocation was successful */
+  ptr = realloc(ptr, newSize);
+  if (ptr == NULL) {
+    printf("Error: realloc(%d) failed. Out of memory?\n", newSize);
+    exit(EXIT_FAILURE);
+  }
+  return ptr;
+}
+
+//:::::::::::::::::::::::: heap functions :::::::::::::::::::::::::://
+
+heap *newHeap() {
   /* creates a new heap of size size */
-  Heap *hp = safeCalloc(sizeof(Heap), 1); hp->size = size;
-  hp->items = safeCalloc(sizeof(Item), size);
+  heap *hp = safeCalloc(1, sizeof(heap)); 
+  hp->capacity = 100;
+  hp->size = 0;
+  hp->items = safeCalloc(hp->capacity, sizeof(item));
   return hp ;
 }
 
-void swap (Heap *hp, int a, int b) {
+void freeHeap(heap *hp) {
+  /* frees the heap */
+  free(hp->items);
+  free(hp);
+}
+
+void swap (heap *hp, int a, int b) {
   /* swaps the elements at indices a and b in the heap */
-  Item temp = hp->items[a]; 
+  item temp = hp->items[a]; 
   hp->items[a] = hp->items[b]; 
   hp->items[b] = temp;
 }
 
-void maxHeapify(Heap *hp, int i){
+void maxHeapify(heap *hp, int i){
   /* restores the max heap property for the heap */
   int max = i, left = 2*i+1, right = 2*i+2;
   if (left < hp->size && hp->items[left].unitValue > hp->items[max].unitValue)
@@ -57,94 +85,77 @@ void maxHeapify(Heap *hp, int i){
   }
 }
 
-void initMaxHeap(Heap *hp) {
+void initMaxHeap(heap *hp) {
   /* initializes the max heap */
   for (int i = hp->size/2; i >= 0; i--)
     maxHeapify(hp, i);
 }
 
-void freeHeap(Heap *hp) {
-  /* frees the heap */
-  free(hp->items);
-  free(hp);
-}
-
-Item extractMax(Heap *hp){
+item extractMax(heap *hp){
   /* extracts the max element from the heap and 
   restores the max heap property */
-  Item max = hp->items[0];
+  item max = hp->items[0];
   hp->items[0] = hp->items[hp->size-1];
   hp->size--; 
   maxHeapify(hp, 0);
   return max; 
 }
 
-void readHeap(Heap *hp, double *weights, double *values) {
-  /* reads the heap from the input */
-  for (int i = 0; i < hp->size; i++) {
-    hp->items[i].index = i;
-    hp->items[i].weight = weights[i];
-    hp->items[i].value = values[i];
-    hp->items[i].unitValue = values[i] / weights[i];
-  }
-}
+//::::::::::::::::::::::::: other functions :::::::::::::::::::::::://
 
-void printItems(double *maxSet, double max, int n, double rem) {
-  /* prints the selected items */
-  printf("Selected items:\n"); 
-  for (int i = 0; i < n; i++) {
-    if (maxSet[i] > 0){
-      if (maxSet[i] == 1)
-        printf("Item %d in full\n", i+1);
-      else
-        printf("Item %d for %.2f%% of its weight (= %.2f kg)\n", i+1, maxSet[i], rem);
+double readInput(heap *hp, double *W) {
+  /* reads the input from stdin and stores it in the heap */
+  double weight, value, totalWeight = 0; int index = 1; 
+  scanf("%lf", W);
+  while (scanf("%lf %lf", &weight, &value) == 2) {
+    // if the heap is full, add more space
+    if (hp->size == hp->capacity) {
+      hp->capacity *= 2;
+      hp->items = safeRealloc(hp->items, hp->size * sizeof(item));
     }
+    // store the item in the heap
+    hp->items[hp->size].index = index;
+    hp->items[hp->size].weight = weight;
+    hp->items[hp->size].value = value;
+    hp->items[hp->size].unitValue = value / weight;
+    hp->size++; index++;
+    totalWeight += weight;
   }
-  printf("Total value: %.2f euros\n", max);
+  return totalWeight;
 }
 
-double selectItems(Heap *hp, double *maxSet, double W, double *rem) {
+void selectItems(heap *hp, double W) {
   /* selects the items to be put in the knapsack and returns the total value */
   double totalValue = 0;
+  printf("Knapsack capacity: %.2lf kg\n", W);
+  printf("\nItems selected in full:\n");
   while (W > 0 && hp->size > 0) {
-    Item item = extractMax(hp);
+    item item = extractMax(hp);
     if (item.weight <= W) {
-      maxSet[item.index] = 1;
+      printf("Item %d: %.2lf kg, %.2lf euros\n", item.index, item.weight, item.value);
       W -= item.weight;
       totalValue += item.value;
     } else {
-      maxSet[item.index] = W / item.weight * 100;
+      printf("\nItem %d: selected for %.2f%% of its weight (= %.2f kg), %.2lf euros\n", 
+        item.index, W / item.weight * 100, W, item.unitValue * W);
       totalValue += item.unitValue * W;
-      *rem = W; W = 0;
+      break;
     }
   }
-  return totalValue;
+  printf("Total value: %.2f euros\n", totalValue);
 }
 
-double sum (double *arr, int n) {
-  /* returns the sum of the first n elements of arr */
-  double sum = 0;
-  for (int i = 0; i < n; i++) sum += arr[i];
-  return sum;
-}
+//:::::::::::::::::::::::::::::: main :::::::::::::::::::::::::::::://
 
 int main (int argc, char *argv[]) {
-  double weights[] = {11.1,  25.2, 14.5, 5.25, 33,  15.3,  16,  12.9, 9.7, 13.9};
-  double values[]  = {125.5, 94.13, 85,  201, 27.6, 183, 50.75, 20.2, 105, 250};
-  int n = 10;       // number of items
-  double W = 61.5;  // capacity of the knapsack
-  if (sum(weights, n) <= W) {
-    printf("All items selected\n");
-    return 0;
+  double W;   // knapsack capacity
+  heap *hp = newHeap();
+  double w = readInput(hp, &W);
+  if (w <= W) printf("All items selected\n");
+  else {
+    initMaxHeap(hp);
+    selectItems(hp, W);
   }
-  Heap *hp = newHeap(n);
-  readHeap(hp, weights, values);
-  initMaxHeap(hp);
-  double *maxSet = safeCalloc(sizeof(double), n);
-  double rem = 0;
-  double max = selectItems(hp, maxSet, W, &rem);
-  printItems(maxSet, max, n, rem);
   freeHeap(hp);
-  free(maxSet);
   return 0;
 }

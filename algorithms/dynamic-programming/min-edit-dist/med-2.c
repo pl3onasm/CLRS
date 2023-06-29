@@ -1,4 +1,4 @@
-/* file: med-1.c
+/* file: med-2.c
    author: David De Potter
    email: pl3onasm@gmail.com
    license: MIT, see LICENSE file in repository root folder
@@ -9,9 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <limits.h>
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
-#define INF INT_MAX
 
 void *safeCalloc (int n, int size) {
   /* allocates n elements of size size, initializing them to 0, and

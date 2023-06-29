@@ -10,14 +10,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <math.h>
 
+//:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 typedef struct {
-  int index;          // index of the item
-  double weight;      // weight of the item
-  double value;       // value of the item
-  double unitValue;   // unit value of the item
-} Item;
+  int index;          // index of the item as given in the input
+  double weight;      // total weight of the item
+  double value;       // total value of the item
+  double unitValue;   // value per unit of weight of the item
+} item;
+
+//::::::::::::::::::::::: memory management :::::::::::::::::::::::://
 
 void *safeCalloc (int n, int size) {
   /* allocates n elements of size size, initializing them to 0, and
@@ -30,65 +32,36 @@ void *safeCalloc (int n, int size) {
   return ptr;
 }
 
-Item *readItems (double *weights, double *values, int n) {
-  /* reads the items from the arrays weights and values */
-  Item *items = safeCalloc(sizeof(Item), n);
-  for (int i = 0; i < n; ++i) {
-    items[i].index = i;
-    items[i].weight = weights[i];
-    items[i].value = values[i];
-    items[i].unitValue = values[i] / weights[i];
+void *safeRealloc (void *ptr, int newSize) {
+  /* reallocates memory and checks whether the allocation was successful */
+  ptr = realloc(ptr, newSize);
+  if (ptr == NULL) {
+    printf("Error: realloc(%d) failed. Out of memory?\n", newSize);
+    exit(EXIT_FAILURE);
   }
-  return items;
+  return ptr;
 }
 
-double sumWeights (Item *items, int left, int right) {
-  /* returns the sum of the weights of the items 
-     in interval [left, right) */
-  double total = 0;
-  for (int i = left; i < right; i++)
-    total += items[i].weight;
-  return total;
-}
+//:::::::::::::::::::::::::: quickselect ::::::::::::::::::::::::::://
 
-void printItems (Item *items, int lim, double W, int n) {
-  /* prints the selected items */
-  double totalW = sumWeights(items, 0, lim);
-  double total = 0;
-  printf("Selected items:\n");
-  for (int i = 0; i < lim; i++) {
-    printf("Item %d in full\n", items[i].index+1);
-    total += items[i].value;
-  }
-  if (totalW < W && lim < n && totalW + items[lim].weight > W) {
-    double w = W - totalW;
-    double p = w / (items[lim].weight) * 100;
-    total += w * items[lim].unitValue;
-    printf("Item %d for %.2f%% of its weight (= %.2f kg)\n", 
-            items[lim].index+1, p, w);
-  } 
-  printf("Total value: %.2f euros\n", total);
-  return;
-}
-
-void swap (int a, int b, Item *arr) {
+void swap (int a, int b, item *arr) {
   /* swaps the elements at indices 
      a and b in the array arr */
-  Item temp = arr[a]; 
+  item temp = arr[a]; 
   arr[a] = arr[b]; 
   arr[b] = temp;
 }
 
-int partition(Item *arr, int left, int right) {
+int partition(item *arr, int left, int right) {
   /* partitions the array arr around a random
      pivot and returns the index of the pivot */
   srand(time(NULL));  // seed the random number generator
   int idx = left + rand() % (right-left+1);
-  Item pivot = arr[idx];
+  item pivot = arr[idx];
   swap(idx, right, arr);
   idx = left;
   for (int i = left; i < right; i++){
-    if (arr[i].unitValue > pivot.unitValue){
+    if (arr[i].unitValue > pivot.unitValue){  // descending order
       swap(i, idx, arr);
       idx++;
     }
@@ -97,65 +70,102 @@ int partition(Item *arr, int left, int right) {
   return idx;
 }
 
-Item quickSelect(Item *arr, int left, int right, int k) {
+item quickSelect(item *arr, int left, int right, int k) {
   /* returns the item with median unit value */
   int idx = partition(arr, left, right);
-  if (idx == k) return arr[idx];
-  if (idx > k) return quickSelect(arr, left, idx-1, k);
+  if (idx == k) 
+    return arr[idx];
+  if (idx > k) 
+    return quickSelect(arr, left, idx-1, k);
   return quickSelect(arr, idx+1, right, k);
 }
 
-int getLimit (Item *items, double W, int left, int right) {
+//::::::::::::::::::: determine last item to add ::::::::::::::::::://
+
+double sumWeights (item *items, int left, int right) {
+  /* returns the sum of the weights of the items in [left, right] */
+  double sum = 0;
+  for (int i = left; i <= right; i++)
+    sum += items[i].weight;
+  return sum;
+}
+
+int getIndex (item *items, double W, int left, int right) {
   /* returns the index of the last item that contributes 
-     fully or partially */
+     fully or partially to knapsack of capacity W */
   
   // we use quickselect to find the median of the items array;
   // the array is then partitioned (not sorted) around the median
-  int k = ceil((double)(left+right)/2);
-  if (k == left) return left;
-  Item med = quickSelect(items, left, right, k);
-  
+  int k = (right - left) / 2 + left;  // index of median if sorted
+  if (k == left) return left;   
+  item median = quickSelect(items, left, right, k);
+
   // W1 is the sum of the weights of the items 
   // with a higher unit value than the median
   double W1 = sumWeights(items, left, k);
-  int i = 0; 
 
-  // W2 is the sum of the weights of the items
-  // with the same unit value as the median
-  double W2 = med.weight;
-  for (i = k+1; i <= right; i++){
-    if (items[i].unitValue == med.unitValue) W2 += items[i].weight;
-    else break;
-  }
-
-  if (W1 <= W && W1+W2 >= W) {  // base case
-    k--;  // index of the last item that contributed to W1
-    while (W1 < W) {  // tries to add as many items as possible
-      W1 += med.weight;
-      k++; 
-    }
-    return k;
-  }
-
-  if (W1 > W) return getLimit(items, W, left, k-1);
-  return getLimit(items, W-W1-W2, i, right);
+  if (W1 > W) // too heavy 
+    return getIndex(items, W, left, k-1);
+  // not heavy enough
+  return getIndex(items, W-W1, k+1, right);
 }
 
-int main (int argc, char *argv[]) {
-  double weights[] = {11.1,  25.2, 14.5, 5.25, 33,  15.3,  16,  12.9, 9.7, 13.9};
-  double values[]  = {125.5, 94.13, 85,  201, 27.6, 183, 50.75, 20.2, 105, 250};
-  int n = 10;       // number of items
-  double W = 61.5;  // capacity of the knapsack
-  Item *items = readItems(weights, values, n);
+//:::::::::::::::::::::::: input / output :::::::::::::::::::::::::://
 
-  double W1 = sumWeights(items, 0, n);
-  if (W1 <= W) {
-    printf("All items selected.\n");
-    return 0;
+double readInput ( item **items, double *W, int *n) {
+  /* reads the input from stdin and returns the total value of the items */
+  double v, w, totalWeight = 0;
+  int i = 0;
+  scanf("%lf", W);
+  *items = safeCalloc(100, sizeof(item));
+  while (scanf("%lf %lf", &w, &v) == 2) {
+    (*items)[i].index = i + 1;
+    (*items)[i].value = v;
+    (*items)[i].weight = w;
+    (*items)[i].unitValue = v / w;
+    totalWeight += w;
+    i++;
+    if (i % 100 == 0) 
+      *items = safeRealloc(*items, (i+100) * sizeof(item));
   }
+  *n = i;
+  return totalWeight;
+}
 
-  int lim = getLimit(items, W, 0, n-1); 
-  printItems(items, lim, W, n);
+void printItems (item *items, int idx, double W, int n) {
+  /* prints the selected items */
+  double total = 0, totalWeight = 0;
+  printf("Knapsack capacity: %.2lf kg\n", W);
+  printf("\nItems selected in full:\n");
+  for (int i = 0; i < idx; i++) {
+    printf("Item %d: %.2f kg, %.2f euros\n", 
+      items[i].index, items[i].weight, items[i].value);
+    total += items[i].value;
+    totalWeight += items[i].weight;
+  }
+  if (totalWeight < W) {
+    double frac = (W - totalWeight) / items[idx].weight;
+    printf("\nItem %d: selected for %.2f%% of its weight (= %.2f kg), %.2f euros\n",
+      items[idx].index, frac * 100, frac * items[idx].weight,
+      frac * items[idx].value);
+    total += frac * items[idx].value;
+  }
+  printf("Total value: %.2f euros\n", total);
+  return;
+}
+
+//:::::::::::::::::::::::::::: main :::::::::::::::::::::::::::::::://
+
+int main (int argc, char *argv[]) {
+  double W;   // knapsack capacity
+  int n;      // number of items
+  item *items;
+  double w = readInput(&items, &W, &n);
+  if (w <= W) printf("All items selected\n");
+  else {
+    int idx = getIndex(items, W, 0, n-1); 
+    printItems(items, idx, W, n);
+  }
   free(items);
   return 0;
 }

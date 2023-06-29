@@ -11,6 +11,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#define INF INT_MAX
+
+typedef struct {
+  int start, finish;
+} act;
 
 void *safeCalloc (int n, int size) {
   /* allocates n elements of size size, initializing them to 0, and
@@ -37,26 +42,26 @@ void free2DArray(int **a, int n) {
   free(a);
 }
 
-void printActs(int *start, int *finish, int **maxSet, int i, int j) {
+void printActs(act *acts, int **maxSet, int i, int j) {
   /* prints the selected activities in [i..j] */
   if (maxSet[i][j] > 0) {
     int k = maxSet[i][j];
-    printActs(start, finish, maxSet, i, k);
-    printf("Activity %d: [%d, %d)\n", k, start[k], finish[k]);
-    printActs(start, finish, maxSet, k, j);
+    printActs(acts, maxSet, i, k);
+    printf("Activity %d: [%d, %d)\n", k, acts[k].start, acts[k].finish);
+    printActs(acts, maxSet, k, j);
   }
 }
 
-void selectActs(int *start, int *finish, int n, int **maxSet, int **dp) {
+void selectActs(act *acts, int n, int **maxSet, int **dp) {
   for (int l = 1; l < n; l++) {  // l = length of interval
     for (int i = 0; i < n-l+1; i++) {
       int j = i+l;
-      if (finish[i] < start[j]) {
-        for (int k = i+1; k < j; k++) {
-          if (finish[i] <= start[k] && finish[k] <= start[j]) {
-            int val = 1 + dp[i][k] + dp[k][j];
-            if (val > dp[i][j]) {
-              dp[i][j] = val;
+      if (acts[i].finish <= acts[j].start) {  // non-overlapping intervals
+        for (int k = i+1; k < j; k++) {       // find the optimal k
+          if (acts[k].start >= acts[i].finish && acts[k].finish <= acts[j].start) {
+            int num = 1 + dp[i][k] + dp[k][j];  // number of activities in [i..j]
+            if (num > dp[i][j]) {   // update dp[i][j] if necessary
+              dp[i][j] = num;
               maxSet[i][j] = k;
             }
           }
@@ -67,20 +72,18 @@ void selectActs(int *start, int *finish, int n, int **maxSet, int **dp) {
 }
 
 int main (int argc, char *argv[]) {
-  int start[]  = {0, 1, 3, 0, 5, 3, 5, 6,  7,  8,  2,  12, INT_MAX};
-  int finish[] = {0, 4, 5, 6, 7, 9, 9, 10, 11, 12, 14, 16, INT_MAX};
+  act acts[] = {{0, 0}, {1, 4}, {3, 5}, {0, 6}, {5, 7}, {3, 9}, 
+      {5, 9}, {6, 10}, {8, 11}, {8, 12}, {2, 14}, {12, 16}, {INF, INF}};
   int n = 11+2;   // number of activities + 2 sentinel activities
   int **dp = new2DArray(n, n); // dp[i][j] = max number of activities in [i..j]
   int **maxSet = new2DArray(n, n); // stores the index of the selected activity
   for (int i = 0; i < n; i++)
-    for (int j = 0; j < n; j++) {
-      dp[i][j] = 0;
+    for (int j = 0; j < n; j++) 
       maxSet[i][j] = -1;
-    }
-  selectActs (start, finish, n, maxSet, dp);
+  selectActs (acts, n, maxSet, dp);
   printf("The maximal number of activities is %d.\n", dp[0][n-1]);
   printf("The selected activities are:\n");
-  printActs(start, finish, maxSet, 0, n-1);
+  printActs(acts, maxSet, 0, n-1);
   free2DArray(dp, n);
   free2DArray(maxSet, n);
   return 0;

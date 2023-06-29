@@ -5,11 +5,16 @@
    description: activity selection problem (ASP)
                 using a recursive top-down greedy algorithm
    assumptions: the activities are sorted in increasing order of finish time
-   time complexity: O(n)
+   time complexity: Θ(n)
 */ 
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+typedef struct {
+  int start, finish;
+} act;
 
 void *safeCalloc (int n, int size) {
   /* allocates n elements of size size, initializing them to 0, and
@@ -22,35 +27,34 @@ void *safeCalloc (int n, int size) {
   return ptr;
 }
 
-void printActs(int *start, int *finish, int *maxSet, int n) {
+void printActs(act *acts, int *maxSet, int n) {
   /* prints the selected activities in [i..j] */
-  for (int i = 0; i < n; i++) {
+  for (int i = 0; i < n; i++) 
     if (maxSet[i] > 0)
-      printf("Activity %d: [%d, %d)\n", i, start[i], finish[i]);
-  }
+      printf("Activity %d: [%d, %d)\n", i, acts[i].start, acts[i].finish);
 }
 
-void selectActs(int *start, int *finish, int i, int n, int *max, int *maxSet) {
+void selectActs(act *acts, int i, int n, int *max, int *maxSet) {
   int k = i+1; 
-  while (k < n && start[k] < finish[i]) k++; 
-    // find first activity that starts after aᵢ finishes
+  while (k < n && acts[k].start < acts[i].finish) ++k;
+    // find index k of first activity that starts after aᵢ finishes
   if (k < n) {
     ++*max; 
     ++maxSet[k];
-    selectActs(start, finish, k, n, max, maxSet);
+    selectActs(acts, k, n, max, maxSet);
   }
 }
 
 int main (int argc, char *argv[]) {
-  int start[]  = {0, 1, 3, 0, 5, 3, 5, 6,  7,  8,  2,  12};
-  int finish[] = {0, 4, 5, 6, 7, 9, 9, 10, 11, 12, 14, 16};
+  act acts[] = {{0, 0}, {1, 4}, {3, 5}, {0, 6}, {5, 7}, 
+    {3, 9}, {5, 9}, {6, 10}, {7, 11}, {8, 12}, {2, 14}, {12, 16}};
   int n = 11+1;   // number of activities + 1 sentinel activity
   int *maxSet = safeCalloc(n, sizeof(int));
   int max = 0;
-  selectActs(start, finish, 0, n, &max, maxSet);
+  selectActs(acts, 0, n, &max, maxSet);
   printf("Maximum number of activities: %d\n", max);
   printf("Selected activities:\n");
-  printActs(start, finish, maxSet, n);
+  printActs(acts, maxSet, n);
   free(maxSet);
   return 0; 
 }
