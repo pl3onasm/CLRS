@@ -62,7 +62,7 @@ int partition(item *arr, int left, int right) {
   swap(idx, right, arr);
   idx = left;
   for (int i = left; i < right; i++){
-    if (arr[i].unitValue > pivot.unitValue){  // descending order
+    if (arr[i].unitValue > pivot.unitValue){ 
       swap(i, idx, arr);
       idx++;
     }
@@ -71,17 +71,11 @@ int partition(item *arr, int left, int right) {
   return idx;
 }
 
-item quickSelect(item *arr, int left, int right, int k) {
-  /* returns the item with median unit value */
-  int idx = partition(arr, left, right);
-  if (idx == k) 
-    return arr[idx];
-  if (idx > k) 
-    return quickSelect(arr, left, idx-1, k);
-  return quickSelect(arr, idx+1, right, k);
+void printArray (item *items, int left, int right) {
+  /* prints the items in the array items in [left, right] */
+  for (int i = left; i <= right; i++)
+    printf("%d: %.2lf\n", items[i].index, items[i].unitValue);
 }
-
-//::::::::::::::::::: determine last item to add ::::::::::::::::::://
 
 double sumWeights (item *items, int left, int right) {
   /* returns the sum of the weights of the items in [left, right] */
@@ -94,26 +88,20 @@ double sumWeights (item *items, int left, int right) {
 int getIndex (item *items, double W, int left, int right) {
   /* returns the index of the last item that contributes 
      fully or partially to knapsack of capacity W */
-  
-  // we use quickselect to find the median of the items array;
-  // the array is then partitioned (not sorted) around the median
-  int k = (right - left) / 2 + left;  // index of median if sorted
-  if (k == left) return left;   
-  item median = quickSelect(items, left, right, k);
-
-  // W1 is the sum of the weights of the items 
-  // with a unit value ≥ median unit value
-  double W1 = sumWeights(items, left, k);
-
-  if (W1 > W) // too heavy 
-    return getIndex(items, W, left, k-1);
-  // not heavy enough
-  return getIndex(items, W-W1, k+1, right);
+  if (left == right) return left;
+  int idx = partition(items, left, right);
+  double sum = sumWeights(items, left, idx);
+  if (sum == W) 
+    return idx;
+  else if (sum < W) 
+    return getIndex(items, W, idx+1, right);
+  else 
+    return getIndex(items, W, left, idx-1);
 }
 
 //:::::::::::::::::::::::: input / output :::::::::::::::::::::::::://
 
-double readInput ( item **items, double *W, int *n) {
+double readInput (item **items, double *W, int *n) {
   /* reads the input from stdin and returns the total value of the items */
   double v, w, totalWeight = 0;
   int i = 0;
