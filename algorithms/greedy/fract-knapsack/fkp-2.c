@@ -12,6 +12,7 @@
 #include <time.h>
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
+
 typedef struct {
   int index;          // index of the item as given in the input
   double weight;      // total weight of the item
@@ -101,7 +102,7 @@ int getIndex (item *items, double W, int left, int right) {
   item median = quickSelect(items, left, right, k);
 
   // W1 is the sum of the weights of the items 
-  // with a higher unit value than the median
+  // with a unit value ≥ median unit value
   double W1 = sumWeights(items, left, k);
 
   if (W1 > W) // too heavy 

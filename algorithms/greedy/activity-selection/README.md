@@ -55,7 +55,7 @@ Impementing the greedy algorithm can be done using a top-down approach, as oppos
 
 A top-down design is typical for greedy algorithms: we can just make the greedy choice, the one that seems optimal locally, and then recursively solve the remaining subproblem to get the global optimal solution. This is in contrast to the bottom-up approach used for DP, where we start by solving the smallest subproblems, so we can make an optimal choice based on the optimal solutions to the subproblems, and thus build our way up to an optimal solution for the entire problem.
 
-Just as before, we assume that the activities are sorted by their finish time $f_i$. This time, we only need to add one sentinel activity for the recursive version (one with start time $0$ and finish time $0$ for the recursive version), and none for the iterative version. We use the same example as before to illustrate the implementation. The time complexity is $\bigtheta(n)$, which is a big improvement over the $O(n^3)$ time complexity of the DP solution.  
+Just as before, we assume that the activities are sorted by their finish time $f_i$. This time, we only need to add one sentinel activity for the recursive version (one with start time $0$ and finish time $0$ for the recursive version), and none for the iterative version. We use the same example as before to illustrate the implementation. The time complexity is $\Theta(n)$, which is a big improvement over the $O(n^3)$ time complexity of the DP solution.  
 
 Recursive implementation using the greedy approach: [ASP - Recursive top-down greedy](https://github.com/pl3onasm/AADS/blob/main/algorithms/greedy/activity-selection/asp-2.c)  
 
