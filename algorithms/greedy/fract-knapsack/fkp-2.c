@@ -53,7 +53,7 @@ void swap (int a, int b, item *arr) {
   arr[b] = temp;
 }
 
-int partition(item *arr, int left, int right, double *W1, double *W2) {
+int partition(item *arr, int left, int right, double *W1) {
   /* partitions the array arr around a random
      pivot and returns the index of the pivot */
   int idx = left + rand() % (right - left + 1);
@@ -61,12 +61,9 @@ int partition(item *arr, int left, int right, double *W1, double *W2) {
   swap(idx, right, arr);
   idx = left;
   *W1 = arr[right].weight;
-  *W2 = 0;
   for (int i = left; i < right; i++){
     if (arr[i].unitValue >= pivot.unitValue){ 
       *W1 += arr[i].weight;
-      if (arr[i].unitValue == pivot.unitValue) 
-        *W2 += arr[i].weight;
       swap(i, idx, arr);
       idx++;
     }
@@ -78,14 +75,15 @@ int partition(item *arr, int left, int right, double *W1, double *W2) {
 int getIndex (item *items, double W, int left, int right) {
   /* returns the index of the item that is critical for  
      filling the knapsack to full capacity */
+  double W1;
   if (left >= right) 
     return left;
-  double W1, W2;
-  int idx = partition(items, left, right, &W1, &W2);
-  if (W1 > W) 
-    return getIndex(items, W, left, idx-1);
-  if (W1-W2 <= W && W1 > W)
+  int idx = partition(items, left, right, &W1);
+  if (W1 == W) 
     return idx;
+  if (W1 > W)   // too heavy, look to the left of pivot
+    return getIndex(items, W, left, idx-1);
+  // too light, take all items to the left of pivot and look to the right
   return getIndex(items, W - W1, idx+1, right);
 }
 
