@@ -43,7 +43,7 @@ void *safeRealloc (void *ptr, int newSize) {
   return ptr;
 }
 
-//:::::::::::::::::::::::::: quickselect ::::::::::::::::::::::::::://
+//:::::::::::::::::::::::::: partitioning :::::::::::::::::::::::::://
 
 void swap (int a, int b, item *arr) {
   /* swaps the elements at indices 
@@ -53,16 +53,20 @@ void swap (int a, int b, item *arr) {
   arr[b] = temp;
 }
 
-int partition(item *arr, int left, int right) {
+int partition(item *arr, int left, int right, double *W1, double *W2) {
   /* partitions the array arr around a random
      pivot and returns the index of the pivot */
-  srand(time(NULL));  // seed the random number generator
-  int idx = left + rand() % (right-left+1);
+  int idx = left + rand() % (right - left + 1);
   item pivot = arr[idx];
   swap(idx, right, arr);
   idx = left;
+  *W1 = arr[right].weight;
+  *W2 = 0;
   for (int i = left; i < right; i++){
-    if (arr[i].unitValue > pivot.unitValue){ 
+    if (arr[i].unitValue >= pivot.unitValue){ 
+      *W1 += arr[i].weight;
+      if (arr[i].unitValue == pivot.unitValue) 
+        *W2 += arr[i].weight;
       swap(i, idx, arr);
       idx++;
     }
@@ -71,38 +75,24 @@ int partition(item *arr, int left, int right) {
   return idx;
 }
 
-void printArray (item *items, int left, int right) {
-  /* prints the items in the array items in [left, right] */
-  for (int i = left; i <= right; i++)
-    printf("%d: %.2lf\n", items[i].index, items[i].unitValue);
-}
-
-double sumWeights (item *items, int left, int right) {
-  /* returns the sum of the weights of the items in [left, right] */
-  double sum = 0;
-  for (int i = left; i <= right; i++)
-    sum += items[i].weight;
-  return sum;
-}
-
 int getIndex (item *items, double W, int left, int right) {
-  /* returns the index of the last item that contributes 
-     fully or partially to knapsack of capacity W */
-  if (left == right) return left;
-  int idx = partition(items, left, right);
-  double sum = sumWeights(items, left, idx);
-  if (sum == W) 
-    return idx;
-  else if (sum < W) 
-    return getIndex(items, W, idx+1, right);
-  else 
+  /* returns the index of the item that is critical for  
+     filling the knapsack to full capacity */
+  if (left >= right) 
+    return left;
+  double W1, W2;
+  int idx = partition(items, left, right, &W1, &W2);
+  if (W1 > W) 
     return getIndex(items, W, left, idx-1);
+  if (W1-W2 <= W && W1 > W)
+    return idx;
+  return getIndex(items, W - W1, idx+1, right);
 }
 
 //:::::::::::::::::::::::: input / output :::::::::::::::::::::::::://
 
 double readInput (item **items, double *W, int *n) {
-  /* reads the input from stdin and returns the total value of the items */
+  /* reads the input from stdin and returns the total weight of the items */
   double v, w, totalWeight = 0;
   int i = 0;
   scanf("%lf", W);
@@ -121,23 +111,37 @@ double readInput (item **items, double *W, int *n) {
   return totalWeight;
 }
 
-void printItems (item *items, int idx, double W, int n) {
+void printPartial (item it, double cap) {
+  /* prints a partially selected item */
+  printf("\nItem %d selected for %.2lf%%: %.2f kg, %.2f euros\n",
+    it.index, 100 * cap / it.weight, cap, cap * it.unitValue);
+  return;
+}
+
+void printItems (item *items, int idx, double cap, int n) {
   /* prints the selected items */
   double total = 0, totalWeight = 0;
-  printf("Knapsack capacity: %.2lf kg\n", W);
+  printf("Knapsack capacity: %.2lf kg\n", cap);
   printf("\nItems selected in full:\n");
-  for (int i = 0; i < idx; i++) {
-    printf("Item %d: %.2f kg, %.2f euros\n", 
-      items[i].index, items[i].weight, items[i].value);
-    total += items[i].value;
-    totalWeight += items[i].weight;
-  }
-  if (totalWeight < W) {
-    double frac = (W - totalWeight) / items[idx].weight;
-    printf("\nItem %d: selected for %.2f%% of its weight (= %.2f kg), %.2f euros\n",
-      items[idx].index, frac * 100, frac * items[idx].weight,
-      frac * items[idx].value);
-    total += frac * items[idx].value;
+  double w = items[idx].weight;
+  for (int i = 0; i <= idx; i++) 
+    if (items[i].unitValue >= items[idx].unitValue) {
+      if (totalWeight + items[i].weight <= cap) {
+        printf("Item %d: %.2f kg, %.2f euros\n", 
+          items[i].index, items[i].weight, items[i].value);
+        total += items[i].value;
+        totalWeight += items[i].weight;
+      } else {  // partially select item with same unit value as critical item
+        printPartial(items[i], cap - totalWeight);
+        total += (cap - totalWeight) * items[i].unitValue;
+        printf("Total value: %.2f euros\n", total);
+        return;
+      }
+    }
+
+  if (totalWeight < cap) {  // partially select item following critical item
+    printPartial(items[idx+1], cap - totalWeight);
+    total += (cap - totalWeight) * items[idx+1].unitValue;
   }
   printf("Total value: %.2f euros\n", total);
   return;
@@ -146,14 +150,15 @@ void printItems (item *items, int idx, double W, int n) {
 //:::::::::::::::::::::::::::: main :::::::::::::::::::::::::::::::://
 
 int main (int argc, char *argv[]) {
-  double W;   // knapsack capacity
-  int n;      // number of items
+  
+  double cap;   // knapsack capacity
+  int n;        // number of items
   item *items;
-  double w = readInput(&items, &W, &n);
-  if (w <= W) printf("All items selected\n");
+  double w = readInput(&items, &cap, &n);
+  if (w <= cap) printf("All items selected\n");
   else {
-    int idx = getIndex(items, W, 0, n-1); 
-    printItems(items, idx, W, n);
+    int idx = getIndex(items, cap, 0, n-1);
+    printItems(items, idx, cap, n);
   }
   free(items);
   return 0;

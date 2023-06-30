@@ -39,6 +39,7 @@ void swap (int i, int j, int *arr) {
 
 int partition(int *arr, int left, int right) {
   /* partitions arr[left..right] around a random pivot */
+  srand(time(NULL));  // seed the random number generator
   int idx = left + rand() % (right - left + 1);
   int pivot = arr[idx];
   swap(idx, right, arr);   // move pivot to the end
@@ -54,7 +55,7 @@ int partition(int *arr, int left, int right) {
 int quickSelect(int *arr, int left, int right, int i) {
   /* returns the ith smallest element in arr[left..right], i.e. the
      element that would be at index i if the array were sorted */
-  if (left == right) 
+  if (left >= right) 
     return arr[left];
   int q = partition(arr, left, right);
   int k = q - left + 1; // k = number of elements ≤ pivot
