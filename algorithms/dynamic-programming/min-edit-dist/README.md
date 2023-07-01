@@ -36,7 +36,7 @@ T[i,j] = \begin{cases}
 T[i-1,j] + 1 \\
 T[i,j-1] + 1 \\
 T[i-1,j-1] + \begin{cases}
-0 & \text{if } S[i] = T[j] \\
+0 & \text{if } s[i] = t[j] \\
 1 & \text{otherwise}
 \end{cases}
 \end{cases} & \text{otherwise}

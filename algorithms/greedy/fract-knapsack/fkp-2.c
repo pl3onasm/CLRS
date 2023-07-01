@@ -60,7 +60,7 @@ int partition(item *arr, int left, int right, double *W1) {
   item pivot = arr[idx];
   swap(idx, right, arr);
   idx = left;
-  *W1 = arr[right].weight;
+  *W1 = pivot.weight;  // include weight of pivot
   for (int i = left; i < right; i++){
     if (arr[i].unitValue >= pivot.unitValue){ 
       *W1 += arr[i].weight;
@@ -83,7 +83,7 @@ int getIndex (item *items, double W, int left, int right) {
     return idx;
   if (W1 > W)   // too heavy, look to the left of pivot
     return getIndex(items, W, left, idx-1);
-  // too light, take all items to the left of pivot and look to the right
+  // too light, take all items on the left of pivot and look to the right
   return getIndex(items, W - W1, idx+1, right);
 }
 
@@ -109,37 +109,24 @@ double readInput (item **items, double *W, int *n) {
   return totalWeight;
 }
 
-void printPartial (item it, double cap) {
-  /* prints a partially selected item */
-  printf("\nItem %d selected for %.2lf%%: %.2f kg, %.2f euros\n",
-    it.index, 100 * cap / it.weight, cap, cap * it.unitValue);
-  return;
-}
-
 void printItems (item *items, int idx, double cap, int n) {
   /* prints the selected items */
   double total = 0, totalWeight = 0;
   printf("Knapsack capacity: %.2lf kg\n", cap);
   printf("\nItems selected in full:\n");
-  double w = items[idx].weight;
-  for (int i = 0; i <= idx; i++) 
-    if (items[i].unitValue >= items[idx].unitValue) {
-      if (totalWeight + items[i].weight <= cap) {
-        printf("Item %d: %.2f kg, %.2f euros\n", 
-          items[i].index, items[i].weight, items[i].value);
-        total += items[i].value;
-        totalWeight += items[i].weight;
-      } else {  // partially select item with same unit value as critical item
-        printPartial(items[i], cap - totalWeight);
-        total += (cap - totalWeight) * items[i].unitValue;
-        printf("Total value: %.2f euros\n", total);
-        return;
-      }
+  for (int i = 0; i < n && i <= idx+1; i++) {
+    if (totalWeight + items[i].weight <= cap) {
+      printf("Item %d: %.2f kg, %.2f euros\n", 
+        items[i].index, items[i].weight, items[i].value);
+      total += items[i].value;
+      totalWeight += items[i].weight;
+    } else {
+      cap -= totalWeight;
+      printf("\nItem %d selected for %.2lf%%: %.2f kg, %.2f euros\n",
+        items[i].index, 100 * cap / items[i].weight, cap, cap * items[i].unitValue);
+      total += cap * items[i].unitValue;
+      break;
     }
-
-  if (totalWeight < cap) {  // partially select item following critical item
-    printPartial(items[idx+1], cap - totalWeight);
-    total += (cap - totalWeight) * items[idx+1].unitValue;
   }
   printf("Total value: %.2f euros\n", total);
   return;
