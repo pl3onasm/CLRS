@@ -73,8 +73,8 @@ int partition(item *arr, int left, int right, double *W1) {
 }
 
 int getIndex (item *items, double W, int left, int right) {
-  /* returns the index of the item that is critical for  
-     filling the knapsack to full capacity */
+  /* returns the index of an optimal boundary between the items  
+     that still fit in the knapsack and the items that don't */
   double W1;
   if (left >= right) 
     return left;
@@ -116,11 +116,12 @@ void printItems (item *items, int idx, double cap, int n) {
   printf("\nItems selected in full:\n");
   for (int i = 0; i < n && i <= idx+1; i++) {
     if (totalWeight + items[i].weight <= cap) {
+      // item fits in knapsack, take it
       printf("Item %d: %.2f kg, %.2f euros\n", 
         items[i].index, items[i].weight, items[i].value);
       total += items[i].value;
       totalWeight += items[i].weight;
-    } else {
+    } else {  // item does not fit in knapsack, take a fraction
       cap -= totalWeight;
       printf("\nItem %d selected for %.2lf%%: %.2f kg, %.2f euros\n",
         items[i].index, 100 * cap / items[i].weight, cap, cap * items[i].unitValue);
