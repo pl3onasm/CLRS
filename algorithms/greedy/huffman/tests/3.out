@@ -1,4 +1,4 @@
-CODES
+CODEWORD TABLE
 
 char    freq      code
    k      89      0
@@ -14,7 +14,7 @@ char    freq      code
    b       1      1111111111
 
 
-TREE
+HUFFMAN TREE
 
 root
 |0 'k'

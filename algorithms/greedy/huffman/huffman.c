@@ -206,10 +206,10 @@ void showTree(node *n, short *code, int level) {
 
 void printResult (node *tree, short *code) {
   /* prints the codes and the tree*/
-  printf("CODES\n\n");
+  printf("CODEWORD TABLE\n\n");
   printf("char    freq      code\n");
   showCodes(tree, code, 0);
-  printf("\n\nTREE\n\n"); 
+  printf("\n\nHUFFMAN TREE\n\n"); 
   showTree(tree, code, 0);
   printf("\n");
 }

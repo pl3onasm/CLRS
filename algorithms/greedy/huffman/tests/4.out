@@ -1,4 +1,4 @@
-CODES
+CODEWORD TABLE
 
 char    freq      code
    u       9      0000
@@ -29,7 +29,7 @@ char    freq      code
    p       9      11111
 
 
-TREE
+HUFFMAN TREE
 
 root
 |0

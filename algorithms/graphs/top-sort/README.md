@@ -18,26 +18,18 @@ The time complexity of the algorithm is $O(V+E)$, where $V$ is the number of ver
 
 We have the following DAG representing a dependency graph of tasks to be performed, where an arrow from task $u$ to task $v$ means that task $u$ must be completed before task $v$:
 
-&nbsp;
-
 <p align="center" width="85%">
 <img src="dag.png"
      alt="dag"
-     style="float: left; padding-top:200px" />  
+     style="float: left; padding-top:60px; padding-bottom:60px" />
 </p>  
 
-&nbsp;
-
 The topological sort of the above graph is a linear ordering of its vertices such that for every directed edge $(u,v)$ from vertex $u$ to vertex $v$, $u$ comes before $v$ in the ordering. A topological sort of the above graph is the permutation $0,6,1,5,4,2,3$:
-
-&nbsp;
 
 <p align="center" width="85%">
 <img src="sorted.png"
      alt="sorted dag"
-     style="float: left; padding-top:200px" />  
+     style="float: left; padding-top:60px; padding-bottom:60px" />
 </p>
-
-&nbsp;
 
 Note that this topological sort is not unique. For example, the permutation $6,0,1,5,2,4,3$ is another valid topological sort of the graph.
