@@ -111,25 +111,24 @@ double readInput (item **items, double *W, int *n) {
 
 void printItems (item *items, int idx, double cap, int n) {
   /* prints the selected items */
-  double total = 0, totalWeight = 0;
+  double total = 0;
   printf("Knapsack capacity: %.2lf kg\n", cap);
   printf("\nItems selected in full:\n");
   for (int i = 0; i < n && i <= idx+1; i++) {
-    if (totalWeight + items[i].weight <= cap) {
+    if (items[i].weight <= cap) {
       // item fits in knapsack, take it
       printf("Item %d: %.2f kg, %.2f euros\n", 
         items[i].index, items[i].weight, items[i].value);
       total += items[i].value;
-      totalWeight += items[i].weight;
-    } else {  // item does not fit in knapsack, take a fraction
-      cap -= totalWeight;
+      cap -= items[i].weight;
+    } else if (cap) {  // item does not fit in knapsack, take a fraction
       printf("\nItem %d selected for %.2lf%%: %.2f kg, %.2f euros\n",
         items[i].index, 100 * cap / items[i].weight, cap, cap * items[i].unitValue);
       total += cap * items[i].unitValue;
       break;
-    }
+    } else break; // knapsack is full
   }
-  printf("Total value: %.2f euros\n", total);
+  printf("\nTotal value: %.2f euros\n", total);
   return;
 }
 

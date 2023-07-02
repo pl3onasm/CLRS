@@ -6,84 +6,122 @@
      using a greedy approach and a minimum priority queue
    time complexity: O(n log n), where n is the number 
      of characters in the input
+   assumption: the input text contains only characters from 
+     the extended ASCII table 
 */ 
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #define LEFT(i)   (2*i + 1)
 #define RIGHT(i)  (2*i + 2)
 #define PARENT(i) ((i-1)/2)
+#define LENGTH    256
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+typedef unsigned int uint;
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
-typedef struct Node {
+typedef struct node {
   int freq;     // frequency of the character
   char ch;      // character
-  struct Node *left, *right;
-} Node;
+  struct node *left, *right;
+} node;
 
 typedef struct {
-  int size;     // size of the heap
+  int size;     // capacity of the heap
   int n;        // number of elements in the heap
-  Node **nodes; // array of pointers to nodes
-} Heap;
+  node **nodes; // array of pointers to nodes
+} heap;
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
 
-void *safeMalloc (int n) {
-  /* checks if memory has been allocated successfully */
-  void *p = malloc(n);
-  if (p == NULL) {
-    printf("Error: malloc(%d) failed. Out of memory?\n", n);
-    exit(EXIT_FAILURE);}
-  return p;
+void *safeCalloc (int n, int size) {
+  /* allocates n elements of size size, initializing them to 0, and
+     checks whether the allocation was successful */
+  void *ptr = calloc(n, size);
+  if (ptr == NULL) {
+    printf("Error: calloc(%d, %d) failed. Out of memory?\n", n, size);
+    exit(EXIT_FAILURE);
+  }
+  return ptr;
+}
+
+void *safeRealloc (void *ptr, int newSize) {
+  /* reallocates memory and checks whether the allocation was successful */
+  ptr = realloc(ptr, newSize);
+  if (ptr == NULL) {
+    printf("Error: realloc(%d) failed. Out of memory?\n", newSize);
+    exit(EXIT_FAILURE);
+  }
+  return ptr;
 }
 
 //::::::::::::::::::::::::: tree functions ::::::::::::::::::::::::://
 
-Node *newNode (char ch, int freq) {
+node *newNode () {
   /* creates a new node */
-  Node *node = safeMalloc(sizeof(Node));
-  node->ch = ch;
-  node->freq = freq;
-  node->left = node->right = NULL;
-  return node;
+  node *n = safeCalloc(1, sizeof(node));
+  n->ch = -1;
+  return n;
 }
 
-void freeTree (Node *n) {
+void freeTree (node *n) {
   /* frees the tree */
-  if (n == NULL) return;
+  if (!n) return;
   freeTree(n->left);
   freeTree(n->right);
   free(n);
 }
 
-//::::::::::::::::::::::::: heap functions ::::::::::::::::::::::::://
-
-Heap *newHeap (int size) {
-  /* creates a new heap */
-  Heap *heap = safeMalloc(sizeof(Heap));
-  heap->size = size;
-  heap->n = 0;
-  heap->nodes = safeMalloc(sizeof(Node *) * size);
-  return heap;
+uint getHeight (node *n) {
+  /* returns the height of the tree */
+  if (!n) return 0;
+  return 1 + MAX(getHeight(n->left), getHeight(n->right));
 }
 
-void freeHeap (Heap *H) {
+void showTree(node *n, short *code, int level) {
+  /* can be used to print the Huffman tree */
+  if (!n) return;
+  for (int i = 0; i < level; i++)
+    printf(i == level - 1 ? "  |%hd " : "  ", code[level-1]);
+  if (!n->left && !n->right)  // leaf node
+    printf("'%c'\n", n->ch);
+  else  // internal node
+    printf("\n");
+
+  code[level] = 0;
+  showTree(n->left, code, level+1);
+  code[level] = 1;
+  showTree(n->right, code, level+1);
+}
+
+//::::::::::::::::::::::::: heap functions ::::::::::::::::::::::::://
+
+heap *newHeap (int size) {
+  /* creates a new heap */
+  heap *H = safeCalloc(size, sizeof(heap));
+  H->size = size;
+  H->n = 0;
+  H->nodes = safeCalloc(size, sizeof(node*));
+  return H;
+}
+
+void freeHeap (heap *H) {
   /* frees the heap */
   free(H->nodes);
   free(H);
 }
 
-void swap (Heap *H, int i, int j) {
+void swap (heap *H, int i, int j) {
   /* swaps the elements at indices i and j in the heap */
-  Node *tmp = H->nodes[i];
+  node *tmp = H->nodes[i];
   H->nodes[i] = H->nodes[j];
   H->nodes[j] = tmp;
 }
 
-void minHeapify(Heap *H, int i){
+void minHeapify(heap *H, int i){
   /* restores the min heap property in a top-down manner */
   int min = i, l = LEFT(i), r = RIGHT(i);
   if (l < H->n && H->nodes[l]->freq < H->nodes[i]->freq)
@@ -96,7 +134,7 @@ void minHeapify(Heap *H, int i){
   }
 }
 
-void minHeapInsert(Heap *H, Node *new){
+void minHeapInsert(heap *H, node *new){
   /* inserts new node into the min heap and restores 
      the min heap property in a bottom-up manner */
   int i = H->n;
@@ -107,87 +145,75 @@ void minHeapInsert(Heap *H, Node *new){
   }
 }
 
-Node *extractMin(Heap *H){
+node *extractMin(heap *H){
   /* extracts the node with the minimum frequency */
-  Node *min = H->nodes[0];
+  node *min = H->nodes[0];
   H->nodes[0] = H->nodes[--H->n];
   minHeapify(H, 0);
   return min;
 }
 
-void initMinHeap(Heap *H){
+void initMinHeap(heap *H){
   /* initializes the min heap */
   for (int i = H->n/2 - 1; i >= 0; i--)
     minHeapify(H, i);
 }
 
-Heap *readHeap (char chars[], int freq[], int len) {
-  /* reads the min heap from the input */
-  Heap *H = newHeap(len);
-  for (int i = 0; i < len; i++) {
-    if (freq[i] > 0) {
-      Node *node = newNode(chars[i], freq[i]);
-      H->nodes[H->n++] = node;
+heap *buildHeap (uint *freqs) {
+  /* builds the min heap from the input */
+  heap *H = newHeap(LENGTH);
+  for (int i = 0; i < LENGTH; i++) {
+    if (freqs[i]) {
+      node *n = newNode();
+      n->ch = i;
+      n->freq = freqs[i];
+      H->nodes[H->n++] = n;
     }
   }
   initMinHeap(H);
   return H;
 }
 
-//:::::::::::::::::::::::: print functions ::::::::::::::::::::::::://
+//::::::::::::::::::::::::: input / output ::::::::::::::::::::::::://
 
-void showArray(int arr[], int n) {
+void readInput (uint *freqs) {
+  /* reads the input text and counts 
+  the frequencies of the characters */
+  char ch;
+  while ((ch = getchar()) != EOF)
+    if (ch >= 32 && ch < LENGTH)  // only printable characters
+      freqs[ch-0]++;
+}
+
+void showCode(short *arr, int n) {
+  /* prints the code for a character */
   for (int i = 0; i < n; ++i)
-    printf("%d", arr[i]);
+    printf("%hd", arr[i]);
   printf("\n");
 }
 
-void showCodes(Node *n, int code[], int level) {
-  if (n->left) {
-    code[level] = 0;
-    showCodes(n->left, code, level+1);
+void showCodes(node *n, short *code, int level) {
+  /* prints the huffman tree by level */
+  if (!n->left && !n->right) {
+    printf("%4c %7d      ", n->ch, n->freq);
+    showCode(code, level);
+    return;
   }
-  if (n->right) {
-    code[level] = 1;
-    showCodes(n->right, code, level+1);
-  }
-  if (!n->left && !n->right) { // leaf node
-    printf("'%c' = ", n->ch);
-    showArray(code, level);
-  }
-}
-
-void showTree(Node *n, int level){
-  if (!n) return;
-  for (int i = 0; i < level; i++)
-    printf(i == level - 1 ? "  |-" : "  ");
-  if (!n->left && !n->right)  // leaf node
-    printf("%d '%c'\n", n->freq, n->ch);
-  else  // internal node
-    printf("%d\n", n->freq);
-  showTree(n->left, level+1);
-  showTree(n->right, level+1);
-}
-
-void printExample(Node *root, int example) {
-  int code[10];  
-  printf("Example %d\n", example); 
-  printf("---------\n"); 
-  showCodes(root, code, 0);
-  printf("\nHuffman tree:\n\n  ");
-  showTree(root, 0);
-  printf("\n");
+  code[level] = 0;
+  showCodes(n->left, code, level + 1);
+  code[level] = 1;
+  showCodes(n->right, code, level + 1);
 }
 
 //::::::::::::::::::::::: huffman functions :::::::::::::::::::::::://
 
-Node *huffman (Heap *H) {
+node *huffman (heap *H) {
   /* creates the Huffman tree */
   while (H->n > 1) {
-    Node *x = extractMin(H);
-    Node *y = extractMin(H);
-    Node *z = newNode('#', x->freq + y->freq);
-    z->left = x; z->right = y;
+    node *z = newNode();
+    z->left = extractMin(H);
+    z->right = extractMin(H);
+    z->freq = z->left->freq + z->right->freq;
     minHeapInsert(H, z);
   }
   return extractMin(H);
@@ -196,29 +222,29 @@ Node *huffman (Heap *H) {
 //::::::::::::::::::::::::::::: main ::::::::::::::::::::::::::::::://
 
 int main (int argc, char *argv[]) {
-  //EXAMPLE 1: taken from the textbook
-  char chars1[] = {'a','b','c','d','e','f'};
-  int freq1[] = {45,13,12,16,9,5};
-
-  //EXAMPLE 2: "Huffman coding is a data compression algorithm."
-  char chars2[] = {'H','u','f','m','a','n',' ','c','o','d',
-                   'i','g','s','t','p','r','e','l','h','.'};
-  int freq2[] = {1,1,2,3,5,3,6,2,4,2,4,2,3,2,1,1,1,1,1,1};
   
-  int len1 = sizeof(chars1) / sizeof(chars1[0]);
-  int len2 = sizeof(chars2) / sizeof(chars2[0]);
-  Heap *H1 = readHeap(chars1, freq1, len1); 
-  Heap *H2 = readHeap(chars2, freq2, len2);
-  Node *root1 = huffman(H1);
-  Node *root2 = huffman(H2);
- 
-  printExample(root1, 1);
-  printExample(root2, 2);
+  // reads the input and stores the frequencies
+  uint freqs[LENGTH] = {0};
+  readInput(freqs);   
 
-  freeTree(root1);
-  freeTree(root2);
-  freeHeap(H1);
-  freeHeap(H2);
+  // builds a binary min heap from the frequencies
+  heap *H = buildHeap(freqs);
+  
+  // creates the Huffman tree
+  node *tree = huffman(H);    
+
+  // height of the tree is the maximum code length
+  uint height = getHeight(tree);  
+  short *code = safeCalloc(height, sizeof(short));
+
+  // prints the codes and frequencies of the characters
+  printf("char    freq      code\n");
+  showCodes(tree, code, 0);
+  //showTree(tree, code, 0);  // uncomment to print the tree
+ 
+  freeTree(tree);
+  freeHeap(H);
+  free(code);
   return 0; 
 }
   

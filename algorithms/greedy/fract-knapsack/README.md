@@ -16,7 +16,7 @@ Note: the greedy approach works for the fractional knapsack problem, but not for
 
 The main reason why the greedy approach works for the fractional knapsack problem is that in this case, the greedy choice made at each step is guaranteed to be globally optimal. This is not the case for the 0-1 knapsack problem, because items can't be broken into fractions so that when you get to the next step, you may find that the greedy choice you made in the previous step was not optimal after all. Thus, when you consider including an item in the knapsack, you are forced to compare the solution of including the item with the solution of not including it before you can safely make a decision that is globally optimal.
 
-## Greedy solution in linear time (CLRS Ex 15.2-6)
+## Greedy solution in linear time (CLRS⁴ Ex 15.2-6, CLRS³ Ex 16.2-6)
 
 The greedy approach described above works, but can be improved upon. The bottleneck of the algorithm is the sorting which runs in $O(n\log n)$ time. However, we actually don't need the elements to be sorted. All we need to know is which items have a higher unit value than some critical point in the items list which separates the items that still fit in the knapsack from the ones that don't. We can find this critical point in linear time using the quickselect algorithm.  
 
