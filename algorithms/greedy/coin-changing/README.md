@@ -6,7 +6,7 @@ Given a set of coins of different denominations, find the minimum number of coin
 
 ## Greedy Approach
 
-The greedy algorithm is to always choose the largest coin that is less than or equal to the remaining amount. However, this approach only works for certain sets of coins. For example, the greedy approach works for the American coin system, which consists of coins for 1 (penny), 5 (nickel), 10 (dime), and 25 (quarter) cents. However, it stops working if we remove the nickel from the coin system. For example, if we want to make a change for 30 cents, the greedy approach will then yield 6 coins (1 quarter and 5 pennies), while the optimal solution in that case is 3 coins (3 dimes).
+The greedy strategy is to always choose the largest coin that is less than or equal to the remaining amount. However, this approach only works for certain sets of coins. For example, the greedy approach works for the American coin system, which consists of coins for 1 (penny), 5 (nickel), 10 (dime), and 25 (quarter) cents. However, it stops working if we remove the nickel from the coin system. For example, if we want to make a change for 30 cents, the greedy approach will then yield 6 coins (1 quarter and 5 pennies), while the optimal solution in that case is 3 coins (3 dimes).
 
 The coin systems for which the greedy algorithm always yields the optimal solution are called **canonical coin systems**. The question as to which conditions must be satisfied for a set of coins to be a canonical coin system is not easy to answer, and has been the subject of research. Also some algorithms have been designed to verify whether a given set of coins is canonical or not [^1] [^2] [^3].
 
@@ -22,7 +22,7 @@ Implementation: [CCP - Greedy](https://github.com/pl3onasm/AADS/blob/main/algori
 
 ## Dynamic Programming
 
-Given the fact that the greedy approach doesn't yield the optimal solution for all coin systems, there's always the option to fall back on dynamic programming. Of course, the downside of dynamic programming is that it requires more space and time than the greedy approach. So if the given coin system is canonical, the greedy approach is preferred.
+Given the fact that the greedy approach doesn't yield the optimal solution for all coin systems, there's always the option to resort to dynamic programming. Of course, the downside of dynamic programming is that it requires more space and time than the greedy approach. So if the given coin system is canonical, the greedy approach is definitely preferred.
 
 It should be an easy exercise to implement a top-down approach with memoization. We'll limit ourselves to the bottom-up approach. Let $D = \lbrace d_1, d_2, \ldots, d_n \rbrace$ be the set of coins in the coin system, and let $A$ be the amount for which we want to make a change. We define $C[A]$ as the minimum number of coins needed to make a change for $A$. We can then define the recurrence relation as follows:
 

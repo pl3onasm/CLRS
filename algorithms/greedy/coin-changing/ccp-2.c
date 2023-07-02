@@ -22,6 +22,15 @@ void *safeCalloc (int n, int size) {
   return ptr;
 }
 
+int maxArray (int *a, int n) {
+  /* returns the maximum value in array a of size n */
+  int max = a[0];
+  for (int i = 1; i < n; ++i) {
+    if (a[i] > max) max = a[i];
+  }
+  return max;
+}
+
 int *change(int amount, int *coins, int cs) {
   /* returns an array where the i-th element contains the denomination 
      of a coin used in an optimal solution to the problem of making 
@@ -55,15 +64,17 @@ void printChange(int *denom, int amount) {
 }
 
 int main(int argc, char *argv[]) {
-  int coins[] = {25, 20, 10, 5, 1}; // non-canonical coin system
+  int coins[] = {25, 20, 10, 5, 1};     // non-canonical coin system
   int cs = sizeof(coins)/sizeof(int);
-  int amounts[] = {40, 67, 19, 28};
+  int amounts[] = {40, 67, 19, 28, 45, 81}; // amounts to be changed
   int as = sizeof(amounts)/sizeof(int);
+  
+  int max = maxArray(amounts, as);      // get maximum amount to be changed
+  int *denom = change(max, coins, cs);  // compute optimal solution for max
 
-  for (int i = 0; i < as; ++i) {
-    int *denom = change(amounts[i], coins, cs);
+  for (int i = 0; i < as; ++i) 
     printChange(denom, amounts[i]); 
-    free(denom);
-  }
+    
+  free(denom);
   return 0;
 }
