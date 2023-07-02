@@ -5,14 +5,14 @@
    description: Huffman coding
      using a greedy approach and a minimum priority queue
    time complexity: O(n log n), where n is the number 
-     of characters in the input
+     of distinct characters in the input text, i.e. the size 
+     of the alphabet
    assumption: the input text contains only characters from 
      the extended ASCII table 
 */ 
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 
 #define LEFT(i)   (2*i + 1)
 #define RIGHT(i)  (2*i + 2)
@@ -24,15 +24,16 @@ typedef unsigned int uint;
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
 typedef struct node {
-  int freq;     // frequency of the character
-  char ch;      // character
-  struct node *left, *right;
+  int freq;             // frequency of the character
+  char ch;              // character
+  struct node *left;    // left child
+  struct node *right;   // right child
 } node;
 
 typedef struct {
-  int size;     // capacity of the heap
-  int n;        // number of elements in the heap
-  node **nodes; // array of pointers to nodes
+  int size;             // capacity of the heap
+  int n;                // number of elements in the heap
+  node **nodes;         // array of pointers to nodes
 } heap;
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
@@ -79,22 +80,6 @@ uint getHeight (node *n) {
   /* returns the height of the tree */
   if (!n) return 0;
   return 1 + MAX(getHeight(n->left), getHeight(n->right));
-}
-
-void showTree(node *n, short *code, int level) {
-  /* can be used to print the Huffman tree */
-  if (!n) return;
-  for (int i = 0; i < level; i++)
-    printf(i == level - 1 ? "  |%hd " : "  ", code[level-1]);
-  if (!n->left && !n->right)  // leaf node
-    printf("'%c'\n", n->ch);
-  else  // internal node
-    printf("\n");
-
-  code[level] = 0;
-  showTree(n->left, code, level+1);
-  code[level] = 1;
-  showTree(n->right, code, level+1);
 }
 
 //::::::::::::::::::::::::: heap functions ::::::::::::::::::::::::://
@@ -185,24 +170,48 @@ void readInput (uint *freqs) {
       freqs[ch-0]++;
 }
 
-void showCode(short *arr, int n) {
-  /* prints the code for a character */
-  for (int i = 0; i < n; ++i)
-    printf("%hd", arr[i]);
-  printf("\n");
-}
-
 void showCodes(node *n, short *code, int level) {
-  /* prints the huffman tree by level */
+  /* prints the huffman codes for all characters */
   if (!n->left && !n->right) {
     printf("%4c %7d      ", n->ch, n->freq);
-    showCode(code, level);
+    for (int i = 0; i < level; ++i)
+      printf("%hd", code[i]);
+    printf("\n");
     return;
   }
   code[level] = 0;
   showCodes(n->left, code, level + 1);
   code[level] = 1;
   showCodes(n->right, code, level + 1);
+}
+
+void showTree(node *n, short *code, int level) {
+  /* prints the huffman tree */
+  if (!n) return;
+  if (!level) printf("root\n");
+  else {
+    for (int i = 0; i < level-1; ++i)
+      printf("-%hd", code[i]);
+    printf("|%hd ", code[level-1]);
+    if (!n->left && !n->right)  // leaf node
+      printf("'%c'\n", n->ch);
+    else  // internal node
+      printf("\n");
+  }
+  code[level] = 0;
+  showTree(n->left, code, level+1);
+  code[level] = 1;
+  showTree(n->right, code, level+1);
+}
+
+void printResult (node *tree, short *code) {
+  /* prints the codes and the tree*/
+  printf("CODES\n\n");
+  printf("char    freq      code\n");
+  showCodes(tree, code, 0);
+  printf("\n\nTREE\n\n"); 
+  showTree(tree, code, 0);
+  printf("\n");
 }
 
 //::::::::::::::::::::::: huffman functions :::::::::::::::::::::::://
@@ -237,10 +246,8 @@ int main (int argc, char *argv[]) {
   uint height = getHeight(tree);  
   short *code = safeCalloc(height, sizeof(short));
 
-  // prints the codes and frequencies of the characters
-  printf("char    freq      code\n");
-  showCodes(tree, code, 0);
-  //showTree(tree, code, 0);  // uncomment to print the tree
+  // prints the codes and the tree
+  printResult(tree, code);
  
   freeTree(tree);
   freeHeap(H);
