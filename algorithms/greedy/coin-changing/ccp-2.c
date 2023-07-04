@@ -33,16 +33,16 @@ int maxArray (int *a, int n) {
 
 int *change(int amount, int *coins, int cs) {
   /* returns an array where the i-th element contains the denomination 
-     of a coin used in an optimal solution to the problem of making 
-     change for i cents */
+     of a coin used as a last step in an optimal solution to the 
+     (sub)problem of making change for i cents */
   int *minCoins = safeCalloc(amount + 1, sizeof(int));
   int *denom = safeCalloc(amount + 1, sizeof(int));
-  for (int i = 1; i <= amount; ++i) {
+  for (int i = 1; i <= amount; ++i) {     // bottom-up approach: increasing amounts
     minCoins[i] = amount;
-    for (int j = 0; j < cs; ++j) {
+    for (int j = 0; j < cs; ++j) {        // try all coins
       if (i >= coins[j] && minCoins[i - coins[j]] + 1 < minCoins[i]) {
-        minCoins[i] = minCoins[i - coins[j]] + 1;
-        denom[i] = coins[j];
+        minCoins[i] = minCoins[i - coins[j]] + 1;  // update minimum
+        denom[i] = coins[j];                       // update denomination 
       }
     }
   }
@@ -52,7 +52,7 @@ int *change(int amount, int *coins, int cs) {
 
 void printChange(int *denom, int amount) {
   /* prints the optimal solution to the problem of 
-     making change for amount cents */
+     making change for a given amount */
   int a = amount;
   printf("Amount of %d cents = ", amount);
   while (a > 0) {
@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
   int *denom = change(max, coins, cs);  // compute optimal solution for max
 
   for (int i = 0; i < as; ++i) 
-    printChange(denom, amounts[i]); 
+    printChange(denom, amounts[i]);     
     
   free(denom);
   return 0;

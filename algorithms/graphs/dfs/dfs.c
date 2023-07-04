@@ -16,24 +16,28 @@
 
 //:::::::::::::::::::::::: data structures ::::::::::::::::::::::::://
 
-typedef struct list list;  // forward declaration
+typedef struct list list;    // forward declaration
 
 typedef struct node {
-  int id, parent;          // node id and parent id
-  int dTime, fTime;        // discovery and finish times
-  list *adj;               // adjacency list
-  char color;              // white, gray, or black
+  int id, parent;            // node id and parent id
+  int dTime, fTime;          // discovery and finish times
+  list *adj;                 // adjacency list
+  enum {WHITE,               // node colors: undiscovered,
+    GRAY, BLACK} color;      // discovered, finished
 } node;              
 
 struct list {
-  node *nbr;               // pointer to neighbor node
-  list *next;              // pointer to next node in the list
-  char type;               // edge type (tree, back, forward, cross)
+  node *nbr;                 // pointer to neighbor node
+  list *next;                // pointer to next node in the list
+  enum {TREE, BACK, FORWARD, // edge types
+    CROSS} type;                  
 };
 
+const char types[] = "TBFC"; // edge type characters
+
 typedef struct graph {
-  int nNodes, nEdges;      // number of nodes and edges in the graph
-  node **vertices;         // array of pointers to nodes
+  int nNodes, nEdges;        // number of nodes and edges in the graph
+  node **vertices;           // array of pointers to nodes
 } graph;
 
 //::::::::::::::::::::::: memory management :::::::::::::::::::::::://
@@ -95,9 +99,9 @@ node *newNode(int id) {
   /* creates a node with given id */
   node *n = safeCalloc(1, sizeof(node));
   n->id = id;
-  n->dTime = -1; 
-  n->parent = -1; // -1 means no parent
-  n->color = 'w';
+  n->dTime = -1;    
+  n->parent = -1;   // still an orphan node :'(
+  n->color = WHITE; // waiting to be adopted   
   n->adj = newList();
   return n;
 }
@@ -149,7 +153,7 @@ void printResults(graph *G) {
   for (int i = 0; i < G->nNodes; i++) {
     node *n = G->vertices[i];
     for (list *a = n->adj; a; a = a->next) {
-      printf("%10d %8d %9c\n", n->id, a->nbr->id, a->type);
+      printf("%10d %8d %9c\n", n->id, a->nbr->id, types[a->type]);
     }
   }
 }
@@ -157,31 +161,31 @@ void printResults(graph *G) {
 void dfsVisit(graph *G, node *u, int *time) {
   /* visits the node u and its descendants in the graph G */
   u->dTime = ++*time;
-  u->color = 'g';
+  u->color = GRAY;       // u is discovered
   
   for (list *L = u->adj; L; L = L->next) {
     node *v = L->nbr;
-    if (v->color == 'w') {
-      L->type = 'T';     // tree edge
+    if (v->color == WHITE) {
+      L->type = TREE;    // if v is undiscovered, (u, v) is a tree edge
       v->parent = u->id;
       dfsVisit(G, v, time);
     } 
-    else if (v->color == 'g') 
-      L->type = 'B';     // back edge
+    else if (v->color == GRAY)
+      L->type = BACK;    // v is an ancestor of u in the same dfs tree
     else if (v->dTime > u->dTime)  
-      L->type = 'F';     // forward edge
+      L->type = FORWARD; // v is a descendant of u in the same dfs tree
     else if (v->dTime < u->dTime) 
-      L->type = 'C';     // cross edge
+      L->type = CROSS;   // rest of the cases; v can be in another dfs tree
   }
   u->fTime = ++*time;
-  u->color = 'b';
+  u->color = BLACK;      // u is finished
 }
 
 void dfs(graph *G, int *time) {
   /* performs a depth-first search on the graph G */
-  for (int i = 0; i < G->nNodes; i++) {
+  for (int i = 0; i < G->nNodes; i++) {   
     node *n = G->vertices[i];
-    if (n->color == 'w')
+    if (n->color == WHITE)    // discover all white nodes
       dfsVisit(G, n, time);
   }
 }
