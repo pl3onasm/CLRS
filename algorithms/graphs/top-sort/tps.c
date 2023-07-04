@@ -4,7 +4,7 @@
    license: MIT, see LICENSE file in repository root folder
    description: topological sort of a directed acyclic 
      graph using depth-first search
-   complexity: O(V + E)
+   complexity: Θ(V + E)
 */
 
 #include <stdio.h>
@@ -135,7 +135,7 @@ void dfsVisit(graph *G, node *u, list **L, int *time) {
   u->dTime = ++*time;
   for (list *l = u->adj; l; l = l->next) {
     node *v = l->n;
-    if (v->dTime < 0) {   // v is undiscovered
+    if (v->dTime < 0) {  // v is undiscovered
       v->parent = u->id;
       dfsVisit(G, v, L, time);
     } 
@@ -148,7 +148,7 @@ void dfs(graph *G, list **L, int *time) {
   /* performs a depth-first search on the graph G */
   for (int i = 0; i < G->nNodes; i++) {
     node *n = G->vertices[i];
-    if (n->dTime < 0)  // n is undiscovered
+    if (n->dTime < 0)   // n is undiscovered
       dfsVisit(G, n, L, time);
   }
 }
@@ -157,8 +157,8 @@ void dfs(graph *G, list **L, int *time) {
 
 list *topSort(graph *G) {
   /* performs a topological sort on the graph G */
-  list *L = newList();
-  int time = 0;
+  list *L = newList();  // list to store the nodes in topological order
+  int time = 0;         // time counter
   dfs(G, &L, &time);
   return L;
 }

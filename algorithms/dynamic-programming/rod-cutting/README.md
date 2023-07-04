@@ -26,7 +26,7 @@ Implementation: [Naive recursive solution](https://github.com/pl3onasm/Algorithm
 
 ## Top-down Approach with Memoization
 
-The problem clearly contains overlapping subproblems: to compute the optimal solution for rods of different lengths, we repeatedly need the optimal solutions for smaller rod lengths. The previous approach can be repaired by storing the optimal solution for each rod length in a table and using this table to avoid recomputing the same subresult over and over again. This approach is called *memoization*: we literally keep a memo of each subproblem solution we solve and use this memo instead of recomputing it when needed. The running time of this approach is in $O(n^2)$.
+The problem clearly contains overlapping subproblems: to compute the optimal solution for rods of different lengths, we repeatedly need the optimal solutions for smaller rod lengths. The previous approach can be repaired by storing the optimal solution for each rod length in a table and using this table to avoid recomputing the same subresult over and over again. This approach is called *memoization*: we literally keep a memo of each subproblem solution and use this memo instead of recomputing the solution when needed. The running time of this approach is in $O(n^2)$.
 
 Implementation: [Top-down DP](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/dynamic-programming/rod-cutting/cut-rod2.c)
 

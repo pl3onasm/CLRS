@@ -4,7 +4,7 @@
    license: MIT, see LICENSE file in repository root folder
    description: computes the strongly connected 
      components of a directed graph
-   complexity: O(n+m)
+   complexity: Θ(V + E)
 */
 
 #include <stdio.h>
@@ -159,14 +159,15 @@ void dfsG(graph *G, list **L, int *time) {
 }
 
 void dfsGT(graph *GT, list *L, int *time) {
-  /* performs a depth-first search on the transposed graph Gᵀ and
-     prints the strongly connected components of G on the fly */
+  /* performs a depth-first search on the transposed graph Gᵀ  
+     guided by the order of the nodes in the list L and prints 
+     the strongly connected components of G on the fly */
   for (list *l = L; l; l = l->next) {
     node *n = GT->vertices[l->n->id];
-    if (n->dTime < 0) {  // n is undiscovered in Gᵀ
+    if (n->dTime < 0) {    // if n is still undiscovered in Gᵀ
       list *component = newList();
-      dfsVisit(GT, n, &component, time); 
-      printList(component);
+      dfsVisit(GT, n, &component, time);  // visit n and its descendants
+      printList(component);               // print the found component
       freeList(component);
     }
   }
@@ -184,8 +185,7 @@ list *topSort(graph *G) {
 
 void decompose(graph *GT, list *L) {
   /* decomposes the graph into strongly connected components 
-     using a topological sort on Gᵀ and a list L of nodes in
-     decreasing order of finishing time in G */
+     using the topological sort L on G to guide the DFS on Gᵀ */
   printf("Strongly connected components:\n");
   int time = 0;
   dfsGT(GT, L, &time);
@@ -201,7 +201,7 @@ int main (int argc, char *argv[]) {
   graph *GT = newGraph(n);  // transposed graph Gᵀ
   buildGraphs(G, GT);       // read edges from stdin
 
-  list *L = topSort(G);     // topological sort
+  list *L = topSort(G);     // L is the topological sort on G
   decompose(GT, L);         // get the strongly connected components
 
   freeGraph(G);
