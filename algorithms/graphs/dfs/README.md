@@ -10,12 +10,12 @@ During the execution of DFS-Visit, nodes also get a discovery and a finish time,
 
 - If $v$ is white, then $v$ is discovered by $u$ and $(u, v)$ is a tree edge.  
   A tree edge is an edge that is part of the DFS tree.
-- If $v$ is gray, then $v$ is an ancestor of $u$ and $(u, v)$ is a back edge.
+- If $v$ is gray, then $v$ is an ancestor of $u$ and $(u, v)$ is a back edge.  
   A back edge is an edge that connects a node to an ancestor in the DFS tree.
-- If $v$ is black and $u.d < v.d$, then $(u, v)$ is a forward edge.
+- If $v$ is black and $u.d < v.d$, then $(u, v)$ is a forward edge.  
   A forward edge is an edge that connects a node to a descendant in the DFS tree.
-- If $v$ is black and $u.d > v.d$, then $(u, v)$ is a cross edge.
-  A cross edge is an edge that is neither of the previous types.
+- If $v$ is black and $u.d > v.d$, then $(u, v)$ is a cross edge.  
+  A cross edge is an edge that is neither of the previous types.  
   It can go between nodes in the same DFS tree or between nodes in different DFS trees.
   
 This classification of edges can be used to get information about the structure of a graph. For example, if a DFS on a directed graph $G$ produces no back edges, then $G$ is a DAG.
