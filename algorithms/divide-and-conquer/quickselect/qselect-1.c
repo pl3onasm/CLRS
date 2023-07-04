@@ -66,7 +66,7 @@ int quickSelect(int *arr, int left, int right, int i) {
   else              // search in the high end of the array
     return quickSelect(arr, q+1, right, i-k);
       // we update i to be relative to the new subarray,
-      // i.e. we search for the i-kth element in the high end
+      // i.e. we search for the (i-k)th element in the high end
 }
 
 int main () {
