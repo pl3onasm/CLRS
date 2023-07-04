@@ -6,7 +6,7 @@ Given a directed graph, find the strongly connected components of the graph. A s
 
 ## Solution
 
-The algorithm to find the strongly connected components of a graph uses its transpose, which is the graph $G^T = (V, E^T)$, where $E^T = \{(u, v) : (v, u) \in E\}$. In other words, the transpose of a graph is the same graph with all its edges reversed.  
+The algorithm to find the strongly connected components of a graph uses its transpose, which is the graph $G^T = (V, E^T)$, where $E^T = \lbrace (u, v) : (v, u) \in E \rbrace $. In other words, the transpose of a graph is the same graph with all its edges reversed.  
 
 The algorithm consists of two steps. First, we run a DFS on the graph $G$ and compute the finish times of each vertex. Then, we run a DFS on the transpose of $G$ in decreasing order of the finish times computed in the first step. Each depth-first tree discovered in this second step forms a strongly connected component of the graph.
 
