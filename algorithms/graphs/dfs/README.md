@@ -20,6 +20,6 @@ During the execution of DFS-Visit, nodes also get a discovery and a finish time,
   
 This classification of edges can be used to get information about the structure of a graph. For example, if a DFS on a directed graph $G$ produces no back edges, then $G$ is a DAG (directed acyclic graph).
 
-The total running time of DFS is $\Theta(V + E)$. The program below implements a DFS to classify edges in a given graph. It outputs the discovery and finish times of each node, as well as the classification of each edge. Note that these results are not unique, as the order in which nodes are explored doesn't have to be unique and may create a different breadth-first forest, meaning that another implementation or a different input order could produce different results.
+The total running time of DFS is $\Theta(V + E)$. The program below implements a DFS to classify edges in a given graph. It outputs the discovery and finish times of each node, as well as the classification of each edge. Note that these results are not unique, as the order in which nodes are explored doesn't have to be unique and may create a different depth-first forest, meaning that another implementation or a different input order could produce different results.
 
 Implementation: [DFS](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/dfs/dfs.c)
