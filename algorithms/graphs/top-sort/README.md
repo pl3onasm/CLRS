@@ -6,7 +6,7 @@ Given a directed acyclic graph (DAG), find a topological sort of its vertices. A
 
 ## Solution
 
-A topological sort can be achieved by running a DFS on the graph. While the graph is traversed, we prepend each node to a linked list when it is assigned a finish time (colored black). The resulting list is then the topological sort of the graph. The time complexity of the algorithm is $O(V+E)$, since we need to run a DFS on the graph and list insertion takes $O(1)$ time.  
+A topological sort can be achieved by running a [DFS](https://github.com/pl3onasm/CLRS-in-C/tree/main/algorithms/graphs/dfs) on the graph. While the graph is traversed, we prepend each node to a linked list when it is assigned a finish time (colored black). The resulting list is then the topological sort of the graph. The time complexity of the algorithm is $O(V+E)$, since we need to run a DFS on the graph and list insertion takes $O(1)$ time.  
 
 The program omits the color attribute of the nodes, since it is not needed to find a topological sort. Note that the program outputs a possible topological sort of the graph which is not necessarily unique.  
 Implementation: [TPS](https://github.com/pl3onasm/Algorithms/tree/main/algorithms/graphs/top-sort/tps.c)

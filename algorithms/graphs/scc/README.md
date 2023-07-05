@@ -8,7 +8,7 @@ Given a directed graph, find the strongly connected components of the graph. A s
 
 The algorithm to find the strongly connected components of a graph uses its transpose, which is the graph $G^T = (V, E^T)$, where $E^T = \lbrace (u, v) : (v, u) \in E \rbrace $. In other words, the transpose of a graph is the same graph with all its edges reversed.  
 
-The algorithm consists of two steps. First, we run a DFS on the graph $G$ and compute the finish times of each vertex. Then, we run a DFS on the transpose of $G$ in decreasing order of the finish times computed in the first step. Each depth-first tree discovered in this second step forms a strongly connected component of the graph.
+The algorithm consists of two steps. First, we run a [DFS](https://github.com/pl3onasm/CLRS-in-C/tree/main/algorithms/graphs/dfs) on the graph $G$ and compute the finish times of each vertex. Then, we run a DFS on the transpose of $G$ in decreasing order of the finish times computed in the first step. Each depth-first tree discovered in this second step forms a strongly connected component of the graph.
 
 To get the list of vertices sorted in decreasing order of their finish times, we can use a [topological sort](https://github.com/pl3onasm/AADS/tree/main/algorithms/graphs/top-sort) on the graph $G$. All we need to do in the second step is to run a DFS on the transpose of $G$ in the order of the vertices in the sorted list.
 

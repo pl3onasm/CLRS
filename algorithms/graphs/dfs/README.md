@@ -1,6 +1,6 @@
 # Depth-first search (DFS)
 
-Unlike BFS, DFS explores a graph $G$ all the way down to the deepest node before backtracking and exploring the branches that were left unexplored while going down the tree. In order to avoid getting trapped in cycles, DFS can be made to keep track of the nodes that have already been visited by means of a color attribute for each node, which can be either white, gray or black. White nodes are unvisited, gray ones are being explored in the current DFS tree and black ones have already been explored.
+Unlike [BFS](https://github.com/pl3onasm/CLRS-in-C/tree/main/algorithms/graphs/bfs), DFS explores a graph $G$ all the way down to the deepest node before backtracking and exploring the branches that were left unexplored while going down the tree. In order to avoid getting trapped in cycles, DFS can be made to keep track of the nodes that have already been visited by means of a color attribute for each node, which can be either white, gray or black. White nodes are unvisited, gray ones are being explored in the current DFS tree and black ones have already been explored.
 
 A DFS traversal sets out to explore all white nodes in the graph, and for each one it can find, it calls the DFS-Visit procedure, which will explore all nodes that are reachable from the current node, and will mark them as gray and black as it explores them. It will also set the parent attribute of each node to the node that discovered it, generating a predecessor subgraph, which can be used to reconstruct the path from the source node to any other node that is reachable from it.
 
@@ -20,6 +20,6 @@ During the execution of DFS-Visit, nodes also get a discovery and a finish time,
   
 This classification of edges can be used to get information about the structure of a graph. For example, if a DFS on a directed graph $G$ produces no back edges, then $G$ is a DAG (directed acyclic graph).
 
-The total running time of DFS is $\Theta(V + E)$. The program below implements a DFS to classify edges in a given graph. It outputs the discovery and finish times of each node, as well as the classification of each edge. Note that these results are not unique, as the order in which nodes are explored doesn't have to be unique, meaning that a different implementation or a different input order could produce different results.
+The total running time of DFS is $\Theta(V + E)$. The program below implements a DFS to classify edges in a given graph. It outputs the discovery and finish times of each node, as well as the classification of each edge. Note that these results are not unique, as the order in which nodes are explored doesn't have to be unique and may create a different breadth-first forest, meaning that another implementation or a different input order could produce different results.
 
 Implementation: [DFS](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/dfs/dfs.c)
