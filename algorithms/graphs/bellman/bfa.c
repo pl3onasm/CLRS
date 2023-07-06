@@ -3,6 +3,7 @@
    email: pl3onasm@gmail.com
    license: MIT, see LICENSE file in repository root folder
    description: Bellman-Ford algorithm for single-source shortest paths
+   time complexity: O(VE)
    assumption: nodes are numbered 0..n-1
 */
 
@@ -166,13 +167,13 @@ bool containsCycle(graph *G, edge *e) {
 
 void bFord(graph *G, int s) {
   /* runs the Bellman-Ford algorithm on graph G starting from node s
-     returns true if a negative cycle is found */
+      and checks whether there is a negative-weight cycle */
   G->nodes[s]->dist = 0;
-  for (int i = 0; i < G->nNodes - 1; i++) 
+  for (int i = 0; i < G->nNodes - 1; i++)   // relax all edges n-1 times
     for (int j = 0; j < G->nEdges; j++) 
       relax(G, G->edges[j]);
 
-  for (int i = 0; i < G->nEdges; i++) 
+  for (int i = 0; i < G->nEdges; i++)       // check for negative cycles
     if (containsCycle(G, G->edges[i]))
       return;
 }

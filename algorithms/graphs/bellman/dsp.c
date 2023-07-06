@@ -3,6 +3,7 @@
    email: pl3onasm@gmail.com
    license: MIT, see LICENSE file in repository root folder
    description: DAG shortest paths algorithm
+   time complexity: O(V+E)
    assumption: nodes are numbered 0..n-1
 */
 
