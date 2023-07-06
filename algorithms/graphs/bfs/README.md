@@ -6,7 +6,7 @@ During the execution of a BFS, each vertex $v$ is in one of three states, which 
 
 As a BFS discovers vertices, it partitions the edges of $G$ into tree edges and non-tree edges. A tree edge is an edge $(u, v)$ such that vertex $v$ was first discovered by exploring edge $(u, v)$ in the BFS, at which point $u$ became a parent of $v$ so that $v.\pi = u$. Together all these tree edges form a breadth-first tree, which defines a predecessor subgraph $G_\pi = (V_\pi, E_\pi)$, where $E_\pi$ consists of all tree edges and $V_\pi$ consists of all vertices reachable from $s$. By following the predecessor subgraph from any vertex $v$ back to the root $s$, we can reconstruct a shortest path from $s$ to $v$.
 
-The total running time of BFS is $O(V + E)$, since each vertex $v$ is enqueued and dequeued once and each edge is examined once when $v$'s adjacency list is processed, and the lengths of all adjacency lists is $\Theta(E)$.
+The total running time of BFS is $O(V + E)$, since each vertex $v$ is enqueued and dequeued once and each edge is examined once when $v$'s adjacency list is processed, while the total length of all adjacency lists is $\Theta(E)$.
 
 The below program implements BFS on a directed graph $G$, represented by an array of pointers to vertices which each contain a linked list of adjacent vertices. The color attribute has been omitted, as the parent attribute is sufficient to determine whether a vertex has been discovered or not.  
 The input consists of the number of vertices $|V|$, followed by the source and the destination vertex, and finally the edges of the graph. The output is the shortest path from the source to the destination vertex, if one exists.
