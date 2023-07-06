@@ -6,8 +6,7 @@
      spanning tree of a graph. For this, we use a min priority queue 
      to keep track of the edges with the smallest weight. In this
      version, we use a Fibonacci heap to implement the priority queue.
-   complexity: O(m + n log n) where m is the number of edges 
-     and n is the number of nodes.
+   complexity: O(E + V log V) 
 */
 
 #include <stdio.h>

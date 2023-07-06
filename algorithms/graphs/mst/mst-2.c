@@ -7,8 +7,7 @@
      to keep track of the edges with the smallest weight. In this
      version, we use a binary min heap to implement the priority 
      queue.
-   complexity: O(m log n) where m is the number of edges 
-     and n is the number of nodes.
+   complexity: O(E log V) 
 */
 
 #include <stdio.h>
