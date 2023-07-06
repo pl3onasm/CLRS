@@ -226,21 +226,22 @@ void initMinHeap(heap *H){
 int *mstPrim(graph *G) {
   /* computes a minimum spanning tree of G using Prim's algorithm */
   int *M = safeCalloc(G->nNodes, sizeof(int)), idx = 0;
-  heap *H = newHeap(G);
-  G->vertices[0]->key = 0;  // set the key of the root to 0
-  initMinHeap(H);           // initialize the min heap
-  
+  heap *H = newHeap(G);     // at the start all nodes are in the heap
+  G->vertices[0]->key = 0;  // we start the MST from node 0
+  initMinHeap(H);           
+
   while (H->nNodes > 0) {
-    node *u = extractMin(H);
-    if (u->parent >= 0) M[idx++] = u->id;  // add u to the MST
+    node *u = extractMin(H);  // get node incident to the MST with min key
+    if (u->parent >= 0) M[idx++] = u->id;  // add it to the MST
    
-    // iterate over u's neighbors and update their keys
+    // iterate over u's non-tree neighbors v and update if necessary
     for (list *l = u->adj; l; l = l->next) {
       node *v = l->n;
-      if (v->inHeap && l->w < v->key) {
+      if (v->inHeap && l->w < v->key) {  
         v->parent = u->id;            // set v's parent to u
         v->reversed = l->reversed;    // set v's reversed flag
         decreaseKey(H, v->heapIndex, l->w);
+          // update v's key and position in the heap
       }
     }
   }
