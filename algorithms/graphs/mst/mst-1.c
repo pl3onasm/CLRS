@@ -4,11 +4,10 @@
    license: MIT, see LICENSE file in repository root folder
    description: implements Kruskal's algorithm to compute the minimum
      spanning tree of a graph. For this, we use a disjoint set data
-     structure to keep track of the connected components.
+     structure to keep track of the components.
      Path compression and union by rank are used to improve the
      performance of the disjoint set operations.
-   complexity: O(m log n) where m is the number of edges and n is the
-     number of nodes.
+   complexity: O(E log V) 
 */
 
 #include <stdio.h>
@@ -133,12 +132,12 @@ int find(set **sets, int n) {
 
 void unionSets(set **sets, int x, int y) {
   /* merges the sets with roots x and y */
-  if (sets[x]->rank > sets[y]->rank)
-    sets[y]->parent = x;
+  if (sets[x]->rank > sets[y]->rank)  
+    sets[y]->parent = x;    // x becomes the new root
   else {
-    sets[x]->parent = y;
-    if (sets[x]->rank == sets[y]->rank)
-      sets[y]->rank++;
+    sets[x]->parent = y;    // y becomes the new root
+    if (sets[x]->rank == sets[y]->rank)  
+      sets[y]->rank++;     
   }
 }
 
@@ -157,7 +156,7 @@ edge **mstKruskal(graph *G) {
   edge **mst = safeCalloc(n, sizeof(edge*));
   set **sets = safeCalloc(n, sizeof(set*));
 
-  // initialize n sets
+  // initialize n sets: one for each node
   for (int i = 0; i < n; i++) sets[i] = newSet(i);
 
   // sort the edges by increasing weight
@@ -167,11 +166,11 @@ edge **mstKruskal(graph *G) {
   for (int i = 0; i < G->nEdges; i++) {
     if (idx == n-1) break;      // stop if the MST is complete
     edge *e = G->edges[i];     
-    int ru = find(sets, e->u);  // find the roots of the sets
+    int ru = find(sets, e->u);  // find the roots of the sets containing u and v
     int rv = find(sets, e->v);
-    if (ru != rv) {  // add e if this does not create a cycle
-      mst[idx++] = e;
-      unionSets(sets, ru, rv);
+    if (ru != rv) {  // only add e if u and v are in different sets so that no cycle is formed
+      mst[idx++] = e;           // add e to the MST
+      unionSets(sets, ru, rv);  // merge the sets containing u and v
     }
   }
   freeSets(sets, n);
