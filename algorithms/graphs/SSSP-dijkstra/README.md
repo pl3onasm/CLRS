@@ -16,6 +16,6 @@ The time complexity using a binary min-heap is $O(m \log n)$, where $m$ is the n
 
 ## Implementations
 
-Using a binary min-heap: [binary-dijkstra](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/dijkstra/dijkstra-1.c)
+Using a binary min-heap: [binary-dijkstra](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/SSSP-dijkstra/dijkstra-1.c)
 
-Using a Fibonacci heap: [fibonacci-dijkstra](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/dijkstra/dijkstra-2.c)
+Using a Fibonacci heap: [fibonacci-dijkstra](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/SSSP-dijkstra/dijkstra-2.c)

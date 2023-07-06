@@ -21,7 +21,7 @@ The resulting procedure for computing the final distance matrix $D^{n-1}$, conta
 
 If additionally we want to know the actual vertices lying on the shortest paths between any two vertices $i$ and $j$, we also need to keep track of the consecutive choices for the vertex $k$ in order to be able to reconstruct those paths. This means we need to compute an extra predecessor matrix $P$, where $p_{ij}$ equals vertex number $k$ such that $i \leadsto k \to j$ is the shortest path between $i$ and $j$.
 
-Implementation: [APSP - Bottom-Up DP](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/floyd/apsp-1.c)
+Implementation: [APSP - Bottom-Up DP](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/APSP-floyd/apsp-1.c)
 
 **Note:** The pseudocode in the textbook is needlessly cumbersome, since by inserting a simple if statement in the path extension procedure (to check if the relevant edges are actually in the graph), we can keep using the same matrix $D$ for each iteration and update it in place.
 
@@ -31,7 +31,7 @@ We can optimize the above solution, which tries to extend paths by one edge at a
 
 Note that the distance matrix $D$ will not change anymore after $n-1$ iterations, so that we can stop after *any* $r \geq n-1$ and get the same matrix $D^{n-1}$, meaning we can also conveniently stop after $r = 2^{\lceil \log_2 (n-1) \rceil} = 2^{\lceil \log_2 (n) \rceil - 1}$ iterations, and get the same result, but now in $\Theta(n^3 \log n)$ time. The predecessor matrix can be computed in the same time; we just need to initialize it differently (so that it corresponds to the initial distance matrix $D$ = $W$), and then we can also repeatedly square it, until we get $P^{n-1}$.
 
-Implementation: [APSP - Optimized Bottom-Up DP](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/floyd/apsp-2.c)
+Implementation: [APSP - Optimized Bottom-Up DP](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/APSP-floyd/apsp-2.c)
 
 ## Floyd-Warshall Algorithm
 
@@ -49,7 +49,7 @@ $$
 
 After $n-1$ iterations, we have $d_{ij}^{(n-1)} = \delta_{ij}$, which is the weight of the shortest path between any two vertices $i$ and $j$ in the given graph.
 
-Implementation: [APSP - Floyd-Warshall](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/floyd/apsp-3.c)
+Implementation: [APSP - Floyd-Warshall](https://github.com/pl3onasm/AADS/blob/main/algorithms/graphs/APSP-floyd/apsp-3.c)
 
 Notice that the code is very similar to the previous solution, except that we iterate over the intermediate vertices $k$ first, and then over the pairs of vertices $i$ and $j$. We also omit the outermost loop of $n-1$ or $\lceil \log_2 (n-1) \rceil$ iterations. Thus, the time complexity of the Floyd-Warshall algorithm is able to drop to $\Theta(n^3)$.
 
