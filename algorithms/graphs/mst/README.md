@@ -6,9 +6,9 @@ Given a connected, undirected graph $G = (V, E)$, in which each edge $(u, v) \in
 
 ## Kruskal's algorithm
 
-In Kruskal's algorithm, we start with a forest of trees, where each tree is a single vertex, and sort the edges in increasing order of their weights. We then try adding an edge to the forest, that is, we try merging the two trees that the edge connectsk. We do this for all the edges, one by one, in increasing order of their weights. If adding an edge would create a cycle, we don't add it and move on to the next edge. We continue until we have added $n - 1$ edges and have found a minimum spanning tree.
+In Kruskal's algorithm, we start with a forest of trees, where each tree is a single vertex, and sort the edges in increasing order of their weights. We then try adding an edge to the forest, that is, we try merging the two trees that the edge connects. We do this for all the edges, one by one, in increasing order of their weights. If adding an edge would create a cycle, we don't add it and move on to the next edge. We continue until we have added $n - 1$ edges and have found a minimum spanning tree.
 
-The running time of this algorithm is $O(E \log E)$, since we need to sort the edges in increasing order of their weights, and we need to perform $ |E| $ operations on a disjoint-set data structure, each of which takes $O(\alpha(V))$ time, where $\alpha(V)$ is the inverse Ackermann function. This is a very slow function, but it is still bounded by a constant, so we can ignore it. Thus, the running time of Kruskal's algorithm is $O(E \log E)$, which is the same as $O(E \log V)$, since $E \leq V^2$.
+The running time of this algorithm is $O(E \log E)$, since we need to sort the edges in increasing order of their weights, and we need to perform $|E|$ operations on a disjoint-set data structure, each of which takes $O(\alpha(V))$ time, where $\alpha(V)$ is the inverse Ackermann function. This is a very slow function, but it is still bounded by a constant, so we can ignore it. Thus, the running time of Kruskal's algorithm is $O(E \log E)$, which is the same as $O(E \log V)$, since $E \leq V^2$.
 
 In order to implement Kruskal's algorithm, we need a data structure that can efficiently perform the following operations:
 
