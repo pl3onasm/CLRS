@@ -347,10 +347,12 @@ void dijkstra(graph *G, int s) {
   while (H->nNodes > 0) {
     node *u = extractMin(H);
 
+    // relax all the neighbors of u that are in the heap (V-S)
     for (list *a = u->adj; a; a = a->next){
       node *v = a->n;
-      if (relax(u, v, a->w) && v->inHeap)
+      if (v->inHeap && relax(u, v, a->w))
         decreaseKey(H, v, v->dist);
+          // update v's key and position in the heap
     }
   }
   freeHeap(H);

@@ -215,20 +215,13 @@ node *extractMin(heap *H) {
   return min;
 }
 
-void initMinHeap(heap *H){
-  /* initializes the min heap */
-  for (int i = H->nNodes/2 - 1; i >= 0; i--)
-    minHeapify(H, i);
-}
-
 //::::::::::::::::::::::::: mst functions :::::::::::::::::::::::::://
 
 int *mstPrim(graph *G) {
   /* computes a minimum spanning tree of G using Prim's algorithm */
   int *M = safeCalloc(G->nNodes, sizeof(int)), idx = 0;
   heap *H = newHeap(G);     // at the start all nodes are in the heap
-  G->vertices[0]->key = 0;  // we start the MST from node 0
-  initMinHeap(H);           
+  H->nodes[0]->key = 0;     // we start the MST from node 0
 
   while (H->nNodes > 0) {
     node *u = extractMin(H);  // get node incident to the MST with min key

@@ -28,7 +28,7 @@ typedef enum {               // definition for boolean type
 typedef struct node {
   // graph-related fields
   int id, parent;            // node id and parent id
-  double dist;               // distance from source
+  double dist;               // distance estimate from source
   list *adj;                 // adjacency list
 
   // heap-related fields
@@ -143,7 +143,17 @@ void freeGraph(graph *G) {
 
 //::::::::::::::::::::::::: heap functions ::::::::::::::::::::::::://
 
-heap *newHeap(graph *G) {
+void swap (heap *H, int i, int j) {
+  /* swaps the nodes at indices i and j in the heap */
+  node *tmp = H->nodes[i];
+  H->nodes[i] = H->nodes[j];
+  H->nodes[j] = tmp;
+  // update the heapIndex fields
+  H->nodes[i]->heapIndex = i;
+  H->nodes[j]->heapIndex = j;
+}
+
+heap *newHeap(graph *G, int s) {
   /* creates a heap with n nodes */
   int n = G->nNodes;
   heap *H = safeCalloc(1, sizeof(heap));
@@ -158,6 +168,9 @@ heap *newHeap(graph *G) {
     u->inHeap = true;
     u->key = u->dist;
   }
+  // swap the source node with the first node
+  // all other nodes have key = INF at this point
+  swap(H, 0, s);
   return H;
 }
 
@@ -165,16 +178,6 @@ void freeHeap (heap *H) {
   /* frees the heap */
   free(H->nodes);
   free(H);
-}
-
-void swap (heap *H, int i, int j) {
-  /* swaps the nodes at indices i and j in the heap */
-  node *tmp = H->nodes[i];
-  H->nodes[i] = H->nodes[j];
-  H->nodes[j] = tmp;
-  // update the heapIndex fields
-  H->nodes[i]->heapIndex = i;
-  H->nodes[j]->heapIndex = j;
 }
 
 void minHeapify(heap *H, int i){
@@ -212,12 +215,6 @@ node *extractMin(heap *H) {
   return min;
 }
 
-void initMinHeap(heap *H){
-  /* initializes the min heap */
-  for (int i = H->nNodes/2 - 1; i >= 0; i--)
-    minHeapify(H, i);
-}
-
 //::::::::::::::::::::::: dijkstra functions ::::::::::::::::::::::://
 
 bool relax(node *u, node *v, double w) {
@@ -232,17 +229,18 @@ bool relax(node *u, node *v, double w) {
 
 void dijkstra(graph *G, int s) {
   /* computes the shortest paths from node s to all other nodes */
-  G->nodes[s]->dist = 0;
-  heap *H = newHeap(G);
-  initMinHeap(H);
+  G->nodes[s]->dist = 0;    // set the source distance to 0
+  heap *H = newHeap(G, s);  // create a new min-heap with source at root
 
   while (H->nNodes > 0) {
     node *u = extractMin(H);
 
+    // relax all the neighbors of u that are in the heap (V-S)
     for (list *a = u->adj; a; a = a->next){
       node *v = a->n;
-      if (relax(u, v, a->w) && v->inHeap)
+      if (v->inHeap && relax(u, v, a->w))
         decreaseKey(H, v->heapIndex, v->dist);
+          // update v's key and position in the heap
     }
   }
   freeHeap(H);
