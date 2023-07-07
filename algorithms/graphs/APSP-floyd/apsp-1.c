@@ -8,6 +8,7 @@
       and prints the distance and predecessor matrices.
       It then reads queries from stdin and prints the
       requested shortest paths.
+   time complexity: Θ(n⁴)
 */
 
 #include <stdio.h>
@@ -125,9 +126,8 @@ void extendPaths (double **W, double **D,
 
 void apsp (double **W, double **D, int **P, int n) {
   /* computes the all-pairs shortest paths */
-  for (int r = 0; r < n; ++r)      // extend paths by 1 edge at a time 
-    extendPaths(W, D, P, n);       // to a maximum of n-1 edges
-                              
+  for (int r = 1; r < n; ++r)      // extend paths by 1 edge at a time 
+    extendPaths(W, D, P, n);       // to a maximum of n-1 edges                 
 }
 
 void answerQueries (double **D, int **P) {

@@ -7,6 +7,7 @@
       directed graph from stdin and prints the distance and 
       predecessor matrices. It then reads queries from stdin 
       and prints the requested shortest paths.
+   time complexity: Θ(n³)
 */
 
 #include <stdio.h>
