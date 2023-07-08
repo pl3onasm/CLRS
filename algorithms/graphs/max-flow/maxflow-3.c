@@ -28,7 +28,7 @@ typedef struct edge {
   node *from, *to;        // pointers to the endnodes of the edge (u->v)
   double cap;             // capacity of the edge
   double flow;            // flow on the edge
-  bool reverse;           // true if the edge is a reverse edge
+  bool reverse;           // to separate G from Gf, the residual graph
   struct edge *rev;       // pointer to edge in the reverse direction
 } edge;
 
@@ -125,7 +125,7 @@ edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
   e->to = G->nodes[vId];
   e->from = u;
   e->cap = cap;
-  e->reverse = reverse;
+  e->reverse = reverse;        // true if the edge is in Gf
   // check if we need to resize the edge array
   if (G->edgeCap == G->nEdges) {
     G->edgeCap += 10;
@@ -142,7 +142,7 @@ edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
 }
 
 void buildGraph(graph *G) {
-  /* reads undirected graph from stdin and builds the adjacency lists */
+  /* reads directed graph from stdin and builds the adjacency lists */
   int u, v; double cap; edge *e, *r;
   while (scanf("%d %d %lf", &u, &v, &cap) == 3) {
     e = addEdge(G, u, v, cap, false); // add original edge
@@ -235,8 +235,8 @@ double dfs(graph *G, int s, int t, double flow) {
     if (e->cap - e->flow > 0 && e->to->level == n->level + 1) {
       double bneck = dfs(G, e->to->id, t, MIN(flow, e->cap - e->flow));
       if (bneck > 0) {
-        e->flow += bneck;                  // adjust flow original edge
-        e->rev->flow -= bneck;             // adjust flow reverse edge
+        e->flow += bneck;                  // adjust flow on edges
+        e->rev->flow -= bneck;             
         return bneck;
       } 
     } 
@@ -261,7 +261,7 @@ void printFlow(graph *G, int s, int t) {
           s, t, G->maxFlow, "flow");
   for (int i = 0; i < G->nEdges; ++i) {
     edge *e = G->edges[i];
-    if (!e->reverse){
+    if (!e->reverse){  // only edges in G, not in Gf
       printf("%6d %6d", e->from->id, e->to->id);
       if (e->flow > 0) printf("%13.2lf\n", e->flow);
       else printf("%13c\n", '-');

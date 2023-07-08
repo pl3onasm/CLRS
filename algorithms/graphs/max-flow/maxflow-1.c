@@ -28,7 +28,7 @@ typedef struct edge {
   int from, to;           // ids of the endpoints of the edge (u->v)
   double cap;             // capacity of the edge
   double flow;            // flow on the edge
-  bool reverse;           // true if the edge is a reverse edge
+  bool reverse;           // to separate G from Gf, the residual graph
   struct edge *rev;       // pointer to edge in the reverse direction
 } edge;
 
@@ -113,7 +113,7 @@ edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
   e->from = uId;
   e->to = vId;
   e->cap = cap;
-  e->reverse = reverse;
+  e->reverse = reverse;     // is true if the edge is exlusive to Gf
   // check if we need to resize the edge array
   if (G->edgeCap == G->nEdges) {
     G->edgeCap += 10;
@@ -131,7 +131,7 @@ edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
 }
 
 void buildGraph(graph *G) {
-  /* reads undirected graph from stdin and builds the adjacency lists */
+  /* reads directed graph from stdin and builds the adjacency lists */
   int u, v; double cap; edge *e, *r;
   while (scanf("%d %d %lf", &u, &v, &cap) == 3) {
     e = addEdge(G, u, v, cap, false); // add original edge
@@ -193,7 +193,7 @@ int dequeue (queue *Q) {
 
 double bfs(graph *G, int s, int t, edge **path) {
   /* tries to find an augmenting path from s to t using BFS */
-  memset(path, 0, G->nNodes * sizeof(edge*));
+  memset(path, 0, G->nNodes * sizeof(edge*)); // all edges unexplored
   double flow = INF;
   queue *q = newQueue(G->nNodes); 
   enqueue(q, s);    // enqueue source node
@@ -203,7 +203,7 @@ double bfs(graph *G, int s, int t, edge **path) {
     // visit all outgoing edges from n
     for (int i = 0; i < n->nAdj; i++) {  
       edge *e = n->adj[i];
-      if (e->cap - e->flow > 0 && !path[e->to]) {
+      if (!path[e->to] && e->cap - e->flow > 0) {
         flow = MIN(flow, e->cap - e->flow);
         path[e->to] = e;
         if (e->to == t) {
@@ -220,15 +220,15 @@ double bfs(graph *G, int s, int t, edge **path) {
 
 void edmondsKarp(graph *G, int s, int t) {
   /* finds the maximum flow from s to t using Edmonds-Karp */
-  edge **path = safeCalloc(G->nNodes, sizeof(edge*));  
-  double flow;
+  edge **path = safeCalloc(G->nNodes, sizeof(edge*));  // simple path from s to t
+  double flow;              // flow on the path                              
   while ((flow = bfs(G, s, t, path))) {
-    G->maxFlow += flow;
+    G->maxFlow += flow;     // augment the flow in G by path flow
     // update flow on each edge in the path
     for (int i = t; i != s; i = path[i]->from){
       edge *e = path[i];
-      e->flow += flow;      // update flow on original edge
-      e->rev->flow -= flow; // update flow on reverse edge
+      e->flow += flow;      // update flow on both edges
+      e->rev->flow -= flow; 
     }
   }
   free(path);
@@ -241,7 +241,7 @@ void printFlow(graph *G, int s, int t) {
           s, t, G->maxFlow, "flow");
   for (int i = 0; i < G->nEdges; ++i) {
     edge *e = G->edges[i];
-    if (!e->reverse){
+    if (!e->reverse){  // only egdes in G, not in Gf
       printf("%6d %6d", e->from, e->to);
       if (e->flow > 0) printf("%13.2lf\n", e->flow);
       else printf("%13c\n", '-');

@@ -28,7 +28,7 @@ typedef struct edge {
   int from, to;           // ids of the endpoints of the edge (u->v)
   double cap;             // capacity of the edge
   double flow;            // flow on the edge
-  bool reverse;           // true if the edge is a reverse edge
+  bool reverse;           // true if the edge is exclusive to Gf
   struct edge *rev;       // pointer to edge in the reverse direction
 } edge;
 
@@ -111,7 +111,7 @@ edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
   e->from = uId;
   e->to = vId;
   e->cap = cap;
-  e->reverse = reverse;
+  e->reverse = reverse;        // true if the edge is exclusive to Gf
   // check if we need to resize the edge array
   if (G->edgeCap == G->nEdges) {
     G->edgeCap += 10;
@@ -129,7 +129,7 @@ edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
 }
 
 void buildGraph(graph *G) {
-  /* reads undirected graph from stdin and builds the adjacency lists */
+  /* reads directed graph from stdin and builds the adjacency lists */
   int u, v; double cap; edge *e, *r;
   while (scanf("%d %d %lf", &u, &v, &cap) == 3) {
     G->maxCap = MAX(G->maxCap, cap);   // update max capacity seen so far
@@ -161,8 +161,9 @@ double dfs(graph *G, int s, int t, double flow, int delta) {
       u->visited = true;            // mark as visited
       if ((bneck = dfs(G, e->to, t, 
            MIN(flow, e->cap - e->flow), delta))) {
-        e->flow += bneck;           // update flow original edge              
-        e->rev->flow -= bneck;      // update flow reverse edge            
+        // path flow is determined by the minimum edge capacity
+        e->flow += bneck;           // update flow on edges  
+        e->rev->flow -= bneck;            
         u->visited = false;         // mark as unvisited
         return bneck;
       }               
@@ -174,11 +175,11 @@ double dfs(graph *G, int s, int t, double flow, int delta) {
 
 void maxFlow(graph *G, int s, int t) {
   /* finds the maximum flow from s to t using capacity scaling */
-  double flow; 
+  double flow;                      // flow on augmenting path
   int delta = pow2(G->maxCap);      // initial threshold
   for (; delta > 0; delta >>= 1) {     
     while ((flow = dfs(G, s, t, INF, delta)))   
-      G->maxFlow += flow;           // update the max flow
+      G->maxFlow += flow;           // augment the flow in G by path flow
   }
 }
 
@@ -189,7 +190,7 @@ void printFlow(graph *G, int s, int t) {
           s, t, G->maxFlow, "flow");
   for (int i = 0; i < G->nEdges; ++i) {
     edge *e = G->edges[i];
-    if (!e->reverse){
+    if (!e->reverse){   // only edges in G, not Gf
       printf("%6d %6d", e->from, e->to);
       if (e->flow > 0) printf("%13.2lf\n", e->flow);
       else printf("%13c\n", '-');
