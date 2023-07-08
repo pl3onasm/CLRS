@@ -27,7 +27,7 @@ typedef struct edge {
   node *from, *to;        // pointers to the endpoints of the edge (u->v)
   double cap;             // capacity of the edge
   double flow;            // flow on the edge
-  bool reverse;           // true if the edge is a reverse edge
+  bool reverse;           // to separate Gf from G
   struct edge *rev;       // pointer to edge in the reverse direction
 } edge;
 
@@ -113,7 +113,7 @@ edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
   e->to = G->nodes[vId];
   e->from = u;
   e->cap = cap;
-  e->reverse = reverse;
+  e->reverse = reverse;        // true if the edge is exclusive to Gf
   // check if we need to resize the edge array
   if (G->edgeCap == G->nEdges) {
     G->edgeCap += 10;
@@ -130,7 +130,7 @@ edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
 }
 
 void buildGraph(graph *G) {
-  /* reads undirected graph from stdin and builds the adjacency lists */
+  /* reads directed graph from stdin and builds the adjacency lists */
   int u, v; double cap; edge *e, *r;
   while (scanf("%d %d %lf", &u, &v, &cap) == 3) {
     e = addEdge(G, u, v, cap, false); // add original edge
@@ -163,8 +163,8 @@ void initPreflow(graph *G, int s) {
   for (int i = 0; i < u->nAdj; i++) {
     // set full flow on all edges from s
     edge *e = u->adj[i];
-    e->flow = e->cap;         // set flow on original edge
-    e->rev->flow = -e->cap;   // set flow on reverse edge
+    e->flow = e->cap;         // set flow on edges
+    e->rev->flow = -e->cap;   
     e->to->excess += e->cap;  // update excess at v
   }
 }
@@ -172,8 +172,8 @@ void initPreflow(graph *G, int s) {
 void push(graph *G, node *u, node *v, edge *e) {
   /* pushes flow from u to v along edge e */
   double delta = MIN(u->excess, e->cap - e->flow);
-  e->flow += delta;           // update flow on original edge
-  e->rev->flow -= delta;      // update flow on reverse edge
+  e->flow += delta;           // update flow on edges
+  e->rev->flow -= delta;      
   u->excess -= delta;         // update excess at u
   v->excess += delta;         // update excess at v
 }
@@ -240,7 +240,7 @@ void printFlow(graph *G, int s, int t) {
           s, t, G->maxFlow, "flow");
   for (int i = 0; i < G->nEdges; ++i) {
     edge *e = G->edges[i];
-    if (!e->reverse){
+    if (!e->reverse){                // print original edges only
       printf("%6d %6d", e->from->id, e->to->id);
       if (e->flow > 0) printf("%13.2lf\n", e->flow);
       else printf("%13c\n", '-');

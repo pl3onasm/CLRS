@@ -125,7 +125,7 @@ edge *addEdge(graph *G, int uId, int vId, double cap, bool reverse) {
   e->to = G->nodes[vId];
   e->from = u;
   e->cap = cap;
-  e->reverse = reverse;        // true if the edge is in Gf
+  e->reverse = reverse;        // true if the edge is exclusive to Gf
   // check if we need to resize the edge array
   if (G->edgeCap == G->nEdges) {
     G->edgeCap += 10;
