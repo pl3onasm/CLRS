@@ -34,11 +34,15 @@ void freeNat(Nat *n) {
 static void checkCapacity(Nat *n, size_t capacity) {
   if (n->capacity <= capacity) {
     n->capacity = 2 * capacity;
+      // we take the opportunity to remove leading zeros
+    if (n->start) {
+      memmove(n->digits, n->digits + n->start, n->size);
+      n->start = 0;
+    }
     n->digits = safeRealloc(n->digits, n->capacity * sizeof(char));
 
-    // initialize new memory to zero
-    memset(n->digits + n->size + n->start, 0, 
-           n->capacity - n->size - n->start);
+      // initialize new memory to zero
+    memset(n->digits + n->size, 0, n->capacity - n->size);
   }
 }
 
