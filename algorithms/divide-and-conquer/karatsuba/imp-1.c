@@ -17,10 +17,11 @@
 // and in the end everything is converted back to char
 Nat *mulNat(Nat *x, Nat *y) {
 
-  Nat *res = newNat(x->size + y->size);
+  Nat *res = newNat(x->size + y->size + 1);
   res->size = x->size + y->size;
 
     // multiplies each digit of x with each digit of y
+    // and adds the result to the corresponding position
   for (size_t i = x->size; i--; ) 
     for (size_t j = y->size; j--; ) {
       int s = (x->digits[i] - '0') * (y->digits[j] - '0') 
@@ -29,14 +30,15 @@ Nat *mulNat(Nat *x, Nat *y) {
       res->digits[i + j] += s / 10;
     }
 
-    // compute start index
+    // compute start index and
   while (res->start < res->size && res->digits[res->start] == 0)
     res->start++;
 
     // convert back to char
-  for (size_t i = 0; i < res->size; i++)
-    res->digits[res->start + i] += '0';
+  for (size_t i = res->start; i < res->size; i++)
+    res->digits[i] += '0';
   
+  res->size -= res->start;
   return res;
 }
 
