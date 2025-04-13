@@ -30,7 +30,7 @@ Nat *mulNat(Nat *x, Nat *y) {
       res->digits[i + j] += s / 10;
     }
 
-    // compute start index and
+    // compute start index
   while (res->start < res->size && res->digits[res->start] == 0)
     res->start++;
 
