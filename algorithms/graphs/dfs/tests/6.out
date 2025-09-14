@@ -1,0 +1,50 @@
+
+--------------------
+ Graph
+ Directed
+ Unweighted
+ Vertices: 8
+ Edges: 13
+--------------------
+
+   s[2]: w, z
+   t[2]: u, v
+   u[2]: v, t
+   v[2]: s, w
+   w[1]: x
+   x[1]: z
+   y[1]: x
+   z[2]: w, y
+
+
+VERTEX DISCOVERY AND FINISH TIMES
+---------------------------------
+Label: discovery time, finish time
+
+   y: 1, 8
+   w: 4, 5
+   s: 9, 10
+   x: 2, 7
+   v: 11, 12
+   u: 13, 16
+   z: 3, 6
+   t: 14, 15
+
+
+EDGE CLASSIFICATION
+-------------------
+Source -> Destination: edge type
+
+   y -> x:  T
+   w -> x:  B
+   s -> w:  C
+   s -> z:  C
+   x -> z:  T
+   v -> s:  C
+   v -> w:  C
+   u -> v:  C
+   u -> t:  T
+   z -> w:  T
+   z -> y:  B
+   t -> u:  B
+   t -> v:  C

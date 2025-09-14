@@ -1,0 +1,70 @@
+
+--------------------
+ Graph
+ Directed
+ Unweighted
+ Vertices: 14
+ Edges: 21
+--------------------
+
+   m[3]: r, x, q
+   n[3]: o, u, q
+   o[3]: v, s, r
+   p[3]: z, s, o
+   q[1]: t
+   r[2]: y, u
+   s[1]: r
+   t[0]
+   u[1]: t
+   v[2]: x, w
+   w[1]: z
+   x[0]
+   y[1]: v
+   z[0]
+
+
+VERTEX DISCOVERY AND FINISH TIMES
+---------------------------------
+Label: discovery time, finish time
+
+   q: 1, 4
+   o: 5, 22
+   t: 2, 3
+   p: 23, 24
+   y: 16, 17
+   n: 25, 26
+   w: 9, 12
+   s: 14, 21
+   x: 7, 8
+   v: 6, 13
+   m: 27, 28
+   r: 15, 20
+   u: 18, 19
+   z: 10, 11
+
+
+EDGE CLASSIFICATION
+-------------------
+Source -> Destination: edge type
+
+   q -> t:  T
+   o -> v:  T
+   o -> s:  T
+   o -> r:  F
+   p -> z:  C
+   p -> s:  C
+   p -> o:  C
+   y -> v:  C
+   n -> o:  C
+   n -> u:  C
+   n -> q:  C
+   w -> z:  T
+   s -> r:  T
+   v -> x:  T
+   v -> w:  T
+   m -> r:  C
+   m -> x:  C
+   m -> q:  C
+   r -> y:  T
+   r -> u:  T
+   u -> t:  C

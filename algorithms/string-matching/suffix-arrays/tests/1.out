@@ -1,0 +1,6 @@
+Pattern: ta
+Shifts (2): 4, 2
+Longest repeated substrings:
+  2 times: atat
+Number of unique substrings: 18
+Longest palindromic substring: atata

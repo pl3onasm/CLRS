@@ -1,0 +1,9 @@
+OBST cost: 2.10
+
+OBST structure:
+
+-| K0 (1)
+K1 (0)
+---| K2 (3)
+--| K3 (2)
+-| K4 (1)
