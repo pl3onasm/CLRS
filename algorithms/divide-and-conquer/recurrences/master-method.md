@@ -1,5 +1,7 @@
 $\huge{\color{Cadetblue}\text{The Master Method}}$
 
+<br/>
+
 The master method provides a straightforward way to obtain asymptotic bounds for a broad class of divide-and-conquer recurrences of the following form:
 
 $$
@@ -18,9 +20,13 @@ The master method consists of three cases, which are determined by comparing the
 
 If none of these cases apply, then the master method cannot be used to solve the recurrence, and other methods should be used instead.
 
+<br/>
+
 $\Large{\color{darkseagreen}\text{Examples}}$
 
-#### 1. Binary Search
+<br/>
+
+$\color{cornflowerblue}{\text{1. Binary Search}}$
   
 The recurrence for the running time of binary search is given by:
 
@@ -40,7 +46,9 @@ $$
 T(n) = \Theta(\log n)
 $$
 
-#### 2. Strassen's Algorithm for Matrix Multiplication 
+<br/>
+
+$\color{cornflowerblue}{\text{2. Strassen's Matrix Multiplication}}$
 
 The recurrence for the running time of Strassen's algorithm is given by:
 
@@ -60,7 +68,9 @@ $$
 T(n) = \Theta(n^{\log_2 7}) \approx \Theta(n^{2.81})
 $$
 
-#### 3. Merge Sort
+<br/>
+
+$\color{cornflowerblue}{\text{3. Merge Sort}}$
 
 The recurrence for the running time of merge sort is given by:
 
@@ -82,7 +92,9 @@ $$
 
 Note that this is the same recurrence and solution as for the closest pair of points problem using the divide and conquer approach.
 
-#### 4. Karatsuba's Algorithm for Integer Multiplication 
+<br/>
+
+$\color{cornflowerblue}{\text{4. Karatsuba's Algorithm}}$
 
 The recurrence for the running time of Karatsuba's algorithm is given by:
 
@@ -101,7 +113,9 @@ $$
 T(n) = \Theta(n^{\log_2 3}) \approx \Theta(n^{1.58})
 $$
 
-#### 5. Matrix chain multiplication 
+<br/>
+
+$\color{cornflowerblue}{\text{5. Matrix Chain Multiplication}}$
 
 The recurrence for the running time of the matrix chain multiplication problem using a naive divide and conquer approach is given by:
 
