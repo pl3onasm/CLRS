@@ -11,7 +11,7 @@
 
 //===================================================================
 // Merges two sorted subarrays into one sorted array
-void merge (int *arr, int left, int invIndex, int right) {
+void merge (int *arr, size_t left, size_t invIndex, size_t right) {
     // allocate memory for an auxiliary array to 
     // store the combined sorted array
   int *sorted = safeMalloc((right - left) * sizeof(int));
@@ -27,7 +27,7 @@ void merge (int *arr, int left, int invIndex, int right) {
   while (l < invIndex) sorted[s++] = arr[l++];
   while (r < right) sorted[s++] = arr[r++];
     // copy the merged array back to the input array
-  for (int i = left; i < right; i++) 
+  for (size_t i = left; i < right; i++) 
     arr[i] = sorted[i - left];
   free(sorted);
 }
