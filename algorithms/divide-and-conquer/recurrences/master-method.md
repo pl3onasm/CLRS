@@ -18,7 +18,7 @@ If none of these cases apply, then the master method cannot be used to solve the
 
 $\Large{\color{darkseagreen}\text{Examples}}$
 
-1. **Binary Search**
+1. **Binary Search**  
    The recurrence for the running time of binary search is given by:
 
     $$  
@@ -37,7 +37,7 @@ $\Large{\color{darkseagreen}\text{Examples}}$
     T(n) = \Theta(\log n)
     $$
 
-2. **Strassen's Algorithm for Matrix Multiplication**
+2. **Strassen's Algorithm for Matrix Multiplication**  
    The recurrence for the running time of Strassen's algorithm is given by:
 
     $$
@@ -56,7 +56,7 @@ $\Large{\color{darkseagreen}\text{Examples}}$
     T(n) = \Theta(n^{\log_2 7}) \approx \Theta(n^{2.81})
     $$
 
-3. **Merge Sort**
+3. **Merge Sort**  
    The recurrence for the running time of merge sort is given by:
 
    $$
@@ -77,12 +77,11 @@ $\Large{\color{darkseagreen}\text{Examples}}$
 
    Note that this is the same recurrence and solution as for the closest pair of points problem using the divide and conquer approach.
 
-4. **Karatsuba's Algorithm for Integer Multiplication**
+4. **Karatsuba's Algorithm for Integer Multiplication**  
    The recurrence for the running time of Karatsuba's algorithm is given by:
 
    $$
-   \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 3T(n/2) + \Theta(n) \space}
-   $$
+   \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 3T(n/2) + \Theta(n) \space}$$
 
    Here, $a = 3$, $b = 2$, and $f(n) = \Theta(n)$. We have $n^{\log_b a} = n^{\log_2 3} \approx n^{1.58}$. So, $f(n)$ is polynomially smaller than $n^{\log_b a}$:
 
@@ -96,7 +95,7 @@ $\Large{\color{darkseagreen}\text{Examples}}$
    T(n) = \Theta(n^{\log_2 3}) \approx \Theta(n^{1.58})
    $$
 
-5. **Matrix chain multiplication**
+5. **Matrix chain multiplication**  
    The recurrence for the running time of the matrix chain multiplication problem using a naive divide and conquer approach is given by:
 
    $$
