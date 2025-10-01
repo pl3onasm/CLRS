@@ -60,7 +60,7 @@ $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 8T(n/2) + \Theta(1)\space}\\
 $$
 
-By case 1 of the master theorem (CLRS 4.5), we can conclude that $T(n) = \Theta(n^3)$, which is the same time complexity as the naive algorithm, and so the question arises whether it is possible to break this cubic barrier.
+By case 1 of the  [master theorem](../../theory/recurrences/master-method.md), we can conclude that $T(n) = \Theta(n^3)$, which is the same time complexity as the naive algorithm, and so the question arises whether it is possible to break this cubic barrier.
 
 Implementation: [Matrix Multiplication - D&C](https://github.com/pl3onasm/AADS/blob/main/algorithms/divide-and-conquer/strassen/mmp-1.c)
 
@@ -115,6 +115,6 @@ $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 7T(n/2) + \Theta(n^2) \space}
 $$
 
-By case 1 of the master theorem (CLRS 4.5), we conclude that $T(n)$ $= \Theta(n^{\log{7}})$ $= \mathcal{O}(n^{2.8074})$, which is a significant improvement over the naive algorithm.
+By case 1 of the  [master theorem](../../theory/recurrences/master-method.md), we conclude that $T(n)$ $= \Theta(n^{\log{7}})$ $= \mathcal{O}(n^{2.8074})$, which is a significant improvement over the naive algorithm.
 
 Implementation: [Matrix Multiplication - Strassen](https://github.com/pl3onasm/AADS/blob/main/algorithms/divide-and-conquer/strassen/mmp-2.c)

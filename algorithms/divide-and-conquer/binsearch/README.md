@@ -18,7 +18,7 @@ $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = T(n/2) + \Theta(1) \space}
 $$
 
-According to the master theorem, case 2, the solution is then $T(n) = \Theta(\log n)$.
+According to the [master theorem](../../theory/recurrences/master-method.md), case 2, the solution is then $T(n) = \Theta(\log n)$.
 
 <br/>
 

@@ -16,7 +16,13 @@ Now, if the element in the left subarray turns out to be less than (or equal to)
 
 Since merge sort recursively ${\color{peru}\text{divides}}$ the array into smaller subarrays in order to merge the conquered, sorted subarrays back together in the end, we are able to count the total number of inversions in the input array by counting the number of inversions in each (${\color{peru}\text{conquered}}$) subarray, which are themselves a result of the merge step, and in the ${\color{peru}\text{recombination}}$ of these subarrays. This can be done by adding a counter to the merge procedure that increments by the number of remaining elements in the left subarray whenever an inversion is found. The total number of inversions in the input array is then the sum of the number of inversions in each recursively divided subarray and the number of inversions in the recombination of these subarrays.  
 
-The time complexity of this algorithm is $\mathcal{O}(n \log n)$, since the merge step takes $\mathcal{O}(n)$ time and the recursion bottoms out after $\mathcal{O}(\log n)$ levels of recursion.
+The time complexity of this algorithm is $\mathcal{O}(n \log n)$, since the merge step takes $\mathcal{O}(n)$ time and the recursion bottoms out after $\mathcal{O}(\log n)$ levels of recursion. Just like merge sort, the recurrence for the running time is given by:
+
+$$
+\color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 2T(n/2) + \Theta(n) \space}
+$$
+
+The solution to this recurrence is $T(n) = \Theta(n \log n)$, as shown in the [master method](../../theory/recurrences/master-method.md).
 
 Implementation: [Inversion count](https://github.com/pl3onasm/AADS/blob/main/algorithms/divide-and-conquer/inversion-count/inversioncount.c)
 

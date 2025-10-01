@@ -28,7 +28,7 @@ $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 2T(n/2) + \Theta(n) \space}
 $$
 
-Using the master theorem, case 2, yields the solution $\Theta(n \log n)$.
+Using the  [master theorem](../../theory/recurrences/master-method.md), case 2, yields the solution $\Theta(n \log n)$.
 
 Implementation: [Linearithmic MSP](https://github.com/pl3onasm/AADS/blob/main/algorithms/divide-and-conquer/max-subarray/msp-2.c)
 

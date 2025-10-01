@@ -12,6 +12,7 @@ ${\Large\color{peru}\text{Algorithms}}$
 * [String matching](algorithms/string-matching)
 * [Sorting](algorithms/sorting)
 * [Fast Fourier Transform](algorithms/fft)
+* [Theory](algorithms/theory)
 
 <br/>
 
