@@ -18,7 +18,7 @@ If we want to multiply two $n \times n$ matrices $A$ and $B$, we can do so by ta
       for j = 1 to n
         Cᵢⱼ = 0
         for k = 1 to n
-          Cᵢⱼ += Aᵢⱼ * Bᵢⱼ
+          Cᵢⱼ += Aᵢₖ * Bₖⱼ
     return C
 ```
 
@@ -52,7 +52,7 @@ $$ \begin{align*}
   \end{align*}
 $$
 
-Repeatedly dividing the matrices in submatrices of size $n/2 \times n/2$ in order to be able to apply a divide and conquer algorithm, however, presumes that $n$ is a power of two. Only this way can we keep halving the matrix dimensions until we reach the base case, where we have matrices of size $1 \times 1$, which is nothing but ${\color{peru}\text{scalar multiplication}}$. If $n$ is not a power of two, we can simply pad the original matrices with zeros until we get a matrix of size $2^k \times 2^k$, where $k$ is the smallest integer such that $2^k \geq n$. Padding the matrices this way makes it even possible to generalize the algorithm to input matrices of arbitrary dimensions, while the core algorithm works for matrices of size $2^k \times 2^k$. The padding does not affect the time complexity either, since it only adds a constant number of operations to the first recursive step of the algorithm.
+Repeatedly dividing the matrices in submatrices of size $n/2 \times n/2$ in order to be able to apply a divide and conquer algorithm, however, presumes that $n$ is a power of two. Only this way can we keep halving the matrix dimensions until we reach the base case, where we have matrices of size $1 \times 1$, which is nothing but ${\color{peru}\text{scalar multiplication}}$. If $n$ is not a power of two, we can simply pad the original matrices with zeros until we get a matrix of size $2^k \times 2^k$, where $k$ is the smallest integer such that $2^k \geq n$. Padding the matrices this way makes it even possible to generalize the algorithm to input matrices of arbitrary dimensions, while the core algorithm works for matrices of size $2^k \times 2^k$. The padding does not affect the time complexity either, since padding can at most increase $n$ to the next power of two, so the blow-up factor is less than 2, and the asymptotic time complexity remains the same. This can be formally proven by using the [Akra-Bazzi method](../../theory/recurrences/akra-bazzi.md), where we can set the perturbation functions $h_i(n)$ to $\Theta(1)$.
 
 Looking at the above formula, we can see that we need to compute 8 products of matrices of size $n/2 \times n/2$ at each dividing step. If we use index calculations to partition the matrices at each step, the partitioning itself only takes $\Theta(1)$ time. All this leads to the following recurrence relation:
 
@@ -115,6 +115,6 @@ $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 7T(n/2) + \Theta(n^2) \space}
 $$
 
-By case 1 of the  [master theorem](../../theory/recurrences/master-method.md), we conclude that $T(n)$ $= \Theta(n^{\log{7}})$ $= \mathcal{O}(n^{2.8074})$, which is a significant improvement over the naive algorithm.
+By case 2 of the  [master theorem](../../theory/recurrences/master-method.md), we conclude that $T(n)$ $= \Theta(n^{\log{7}})$ $= \mathcal{O}(n^{2.8074})$, which is a significant improvement over the naive algorithm. 
 
 Implementation: [Matrix Multiplication - Strassen](https://github.com/pl3onasm/AADS/blob/main/algorithms/divide-and-conquer/strassen/mmp-2.c)
