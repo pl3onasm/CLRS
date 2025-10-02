@@ -123,16 +123,16 @@ $\color{cornflowerblue}{\text{3. Example 3}}$
 Given is a function that satisfies the recurrence relation:  
 
 $$
-\color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 2T(n/2) + n/\log n \space}
+\color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 2T(n/2) + n/\log {n} \space}
 $$
 
-Note that this recurrence cannot be solved using the Master Theorem, since the driving function $f(n) = n/\log n$ cannot be expressed in the form $n^{\log_b a - \epsilon}$, $n^{\log_b a} \log^k n$, or $n^{\log_b a + \epsilon}$ for any $\epsilon > 0$ and $k \geq 0$.
+Note that this recurrence cannot be solved using the Master Theorem, since the driving function $f(n) = n/\log{n}$ cannot be expressed in the form $n^{\log_b a - \epsilon}$, $n^{\log_b a} \log^k n$, or $n^{\log_b a + \epsilon}$ for any $\epsilon > 0$ and $k \geq 0$.
 
-Here, we have $a_1 = 2$, $b_1 = 2$, and $f(n) = n/\log n$. We need to find $p$ such that:
+Here, we have $a_1 = 2$, $b_1 = 2$, and $f(n) = n/\log {n}$. We need to find $p$ such that:
 
 $$
 \begin{align*}
-\frac{2}{2^p} = 1 &\implies 2^{1-p} = 1 \\ 
+\frac{2}{2^p} = 1 &\implies 2^{1-p} = 1 \\
 & \implies p = 1
 \end{align*}
 $$
@@ -143,7 +143,7 @@ $$
 \begin{align*}
 \int_{1}^{n} \frac{f(u)}{u^{p+1}} du &= \int_{1}^{n} \frac{u/\log u}{u^{1+1}} du \\
 &= \int_{1}^{n} \frac{1}{u \log u} du \\
-&= \ln(\log n)
+&= \ln(\log {n})
 \end{align*}
 $$
 
@@ -151,11 +151,11 @@ Thus, we have:
 
 $$
 \begin{align*}
-T(n) &= \Theta\left( n^1 \left( 1 + \ln(\log n) \right) \right) \\
-&= \Theta(n \ln (\log n) + n) \\
-&= \Theta(n \ln (\log n)) \\
-&= \Theta\left(n \frac{\log(\log n)}{\ln(2)}\right) \\
-&= \Theta(n \log(\log n))
+T(n) &= \Theta\left( n^1 \left( 1 + \ln(\log {n}) \right) \right) \\
+&= \Theta(n \ln (\log {n}) + n) \\
+&= \Theta(n \: \ln (\log {n})) \\
+&= \Theta\left(n \: \frac{\log(\log {n})}{\ln(2)}\right) \\
+&= \Theta(n \: \log(\log {n}))
 \end{align*}
 $$
 
