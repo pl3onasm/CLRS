@@ -2,7 +2,7 @@ $\huge{\color{Cadetblue}\text{Akra-Bazzi Method}}$
 
 <br/>
 
-The Akra-Bazzi method is a powerful technique for solving a class of divide-and-conquer recurrences that are more general than those typically handled by the Master Theorem. It is particularly useful for recurrences that take the following form for $ n > n_0$:
+The Akra-Bazzi method is a powerful technique for solving a class of divide-and-conquer recurrences that are more general than those typically handled by the Master Theorem. It is particularly useful for recurrences that take the following form for $n > n_0$:
 
 $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = f(n) + \sum_{i=1}^{k} a_i T(\frac{n}{b_i} + h_i(n)) \space}
@@ -12,7 +12,7 @@ where:
 
 - $a_i$ and $b_i$ are constants with $a_i > 0$ and $b_i > 1$,
 - $h_i(n)$ are functions that satisfy $|h_i(n)| = O(n / \log^2 n)$,
-- $f(n)$ must be polynomially bounded: $| f'(n) | \leq n^c$ for some constant $ c$,
+- $f(n)$ must be polynomially bounded: $| f'(n) | \leq n^c$ for some constant $c$,
 - $k$ is a positive constant.
 
 The Akra-Bazzi method provides a way to find the asymptotic behavior of $T(n)$ by solving the following integral equation:
@@ -126,7 +126,7 @@ $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 2T(n/2) + n/\log n \space}
 $$
 
-Note that this recurrence cannot be solved using the Master Theorem, since the driving function $ f(n) = n/\log n$ cannot be expressed in the form $ n^{\log_b a - \epsilon}$, $ n^{\log_b a} \log^k n$, or $ n^{\log_b a + \epsilon}$ for any $ \epsilon > 0$ and $ k \geq 0$.
+Note that this recurrence cannot be solved using the Master Theorem, since the driving function $f(n) = n/\log n$ cannot be expressed in the form $n^{\log_b a - \epsilon}$, $n^{\log_b a} \log^k n$, or $n^{\log_b a + \epsilon}$ for any $\epsilon > 0$ and $k \geq 0$.
 
 Here, we have $a_1 = 2$, $b_1 = 2$, and $f(n) = n/\log n$. We need to find $p$ such that:
 
