@@ -48,6 +48,6 @@ $$
 
 where the last inequality holds for $c \geq 10d$. This shows that $T(n) = \mathcal{O}(n)$, and thus the worst-case running time of the algorithm is indeed linear.
 
-Note that we can also use the Akra-Bazzi method to solve the above recurrence relation.
+Note that we can also use the [Akra-Bazzi method](../../theory/recurrences/akra-bazzi.md) to solve the above recurrence relation, which gives the same result.
 
 Implementation: [Quickselect 2](https://github.com/pl3onasm/AADS/blob/main/algorithms/divide-and-conquer/quickselect/qselect-2.c)

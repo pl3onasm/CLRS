@@ -18,7 +18,7 @@ where:
 The Akra-Bazzi method provides a way to find the asymptotic behavior of $T(n)$ by solving the following integral equation:
 
 $$
-T(n) = \Theta\left( n^p \left( 1 + \int_{1}^{n} \frac{f(u)}{u^{p+1}} du \right) \right)
+T(n) = \Theta\left( n^p \left( 1 + \displaystyle\int_{1}^{n} \frac{f(u)}{u^{p+1}} du \right) \right)
 $$
 
 where $p$ is the unique solution to the equation:
@@ -52,8 +52,8 @@ Now, we compute the integral:
 
 $$
 \begin{align*}
-\int_{1}^{n} \frac{f(u)}{u^{p+1}} du &= \int_{1}^{n} \frac{u}{u^{1+1}} du \\
-&= \int_{1}^{n} \frac{1}{u} du \\
+\displaystyle\int_{1}^{n} \frac{f(u)}{u^{p+1}} du &= \displaystyle\int_{1}^{n} \frac{u}{u^{1+1}} du \\
+&= \displaystyle\int_{1}^{n} \frac{1}{u} du \\
 &= \ln(n)
 \end{align*}
 $$
@@ -97,8 +97,8 @@ Now, we compute the integral:
 
 $$
 \begin{align*}
-\int_{1}^{n} \frac{f(u)}{u^{p+1}} du &= \int_{1}^{n} \frac{u}{u^{p+1}} du \\
-&= \int_{1}^{n} u^{-p} du \\
+\displaystyle\int_{1}^{n} \frac{f(u)}{u^{p+1}} du &= \displaystyle\int_{1}^{n} \frac{u}{u^{p+1}} du \\
+&= \displaystyle\int_{1}^{n} u^{-p} du \\
 &= \left[ \frac{u^{1-p}}{1-p} \right]_{1}^{n} \\
 &= \frac{n^{1-p} - 1}{1-p}
 \end{align*}
@@ -141,8 +141,8 @@ Now, we compute the integral:
 
 $$
 \begin{align*}
-\int_{1}^{n} \frac{f(u)}{u^{p+1}} du &= \int_{1}^{n} \frac{u/\log u}{u^{1+1}} du \\
-&= \int_{1}^{n} \frac{1}{u \log u} du \\
+\displaystyle\int_{1}^{n} \frac{f(u)}{u^{p+1}} du &= \displaystyle\int_{1}^{n} \frac{u/\log (u)}{u^{1+1}} du \\
+&= \displaystyle\int_{1}^{n} \frac{1}{u\space \log (u)} du \\
 &= \ln(\log (n))
 \end{align*}
 $$
