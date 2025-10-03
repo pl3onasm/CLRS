@@ -20,7 +20,7 @@ The master method consists of three cases, which are determined by comparing the
 
 It is good to note that it is assumed that the work done at the leaves of the recursion tree is constant, i.e., $T(1) = \Theta(1)$. If the base cost is not constant or there are offset terms, we need to resort to Akra-Bazzi or the recursion tree method.
 
-Also noteworthy is that there is a significant difference in how the master method is presented in editions 3 and 4 of CLRS. This is why the recurrence $T(n) = 2T(n/2) + n/\log n$ is not covered by the master method in edition 3, but it is covered in edition 4. In edition 3, the master method requires $f(n)$ to be polynomially larger or smaller than $n^{\log_b a}$, while in edition 4, it allows for more flexibility with logarithmic factors. The above presentation follows edition 4.
+Also noteworthy is that there is a significant difference in how the master method is presented in editions 3 and 4 of CLRS. This is why the recurrence $T(n) = 2T(n/2) + n \log n$ is not covered by the master method in edition 3, but it is covered in edition 4. In edition 3, the master method requires $f(n)$ to be polynomially larger or smaller than $n^{\log_b a}$, while in edition 4, it allows for more flexibility with logarithmic factors. The above presentation follows edition 4.
 
 <br/>
 
