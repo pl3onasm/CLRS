@@ -19,7 +19,7 @@ $\Large{\color{darkseagreen}\text{Examples}}$
 
 <br/>
 
-$\color{cornflowerblue}{\text{1. Example 1}}$
+$\Large{\color{cornflowerblue}\text{1. Example 1}}$
 
 Consider the recurrence:
 
@@ -59,7 +59,7 @@ A matching lower bound can be shown similarly, thus proving that $T(n) = \Theta(
 
 <br/>
 
-$\color{cornflowerblue}{\text{2. Example 2}}$
+$\Large{\color{cornflowerblue}\text{2. Example 2}}$
  
 Consider the recurrence:
 
@@ -97,7 +97,7 @@ A matching lower bound can be shown similarly, thus proving that $T(n) = \Theta(
 
 <br/>
 
-$\color{cornflowerblue}{\text{3. Example 3}}$
+$\Large{\color{cornflowerblue}\text{3. Example 3}}$
 
 Consider the recurrence:
 
@@ -135,7 +135,7 @@ Moreover, since $T(n) = T(n - 1) + n$ expands to the sum of the first $n$ intege
 
 <br/>
 
-$\color{cornflowerblue}{\text{4. Example 4}}$
+$\Large{\color{cornflowerblue}\text{4. Example 4}}$
 
 Consider the recurrence:
 
@@ -174,6 +174,7 @@ Induction hypothesis (IH):
 Assume that the strenghthened hypothesis holds for all values smaller than $n$, i.e., $T(k) \leq c k - d$ for all $k < n$.
 
 Then:
+
 $$
 \begin{align*}
 T(n) & \leq 2(c (n/3) - d) + \Theta(n) \quad \text{(IH)} \\
@@ -211,7 +212,7 @@ Hence, by induction, we have shown that $T(n) = \mathcal{O}(n)$.
 
 <br/>
 
-$\color{cornflowerblue}{\text{5. Example 5}}$
+$\Large{\color{cornflowerblue}\text{5. Example 5}}$
 
 Consider the recurrence (for $n > 2$):
 
