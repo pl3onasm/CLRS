@@ -18,7 +18,9 @@ The master method consists of three cases, which are determined by comparing the
 
 3. If $f(n) = \Omega(n^{\log_b a + \epsilon})$ for some constant $\epsilon > 0$, and if the regularity condition $af(n/b) \leq c \cdot f(n)$ holds for some constant $c< 1$ and sufficiently large $n$, then $T(n) = \Theta(f(n))$. This case applies when the driving function is polynomially larger than $n^{\log_b a}$, meaning that the cost of the work done outside the recursive calls dominates the cost of the recursive calls themselves. The regularity condition $af(n/b) \leq c \cdot f(n)$ prevents the driving function $f(n)$ from being so irregular that the recursive part sometimes dominates and sometimes does not, which would make it impossible to determine the overall asymptotic behavior of the recurrence. This ensures the work per recursive level shrinks geometrically, so the top-level $f(n)$ dominates. </br>  
 
-If none of these cases apply, then the master method cannot be used to solve the recurrence, and other methods should be used instead.
+It is good to note that it is assumed that the work done at the leaves of the recursion tree is constant, i.e., $T(1) = \Theta(1)$. If the base cost is not constant or there are offset terms, we need to resort to Akra-Bazzi or the recursion tree method.
+
+Also noteworthy is that there is a significant difference in how the master method is presented in editions 3 and 4 of CLRS. This is why the recurrence $T(n) = 2T(n/2) + n/\log n$ is not covered by the master method in edition 3, but it is covered in edition 4. In edition 3, the master method requires $f(n)$ to be polynomially larger or smaller than $n^{\log_b a}$, while in edition 4, it allows for more flexibility with logarithmic factors. The above presentation follows edition 4.
 
 <br/>
 
@@ -34,7 +36,7 @@ $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = T(n/2) + \Theta(1) \space}
 $$
 
-Here, $a = 1$, $b = 2$, and $f(n) = \Theta(1)$. We have $n^{\log_b a} = n^{\log_2 1} = n^0 = 1$. So, $f(n)$ asymptotically matches $n^{\log_b a}$:
+Here, $a = 1$, $b = 2$, and $f(n) = \Theta(1)$. We have $n^{\log_b a} = n^{\log 1} = n^0 = 1$. So, $f(n)$ asymptotically matches $n^{\log_b a}$:
 
 $$
 f(n) = \Theta(n^{\log_b a} \log^0 n)
@@ -56,7 +58,7 @@ $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 8T(n/2) + \Theta(1)\space}\\
 $$
 
-Here, $a = 8$, $b = 2$, and $f(n) = \Theta(1)$. We have $n^{\log_b a} = n^{\log_2 8} = n^3$. So, $f(n)$ is polynomially smaller than $n^{\log_b a}$:
+Here, $a = 8$, $b = 2$, and $f(n) = \Theta(1)$. We have $n^{\log_b a} = n^{\log 8} = n^3$. So, $f(n)$ is polynomially smaller than $n^{\log_b a}$:
 
 $$
 f(n) = \mathcal{O}(n^{\log_b a - \epsilon}) = \mathcal{O}(n^{3 - \epsilon})
@@ -77,7 +79,7 @@ $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 7T(n/2) + \Theta(n^2) \space}
 $$
 
-Here, $a = 7$, $b = 2$, and $f(n) = \Theta(n^2)$. We have $n^{\log_b a} = n^{\log_2 7} \approx n^{2.81}$. So, $f(n)$ is polynomially smaller than $n^{\log_b a}$:
+Here, $a = 7$, $b = 2$, and $f(n) = \Theta(n^2)$. We have $n^{\log_b a} = n^{\log 7} \approx n^{2.81}$. So, $f(n)$ is polynomially smaller than $n^{\log_b a}$:
 
 $$
 f(n) = \mathcal{O}(n^{\log_b a - \epsilon}) = \mathcal{O}(n^{2.81 - \epsilon})
@@ -86,7 +88,7 @@ $$
 where $0 <\epsilon < 0.81$. Hence, we are in case 1 of the master method, which gives us:
 
 $$
-T(n) = \Theta(n^{\log_2 7}) \approx \Theta(n^{2.81})
+T(n) = \Theta(n^{\log 7}) \approx \Theta(n^{2.81})
 $$
 
 <br/>
@@ -99,7 +101,7 @@ $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 2T(n/2) + \Theta(n) \space}
 $$
 
-Here, $a = 2$, $b = 2$, and $f(n) = \Theta(n)$. We have $n^{\log_b a} = n^{\log_2 2} = n^1 = n$. So, $f(n)$ asymptotically matches $n^{\log_b a}$:
+Here, $a = 2$, $b = 2$, and $f(n) = \Theta(n)$. We have $n^{\log_b a} = n^{\log 2} = n^1 = n$. So, $f(n)$ asymptotically matches $n^{\log_b a}$:
 
 $$
 f(n) = \Theta(n^{\log_b a} \log^0 n)
@@ -117,13 +119,13 @@ Note that this is the same recurrence and solution as for the closest pair of po
 
 $\color{cornflowerblue}{\text{5. Standard Integer Multiplication}}$
 
-The recurrence for the running time of the long multiplication algorithm for multiplying two $n$-digit integers is given by:
+The recurrence for the running time of the divide-and-conquer version of the standard long multiplication algorithm for multiplying two $n$-digit integers is given by:
 
 $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 4T(n/2) + \Theta(n) \space}
 $$  
 
-Here, $a = 4$, $b = 2$, and $f(n) = \Theta(n)$. We have $n^{\log_b a} = n^{\log_2 4} = n^2$. So, $f(n)$ is polynomially smaller than $n^{\log_b a}$:
+Here, $a = 4$, $b = 2$, and $f(n) = \Theta(n)$. We have $n^{\log_b a} = n^{\log 4} = n^2$. So, $f(n)$ is polynomially smaller than $n^{\log_b a}$:
 
 $$
 f(n) = \mathcal{O}(n^{\log_b a - \epsilon}) = \mathcal{O}(n^{2 - \epsilon})
@@ -144,7 +146,7 @@ The recurrence for the running time of Karatsuba's algorithm is given by:
 $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 3T(n/2) + \Theta(n) \space}$$
 
-Here, $a = 3$, $b = 2$, and $f(n) = \Theta(n)$. We have $n^{\log_b a} = n^{\log_2 3} \approx n^{1.58}$. So, $f(n)$ is polynomially smaller than $n^{\log_b a}$:
+Here, $a = 3$, $b = 2$, and $f(n) = \Theta(n)$. We have $n^{\log_b a} = n^{\log 3} \approx n^{1.58}$. So, $f(n)$ is polynomially smaller than $n^{\log_b a}$:
 
 $$
 f(n) = \mathcal{O}(n^{\log_b a - \epsilon}) = \mathcal{O}(n^{1.58 - \epsilon})
@@ -153,7 +155,7 @@ $$
 where $0 <\epsilon < 0.58$. Hence, we are in case 1 of the master method, which gives us:
 
 $$
-T(n) = \Theta(n^{\log_2 3}) \approx \Theta(n^{1.58})
+T(n) = \Theta(n^{\log 3}) \approx \Theta(n^{1.58})
 $$
 
 <br/>
@@ -170,7 +172,7 @@ $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 2T(n/2) + \Theta(n^3) \space}
 $$
 
-Here, $a = 2$, $b = 2$, and $f(n) = \Theta(n^3)$. We have $n^{\log_b a} = n^{\log_2 2} = n^1 = n$. So, $f(n)$ is polynomially larger than $n^{\log_b a}$:
+Here, $a = 2$, $b = 2$, and $f(n) = \Theta(n^3)$. We have $n^{\log_b a} = n^{\log 2} = n^1 = n$. So, $f(n)$ is polynomially larger than $n^{\log_b a}$:
 
 $$
 f(n) = \Omega(n^{\log_b a + \epsilon}) = \Omega(n^{1 + \epsilon})
@@ -309,3 +311,26 @@ where $k = 3$. Hence, we are in case 2 of the master method, which gives us:
 $$
 T(n) = \Theta(n^2 \log^4 n)
 $$
+
+<br/>
+
+$\color{cornflowerblue}{\text{7. Exercise 7}}$
+
+The recurrence for a certain divide-and-conquer algorithm is given by:
+
+$$
+\color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 2T(n/2) + n\log{n} \space}
+$$  
+
+Here, $a = 2$, $b = 2$, and $f(n) = n\log n$. We have $n^{\log_b a} = n^{\log 2} = n^1 = n$. Since $f(n)$ matches $n^{\log_b a}$ up to a logarithmic factor, we are in case 2 of the master theorem: 
+
+$$
+f(n) = \Theta(n^{\log_b a} \log^k n)
+$$
+
+where $k = 1$. Hence, we have:
+
+$$
+T(n) = \Theta(n \log^{k+1} n) = \Theta(n \log^2 n)
+$$  
+
