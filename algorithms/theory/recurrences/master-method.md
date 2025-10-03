@@ -20,7 +20,7 @@ The master method consists of three cases, which are determined by comparing the
 
 It is good to note that it is assumed that the work done at the leaves of the recursion tree is constant, i.e., $T(1) = \Theta(1)$. If the base cost is not constant or there are offset terms, we need to resort to Akra-Bazzi or the recursion tree method.
 
-Also noteworthy is that there is a significant difference in how the master method is presented in editions 3 and 4 of CLRS. This is why the recurrence $T(n) = 2T(n/2) + n \log n$ is not covered by the master method in edition 3, but it is covered in edition 4. In edition 3, the master method requires $f(n)$ to be polynomially larger or smaller than $n^{\log_b a}$, while in edition 4, it allows for more flexibility with logarithmic factors. The above presentation follows edition 4.
+Also noteworthy is that there is a significant difference in how the master method is presented in editions 3 and 4 of CLRS. This is why the recurrence $T(n) = 2T(n/2) + n \space \log (n)$ is not covered by the master method in edition 3, but it is covered in edition 4. In edition 3, the master method requires $f(n)$ to be polynomially larger or smaller than $n^{\log_b a}$, while in edition 4, it allows for more flexibility with logarithmic factors. The above presentation follows edition 4.
 
 <br/>
 
@@ -45,7 +45,7 @@ $$
 Hence, we are in case 2 of the master method, which gives us:
 
 $$
-T(n) = \Theta(\log n)
+T(n) = \Theta(\log (n))
 $$
 
 <br/>
@@ -104,13 +104,13 @@ $$
 Here, $a = 2$, $b = 2$, and $f(n) = \Theta(n)$. We have $n^{\log_b a} = n^{\log 2} = n^1 = n$. So, $f(n)$ asymptotically matches $n^{\log_b a}$:
 
 $$
-f(n) = \Theta(n^{\log_b a} \log^0 n)
+f(n) = \Theta(n^{\log_b a} \log^0 (n))
 $$
 
 Hence, we are in case 2 of the master method, which gives us:
 
 $$
-T(n) = \Theta(n \log n)
+T(n) = \Theta(n \space \log (n))
 $$
 
 Note that this is the same recurrence and solution as for the closest pair of points problem and the linearithmic maximum subarray problem in the divide-and-conquer versions of those algorithms.
@@ -197,19 +197,19 @@ $\color{cornflowerblue}{\text{2. Exercise 2}}$
 The recurrence for a certain divide-and-conquer algorithm is given by:
 
 $$
-\color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = T(n/3) + \Theta(\log{n}) \space}
+\color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = T(n/3) + \Theta(\log(n)) \space}
 $$
 
-Here, $a = 1$, $b = 3$, and $f(n) = \Theta(\log n)$. We have $n^{\log_b a} = n^{\log_3 1} = n^0 = 1$. So, $f(n)$ asymptotically matches $n^{\log_b a}$ up to a logarithmic factor:
+Here, $a = 1$, $b = 3$, and $f(n) = \Theta(\log (n))$. We have $n^{\log_b a} = n^{\log_3 1} = n^0 = 1$. So, $f(n)$ asymptotically matches $n^{\log_b a}$ up to a logarithmic factor:
 
 $$
-f(n) = \Theta(n^{\log_b a} \log^1 n) = \Theta(\log n)
+f(n) = \Theta(n^{\log_b a} \log^1 n) = \Theta(\log (n))
 $$
 
 where $k = 1$. Hence, we are in case 2 of the master method, which gives us:
 
 $$
-T(n) = \Theta(\log^2 n)
+T(n) = \Theta(\log^2 (n))
 $$
 
 <br/>
@@ -219,10 +219,10 @@ $\color{cornflowerblue}{\text{3. Exercise 3}}$
 The recurrence for a certain divide-and-conquer algorithm is given by:
 
 $$
-\color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 3T(n/4) + \Theta(n \log n) \space}
+\color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 3T(n/4) + \Theta(n \space \log (n)) \space}
 $$
 
-Here, $a = 3$, $b = 4$, and $f(n) = \Theta(n \log n)$. We have $n^{\log_b a} = n^{\log_4 3} \approx n^{0.79}$. So, $f(n)$ is polynomially larger than $n^{\log_b a}$:
+Here, $a = 3$, $b = 4$, and $f(n) = \Theta(n \log (n))$. We have $n^{\log_b a} = n^{\log_4 3} \approx n^{0.79}$. So, $f(n)$ is polynomially larger than $n^{\log_b a}$:
 
 $$
 f(n) = \Omega(n^{\log_b a + \epsilon}) = \Omega(n^{0.79 + \epsilon})
@@ -237,7 +237,7 @@ $$
 for some constant $c < 1$ and sufficiently large $n$. We can choose $c = 3/4$, which satisfies the condition. Hence, we are in case 3 of the master method, which gives us:
 
 $$
-T(n) = \Theta(f(n)) = \Theta(n \log n)
+T(n) = \Theta(f(n)) = \Theta(n \space \log (n))
 $$
 
 <br/>
@@ -259,7 +259,7 @@ $$
 where $k = 0$. Hence, we are in case 2 of the master method, which gives us:
 
 $$
-T(n) = \Theta(\sqrt{n} \log n)
+T(n) = \Theta(\sqrt{n} \log (n))
 $$
 
 <br/>
@@ -297,19 +297,19 @@ $\color{cornflowerblue}{\text{6. Exercise 6}}$
 The recurrence for a certain divide-and-conquer algorithm is given by:
 
 $$
-\color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 9T(n/3) + n^2 \log^3{n} \space}
+\color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 9T(n/3) + n^2 \log^3(n) \space}
 $$
 
 Here, $a = 9$, $b = 3$, and $f(n) = \Theta(n^2 \log^3 n)$. We have $n^{\log_b a} = n^{\log_3 9} = n^2$. So, $f(n)$ asymptotically matches $n^{\log_b a}$ up to a logarithmic factor:
 
 $$
-f(n) = \Theta(n^{\log_b a} \log^3 n)
+f(n) = \Theta(n^{\log_b a} \log^3 (n))
 $$
 
 where $k = 3$. Hence, we are in case 2 of the master method, which gives us:
 
 $$
-T(n) = \Theta(n^2 \log^4 n)
+T(n) = \Theta(n^2 \log^4 (n))
 $$
 
 <br/>
@@ -319,18 +319,18 @@ $\color{cornflowerblue}{\text{7. Exercise 7}}$
 The recurrence for a certain divide-and-conquer algorithm is given by:
 
 $$
-\color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 2T(n/2) + n\log{n} \space}
+\color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 2T(n/2) + n\space\log(n) \space}
 $$  
 
-Here, $a = 2$, $b = 2$, and $f(n) = n\log n$. We have $n^{\log_b a} = n^{\log 2} = n^1 = n$. Since $f(n)$ matches $n^{\log_b a}$ up to a logarithmic factor, we are in case 2 of the master theorem: 
+Here, $a = 2$, $b = 2$, and $f(n) = n\log (n)$. We have $n^{\log_b a} = n^{\log 2} = n^1 = n$. Since $f(n)$ matches $n^{\log_b a}$ up to a logarithmic factor, we are in case 2 of the master theorem: 
 
 $$
-f(n) = \Theta(n^{\log_b a} \log^k n)
+f(n) = \Theta(n^{\log_b a} \space \log^k (n))
 $$
 
 where $k = 1$. Hence, we have:
 
 $$
-T(n) = \Theta(n \log^{k+1} n) = \Theta(n \log^2 n)
+T(n) = \Theta(n \space \log^{k+1} (n)) = \Theta(n\space \log^2 (n))
 $$  
 
