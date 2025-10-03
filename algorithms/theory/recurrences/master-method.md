@@ -14,7 +14,7 @@ The master method consists of three cases, which are determined by comparing the
 
 1. If $f(n) = \mathcal{O}(n^{\log_b a - \epsilon})$ for some constant $\epsilon > 0$, then $T(n) = \Theta(n^{\log_b a})$. This case applies when the driving function is smaller by at least a polynomial factor than $n^{\log_b a}$, meaning that the cost of the work done outside the recursive calls is dominated by the cost of the recursive calls themselves.</br>  
 
-2. If $f(n) = \Theta(n^{\log_b a} \log^k n)$ for some constant $k \geq 0$, then $T(n) = \Theta(n^{\log_b a} \log^{k+1} n)$. This case applies when the driving function asymptotically matches $n^{\log_b a}$ up to a logarithmic factor, meaning that the cost of the work done outside the recursive calls is comparable to the cost of the recursive calls themselves.</br>  
+2. If $f(n) = \Theta(n^{\log_b a} \space \log^k n)$ for some constant $k \geq 0$, then $T(n) = \Theta(n^{\log_b a} \space \log^{k+1} n)$. This case applies when the driving function asymptotically matches $n^{\log_b a}$ up to a logarithmic factor, meaning that the cost of the work done outside the recursive calls is comparable to the cost of the recursive calls themselves.</br>  
 
 3. If $f(n) = \Omega(n^{\log_b a + \epsilon})$ for some constant $\epsilon > 0$, and if the regularity condition $af(n/b) \leq c \cdot f(n)$ holds for some constant $c< 1$ and sufficiently large $n$, then $T(n) = \Theta(f(n))$. This case applies when the driving function is polynomially larger than $n^{\log_b a}$, meaning that the cost of the work done outside the recursive calls dominates the cost of the recursive calls themselves. The regularity condition $af(n/b) \leq c \cdot f(n)$ prevents the driving function $f(n)$ from being so irregular that the recursive part sometimes dominates and sometimes does not, which would make it impossible to determine the overall asymptotic behavior of the recurrence. This ensures the work per recursive level shrinks geometrically, so the top-level $f(n)$ dominates. </br>  
 
@@ -39,7 +39,7 @@ $$
 Here, $a = 1$, $b = 2$, and $f(n) = \Theta(1)$. We have $n^{\log_b a} = n^{\log 1} = n^0 = 1$. So, $f(n)$ asymptotically matches $n^{\log_b a}$:
 
 $$
-f(n) = \Theta(n^{\log_b a} \log^0 n)
+f(n) = \Theta(n^{\log_b a} \space \log^0 n)
 $$
 
 Hence, we are in case 2 of the master method, which gives us:
@@ -104,7 +104,7 @@ $$
 Here, $a = 2$, $b = 2$, and $f(n) = \Theta(n)$. We have $n^{\log_b a} = n^{\log 2} = n^1 = n$. So, $f(n)$ asymptotically matches $n^{\log_b a}$:
 
 $$
-f(n) = \Theta(n^{\log_b a} \log^0 (n))
+f(n) = \Theta(n^{\log_b a} \space \log^0 (n))
 $$
 
 Hence, we are in case 2 of the master method, which gives us:
@@ -203,7 +203,7 @@ $$
 Here, $a = 1$, $b = 3$, and $f(n) = \Theta(\log (n))$. We have $n^{\log_b a} = n^{\log_3 1} = n^0 = 1$. So, $f(n)$ asymptotically matches $n^{\log_b a}$ up to a logarithmic factor:
 
 $$
-f(n) = \Theta(n^{\log_b a} \log^1 n) = \Theta(\log (n))
+f(n) = \Theta(n^{\log_b a} \space \log^1 n) = \Theta(\log (n))
 $$
 
 where $k = 1$. Hence, we are in case 2 of the master method, which gives us:
@@ -303,7 +303,7 @@ $$
 Here, $a = 9$, $b = 3$, and $f(n) = \Theta(n^2 \log^3 n)$. We have $n^{\log_b a} = n^{\log_3 9} = n^2$. So, $f(n)$ asymptotically matches $n^{\log_b a}$ up to a logarithmic factor:
 
 $$
-f(n) = \Theta(n^{\log_b a} \log^3 (n))
+f(n) = \Theta(n^{\log_b a} \space \log^3 (n))
 $$
 
 where $k = 3$. Hence, we are in case 2 of the master method, which gives us:
