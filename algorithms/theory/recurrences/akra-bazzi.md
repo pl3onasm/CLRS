@@ -1,4 +1,4 @@
-$\huge{\color{Cadetblue}\text{Akra-Bazzi Method}}$
+$\huge{\color{Cadetblue}\text{The Akra-Bazzi Method}}$
 
 <br/>
 
@@ -11,7 +11,7 @@ $$
 where:
 
 - $a_i$ and $b_i$ are constants with $a_i > 0$ and $b_i > 1$,
-- $h_i(n)$ are functions that satisfy $|h_i(n)| = O(n / \log^2 n)$,
+- $h_i(n)$ are functions that satisfy $|h_i(n)| = O(n / \log^2 (n))$,
 - $f(n)$ must be polynomially bounded: there exists a constant $c$ such that $f(n) = O(n^c)$ and its derivative $f'(n)$ is also polynomially bounded,
 - $k$ is a positive constant.
 
@@ -31,7 +31,7 @@ The Akra–Bazzi method generalizes the Master Theorem by allowing:
 
 - Multiple subproblems with potentially different scaling factors $b_i$,
 
-- Perturbed subproblem sizes via $h_i(n)$, as long as they’re small compared to $n$ (e.g. $O(n/\log^2 n)$),
+- Perturbed subproblem sizes via $h_i(n)$, as long as they’re small compared to $n$,
 
 - More general driving functions $f(n)$, provided they are polynomially bounded.
 
@@ -45,7 +45,7 @@ $\Large{\color{darkseagreen}\text{Examples}}$
 
 $\color{cornflowerblue}{\text{1. Example 1}}$
 
-The Akra-Bazzi method can also be applied to recurrences that would typically be solved using the Master Theorem, such as the recurrence for Mergesort:
+As stated above, the Akra-Bazzi method generalizes the Master Theorem. To illustrate this, we will solve a recurrence that can also be solved using the Master Theorem. Take for example the recurrence that describes the time complexity of the Mergesort algorithm:
 
 $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 2T(n/2) + n \space}
