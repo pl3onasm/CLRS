@@ -130,9 +130,11 @@ $$
 Note that we did not need the exact value of $p$ to determine that $T(n) = \Theta(n)$. Generally, this will be the case when the value of $p$ is smaller than the exponent of the polynomially bounded function $f(n)$. Here, we knew that $p < 1$ and $f(n) = \Theta(n)$, which has an exponent of $1$. In such cases, we can in fact apply the below theorem to directly conclude that $T(n) = \Theta(f(n))$.
 
 Hence, this confirms that the Quickselect algorithm implemented with the median-of-medians strategy runs in linear time.
+
+<br/>
 <br/>
 
-$\Large{\color{mediumpurple}\text{Additional Theorem}}$
+$\Large{\color{mediumorchid}\text{Additional Theorem}}$
 
 If $f(n) = \Theta(n^c)$ for some constant $c > 0$ and if $p < c$, then:
 
@@ -140,6 +142,7 @@ $$
 T(n) = \Theta(f(n))
 $$
 
+<br/>
 <br/>
 
 $\color{cornflowerblue}{\text{3. Example 3}}$
