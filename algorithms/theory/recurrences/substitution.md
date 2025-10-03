@@ -25,13 +25,13 @@ Consider the recurrence:
 
 $$\color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 2T(n/2) + n \space}$$
 
-We know from recursion trees that the solution should be $T(n) = \mathcal{O}(n \space \log (n))$. To prove this, we try to show that $T(n) \leq c n \log (n)$ for some constant $c > 0$ and sufficiently large $n$, as the definition of $\mathcal{O}$ notation requires.
+We know from recursion trees that the solution should be $T(n) = \mathcal{O}(n \space \log (n))$. To prove this, we try to show that $T(n) \leq c n \space \log (n)$ for some constant $c > 0$ and sufficiently large $n$, as the definition of $\mathcal{O}$ notation requires.
 
 $\color{mediumorchid}{\text{1.1 Base Case}}$
 
 Pick a small value, say $n = 2$.
 
-Then $T(2) = 2T(1) + 2$. Since $T(1)$ is finite, we can always choose $c$ large enough so that $T(2) \leq c \cdot 2 \log 2 = 2c$.
+Then $T(2) = 2T(1) + 2$. Since $T(1)$ is finite, we can always choose $c$ large enough so that $T(2) \leq c \cdot 2 \space \log 2 = 2c$.
 
 $\color{mediumorchid}{\text{1.2 Inductive Step}}$
 
@@ -44,11 +44,11 @@ Then:
 $$
 \begin{align*}
 T(n) & = 2T(n/2) + n \\
-& \leq 2 \left( c \frac{n}{2} \log \left( \frac{n}{2} \right) \right) + n \quad \text{(IH)} \\
-& = c n \log \left( \frac{n}{2} \right) + n \\
+& \leq 2 \left( c \frac{n}{2} \space \log \left( \frac{n}{2} \right) \right) + n \quad \text{(IH)} \\
+& = c n \space \log \left( \frac{n}{2} \right) + n \\
 & = c n \left( \log (n) - \log (2) \right) + n \\
-& = c n \log (n) - c n + n \\
-& = c n \log (n) + n (1 - c)
+& = c n \space \log (n) - c n + n \\
+& = c n \space \log (n) + n (1 - c)
 \end{align*}
 $$
 
@@ -154,7 +154,7 @@ Substituting into the recurrence:
 $$
 \begin{align*}
 T(n) & = 2T(n/3) + \Theta (n) \\
-& \leq 2 \left( c \frac{n}{3} \right) + \Theta (n) \quad \text{(IH)} 
+& \leq 2 \left( c \space \frac{n}{3} \right) + \Theta (n) \quad \text{(IH)} 
 \end{align*}
 $$
 
@@ -193,9 +193,19 @@ T(n) & \leq \frac{2cn}{3} - 2d + k n \\
 $$
 
 To complete the inductive step, we need to show that $T(n) \leq c n - d$.
-This will be true if $n \left( \frac{2c}{3} + k \right) - 2d \leq c n - d$, or equivalently if $n \left( c - \frac{2c}{3} - k \right) \geq d$.
+This will be true if:
 
-To satisfy $T(n) \leq c n - d$, it suffices that $c - \frac{2c}{3} - k > 0$, or $c > 3k$. First pick $c > 3k$. Then, for sufficiently large $n$, the inequality holds automatically, and you can enlarge $d$ if necessary to ensure that the base cases hold.
+$$n \left( \frac{2c}{3} + k \right) - 2d \leq c n - d$$ 
+
+or equivalently if:
+
+$$n \left( c - \frac{2c}{3} - k \right) \geq d$$
+
+To satisfy $T(n) \leq c n - d$, it suffices that:
+
+$$c - \frac{2c}{3} - k > 0 \implies c > 3k$$
+ 
+First pick $c > 3k$. Then, for sufficiently large $n$, the inequality holds automatically, and you can enlarge $d$ if necessary to ensure that the base cases hold.
 
 Hence, by induction, we have shown that $T(n) = \mathcal{O}(n)$.
 
