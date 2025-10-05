@@ -18,7 +18,7 @@ where:
 The Akra-Bazzi method provides a way to find the asymptotic behavior of $T(n)$ by solving the following integral equation:
 
 $$
-T(n) = \Theta\left( n^p \left( 1 + \int_{1}^{n} \frac{f(u)}{u^{p+1}} \space du \right) \right)
+\color{mediumpurple}T(n) = \Theta\left( n^p \left( 1 + \int_{1}^{n} \frac{f(u)}{u^{p+1}} \space du \right) \right)
 $$
 
 where $p$ is the unique solution to the equation:
@@ -37,19 +37,19 @@ The Akra–Bazzi method generalizes the Master Theorem by allowing:
 
 In this way, Akra–Bazzi subsumes all the cases handled by the Master Theorem, while also solving a much wider class of recurrences that may arise in advanced algorithms.
 
+--------------------------------------------------------------------
+
+$\Large \color{cornflowerblue}{\text{Example 1}}$
+
 <br/>
-
-$\Large{\color{darkseagreen}\text{Examples}}$
-
-<br/>
-
-$\color{cornflowerblue}{\text{1. Example 1}}$
 
 As stated above, the Akra-Bazzi method generalizes the Master Theorem. To illustrate this, we will solve a recurrence that can also be solved using the Master Theorem. Take for example the recurrence that describes the time complexity of the Mergesort algorithm:
 
 $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 2T(n/2) + n \space}
 $$
+
+<br/>
 
 Here, we have $a_1 = 2$, $b_1 = 2$, and $f(n) = n$. We need to find $p$ such that:
 
@@ -84,7 +84,11 @@ $$
 
 <br/>
 
-$\color{cornflowerblue}{\text{2. Example 2}}$
+--------------------------------------------------------------------
+
+$\Large \color{cornflowerblue}{\text{Example 2}}$
+
+<br/>
 
 The recurrence relation for the Quickselect algorithm, using the median-of-medians strategy for pivot selection, is given by:
 
@@ -132,26 +136,37 @@ Note that we did not need the exact value of $p$ to determine that $T(n) = \Thet
 Hence, this confirms that the Quickselect algorithm implemented with the median-of-medians strategy runs in linear time.
 
 <br/>
-<br/>
+
+--------------------------------------------------------------------
+
 
 $\Large{\color{mediumorchid}\text{Additional Theorem}}$
 
-If $f(n) = \Theta(n^c)$ for some constant $c > 0$ and if $p < c$, then:
-
-$$
-T(n) = \Theta(f(n))
-$$
-
-<br/>
 <br/>
 
-$\color{cornflowerblue}{\text{3. Example 3}}$
+> If $f(n) = \Theta(n^c)$ for some constant $c > 0$ and if $p < c$, then:  
+>   
+> $T(n) = \Theta(f(n))$
+
+<br/>
+
+This theorem is particularly useful when the value of $p$ is difficult to compute exactly, but we can establish an upper bound for it that is less than the exponent of the polynomially bounded function $f(n)$. In such cases, we can directly conclude that $T(n)$ asymptotically matches $f(n)$ without needing to evaluate the integral in the Akra-Bazzi formula.
+
+<br/>
+
+--------------------------------------------------------------------
+
+$\Large \color{cornflowerblue}{\text{Example 3}}$
+
+<br/>
 
 Given is a function that satisfies the recurrence relation:  
 
 $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 2T(n/2) + n/\log (n) \space}
 $$
+
+<br/>
 
 Note that this recurrence cannot be solved using the Master Theorem, since the driving function $f(n) = n/\log{n}$ cannot be expressed in the form $n^{\log_b a - \epsilon}$, $n^{\log_b a} \log^k n$, or $n^{\log_b a + \epsilon}$ for any $\epsilon > 0$ and $k \geq 0$.
 
@@ -201,13 +216,19 @@ $$
 
 <br/>
 
-$\color{cornflowerblue}{\text{4. Example 4}}$
+--------------------------------------------------------------------
+
+$\Large \color{cornflowerblue}{\text{Example 4}}$
+
+<br/>
 
 Given is a function that satisfies the recurrence relation:
 
 $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 3T(n/3) + 4T(n/4) + n^2 \space}
 $$
+
+<br/>
 
 Here, we have $a_1 = 3$, $b_1 = 3$, $a_2 = 4$, $b_2 = 4$, and $f(n) = n^2$. We need to find $p$ such that:
 
@@ -222,13 +243,19 @@ Plugging in $p = 1$ gives $2 > 1$ and plugging in $p = 2$ gives $\frac{3}{9} + \
 
 <br/>
 
-$\color{cornflowerblue}{\text{5. Example 5}}$
+--------------------------------------------------------------------
+
+$\Large \color{cornflowerblue}{\text{Example 5}}$
+
+<br/>
 
 Given is a function that satisfies the recurrence relation:
 
 $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = T(n/2) + T(n/3) + T(n/6) + n \log(n) \space}
 $$
+
+<br/>
 
 Here, we have $a_1 = a_2 = a_3 = 1$, $b_1 = 2$, $b_2 = 3$, $b_3 = 6$, and $f(n) = n \log(n)$. We need to find $p$ such that:
 
@@ -273,13 +300,19 @@ $$
 
 <br/>
 
-$\color{cornflowerblue}{\text{6. Example 6}}$
+--------------------------------------------------------------------
+
+$\Large \color{cornflowerblue}{\text{Example 6}}$
+
+<br/>
 
 Given is a function that satisfies the recurrence relation:
 
 $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 3T(n/3) + 8T(n/4) + n^2 \log(n) \space}
 $$
+
+<br/>
 
 Here, we have $a_1 = 3$, $b_1 = 3$, $a_2 = 8$, $b_2 = 4$, and $f(n) = n^2 \log(n)$. We need to find $p$ such that:
 
@@ -294,13 +327,19 @@ Plugging in $p = 1$ gives $3 > 1$ and plugging in $p = 2$ yields $\frac{5}{6} < 
 
 <br/>
 
-$\color{cornflowerblue}{\text{7. Example 7}}$
+--------------------------------------------------------------------
+
+$\Large \color{cornflowerblue}{\text{Example 7}}$
+
+<br/>
 
 Given is a function that satisfies the recurrence relation:
 
 $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = \frac{2}{3}T(n/3) + \frac{1}{3}T(2n/3) + \log (n) \space}
 $$
+
+<br/>
 
 Here, we have $a_1 = \frac{2}{3}$, $b_1 = 3$, $a_2 = \frac{1}{3}$, $b_2 = \frac{3}{2}$, and $f(n) = \log (n)$. We need to find $p$ such that:
 
@@ -338,13 +377,19 @@ $$
 
 <br/>
 
-$\color{cornflowerblue}{\text{8. Example 8}}$
+--------------------------------------------------------------------
+
+$\Large \color{cornflowerblue}{\text{Example 8}}$
+
+<br/>
 
 Given is a function that satisfies the recurrence relation:
 
 $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = \frac{1}{3}T(n/3) + 1/n \space}
 $$
+
+<br/>
 
 Note that this recurrence cannot be solved using the Master Theorem, since the driving function $f(n) = 1/n$ cannot be expressed in the form $n^{\log_b a - \epsilon}$, $n^{\log_b a} \log^k n$, or $n^{\log_b a + \epsilon}$ for any $\epsilon > 0$ and $k \geq 0$.
 
@@ -381,13 +426,19 @@ $$
 
 <br/>
 
-$\color{cornflowerblue}{\text{9. Example 9}}$
+--------------------------------------------------------------------
+
+$\Large \color{cornflowerblue}{\text{Example 9}}$
+
+<br/>
 
 Given is a function that satisfies the recurrence relation:
 
 $$
 \color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = T(n/2) + T(n/4) + T(n/8) + n \space}
 $$  
+
+<br/>
 
 Here, we have $a_1 = a_2 = a_3 = 1$, $b_1 = 2$, $b_2 = 4$, $b_3 = 8$, and $f(n) = n$. We need to find $p$ such that:
 
@@ -400,44 +451,3 @@ $$
 $$
 
 Plugging in $p = 0$ gives $3 > 1$ and plugging in $p = 1$ gives $\frac{7}{8} < 1$. So we have $0 < p < 1$. Since $f(n) = n$ has an exponent of $1 > p$, we can conclude that $T(n) = \Theta(f(n)) = \Theta(n)$ using the additional theorem mentioned above.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

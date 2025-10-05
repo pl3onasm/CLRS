@@ -15,17 +15,19 @@ To prove a lower bound, we show the opposite inequality.
 
 <br/>
 
-$\Large{\color{darkseagreen}\text{Examples}}$
+--------------------------------------------------------------------
+
+$\Large{\color{cornflowerblue}\text{Example 1}}$
 
 <br/>
-
-$\Large{\color{cornflowerblue}\text{1. Example 1}}$
 
 Consider the recurrence:
 
 $$\color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 2T(n/2) + n \space}$$
 
-We know from recursion trees that the solution should be $T(n) = \mathcal{O}(n \space \log (n))$. To prove this, we try to show that $T(n) \leq c n \space \log (n)$ for some constant $c > 0$ and sufficiently large $n$, as the definition of $\mathcal{O}$ notation requires.
+<br/>
+
+We know from recursion trees that the solution should be $T(n) = \mathcal{O}(n \space \log (n))$. To prove this, we try to show that $T(n) \leq c n \space \log (n)$ for some constant $c > 0$ and sufficiently large $n$, as the definition of big-$\mathcal{O}$ notation requires.
 
 $\color{mediumorchid}{\text{1.1 Base Case}}$
 
@@ -37,7 +39,8 @@ $\color{mediumorchid}{\text{1.2 Inductive Step}}$
 
 Induction hypothesis (IH):
 
-Assume that the hypothesis holds for all values smaller than $n$, i.e., $T(k) \leq c k \space \log (k)$ for all $k < n$.
+&nbsp;&nbsp; Assume that the hypothesis holds for all values smaller than $n$, i.e., 
+&nbsp;&nbsp; $T(k) \leq c k \space \log (k)$ for all $k < n$.
 
 Then:
 
@@ -59,11 +62,17 @@ A matching lower bound can be shown similarly, thus proving that $T(n) = \Theta(
 
 <br/>
 
-$\Large{\color{cornflowerblue}\text{2. Example 2}}$
- 
+--------------------------------------------------------------------
+
+$\Large{\color{cornflowerblue}\text{Example 2}}$
+
+<br/>
+
 Consider the recurrence:
 
 $$\color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = T(n/2) + T(n/4) + n^2 \space}$$
+
+<br/>
 
 We will guess that $T(n) = \mathcal{O}(n^2)$ and prove it by induction.
 
@@ -76,7 +85,9 @@ Then $T(4) = T(2) + T(1) + 16$. Since $T(2)$ and $T(1)$ are finite, there exists
 $\color{mediumorchid}{\text{2.2 Inductive Step}}$
 
 Induction hypothesis (IH):
-Assume that the hypothesis holds for all values smaller than $n$, i.e., $T(k) \leq c k^2$ for all $k < n$.
+
+&nbsp;&nbsp; Assume that the hypothesis holds for all values smaller than $n$, i.e., 
+&nbsp;&nbsp; $T(k) \leq c k^2$ for all $k < n$.
 
 Then:
 
@@ -97,11 +108,17 @@ A matching lower bound can be shown similarly, thus proving that $T(n) = \Theta(
 
 <br/>
 
-$\Large{\color{cornflowerblue}\text{3. Example 3}}$
+--------------------------------------------------------------------
+
+$\Large{\color{cornflowerblue}\text{Example 3}}$
+
+<br/>
 
 Consider the recurrence:
 
 $$\color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = T(n - 1) + n \space}$$
+
+<br/>
 
 We will guess that $T(n) = O(n^2)$ and prove it by induction.
 
@@ -114,7 +131,9 @@ Then $T(1)$ is finite, so we can always choose $c$ large enough so that $T(1) \l
 $\color{mediumorchid}{\text{3.2 Inductive Step}}$
 
 Induction hypothesis (IH):
-Assume that the hypothesis holds for all values smaller than $n$, i.e., $T(k) \leq c k^2$ for all $k < n$.
+
+&nbsp;&nbsp; Assume that the hypothesis holds for all values smaller than $n$, i.e., 
+&nbsp;&nbsp; $T(k) \leq c k^2$ for all $k < n$.
 
 Then:
 
@@ -135,19 +154,26 @@ Moreover, since $T(n) = T(n - 1) + n$ expands to the sum of the first $n$ intege
 
 <br/>
 
-$\Large{\color{cornflowerblue}\text{4. Example 4}}$
+--------------------------------------------------------------------
+
+$\Large{\color{cornflowerblue}\text{Example 4}}$
+
+<br/>
 
 Consider the recurrence:
 
 $$\color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = 2T(n/3) + \Theta(n) \space}$$
 
+<br/>
+
 We guess that $T(n) = \mathcal{O}(n)$ and prove it by induction. To prove this with substitution, we show that $T(n) \leq c n$ for some constant $c > 0$ and sufficiently large $n$.
 
 $\color{mediumorchid}{\text{4.1 First attempt}}$
 
-Suppose we try the induction hypothesis (IH):
+Suppose we try the induction hypothesis (IH):  
 
-Assume that the hypothesis holds for all values smaller than $n$, i.e., $T(k) \leq c k$ for all $k < n$.
+&nbsp;&nbsp; Assume that the hypothesis holds for all values smaller than $n$, i.e., 
+&nbsp;&nbsp; $T(k) \leq c k$ for all $k < n$.
 
 Substituting into the recurrence:
 
@@ -212,11 +238,17 @@ Hence, by induction, we have shown that $T(n) = \mathcal{O}(n)$.
 
 <br/>
 
-$\Large{\color{cornflowerblue}\text{5. Example 5}}$
+--------------------------------------------------------------------
+
+$\Large{\color{cornflowerblue}\text{Example 5}}$
+
+<br/>
 
 Consider the recurrence (for $n > 2$):
 
 $$\color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = T(n - 1) + T(n - 2) + 1 \space}$$
+
+<br/>
 
 with finite base values T(0) and T(1) > 0.
 
@@ -231,7 +263,9 @@ Then: $T(2) = T(1) + T(0) + 1$. Choose any constant $c > 0$ small enough so that
 $\color{mediumorchid}{\text{5.2 Inductive Step}}$
 
 Induction hypothesis (IH):
-Assume that the hypothesis holds for all arguments smaller than $n$, i.e., $T(k) \geq c \phi^k$ for all $k < n$.
+
+&nbsp;&nbsp; Assume that the hypothesis holds for all arguments smaller than $n$, i.e.,
+&nbsp;&nbsp; $T(k) \geq c \phi^k$ for all $k < n$.
 
 Then:
 
@@ -248,25 +282,3 @@ $$
 This recurrence is essentially the Fibonacci recurrence with a small additive constant. The Fibonacci numbers themselves grow like $\phi^n$, which is why the golden ratio appears in this proof.
 
 By induction, we have shown that $T(n) = \Omega(\phi^n)$.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
