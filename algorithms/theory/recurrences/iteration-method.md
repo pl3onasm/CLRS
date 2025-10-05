@@ -26,6 +26,8 @@ The general steps of the iteration method are as follows:
 
 We now illustrate the iteration method with several examples, covering both divide-and-conquer and decremental types of recurrences. The formulas used to sum the series are provided in the appendix at the end.
 
+<br/>
+
 --------------------------------------------------------------------------
 
 $\Large{\color{cornflowerblue}\text{Example 1}}$
@@ -301,40 +303,47 @@ $\Large{\color{mediumpurple}\text{Appendix: Summation Formulas}}$
 The following standard summation formulas are frequently used when applying the iteration method to simplify the series that appear after unfolding a recurrence:
 <br/>
 
-1. **Sum of the first n natural numbers**:
-   $$
-   \sum_{i=1}^{n} i = \frac{n(n+1)}{2}
-   $$
-<br/>
+**1. Sum of the first n natural numbers**:  
 
-2. **Sum of the squares of the first n natural numbers**:
-   $$
-   \sum_{i=1}^{n} i^2 = \frac{n(n+1)(2n+1)}{6}
-   $$
+$$
+\sum_{i=1}^{n} i = \frac{n(n+1)}{2}
+$$
 
 <br/>
 
-3. **Sum of a geometric series**:
-   $$
-   \sum_{i=0}^{n-1} r^i = \frac{r^n - 1}{r - 1} \quad \text{for } r \neq 1
-   $$
+**2. Sum of the squares of the first n natural numbers**:  
+
+$$
+\sum_{i=1}^{n} i^2 = \frac{n(n+1)(2n+1)}{6}
+$$
 
 <br/>
 
-4. **Sum of logarithms**:
-   For $n$ and $k$ as integers with $k \leq n$:
-    $$
-    \sum_{i=0}^{k-1} \log(n - i) = \log\left(\frac{n!}{(n-k)!}\right)
-    $$
+**3. Sum of a geometric series**:  
+   
+$$
+\sum_{i=0}^{n-1} r^i = \frac{r^n - 1}{r - 1} \quad \text{for } r \neq 1
+$$
 
 <br/>
 
-5. **Sum of an arithmetic series**:
-   For an arithmetic series with first term $a$, common difference $d$, and $n$ terms:
-   $$
-   \sum_{i=0}^{n-1} (a + id) = \frac{n}{2} \left( 2a + (n-1)d \right)
-   $$
+**4. Sum of logarithms**:  
+
+For $n$ and $k$ as integers with $k \leq n$:
+
+$$
+\sum_{i=0}^{k-1} \log(n - i) = \log\left(\frac{n!}{(n-k)!}\right)
+$$
 
 <br/>
 
+**5. Sum of an arithmetic series**:  
+
+For an arithmetic series with first term $a$, common difference $d$, and $n$ terms:
+
+$$
+\sum_{i=0}^{n-1} (a + id) = \frac{n}{2} \left( 2a + (n-1)d \right)
+$$
+
+<br/>
 
