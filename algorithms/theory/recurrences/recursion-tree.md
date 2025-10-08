@@ -194,9 +194,9 @@ The total cost is:
 
 $$
 \begin{align*}
-T(n) &= c\,n \sum_{i=0}^{\log_5 n} \left(\frac{3}{5}\right)^i \\
-&= c\,n \cdot \frac{1 - (3/5)^{\log_5 n + 1}}{1 - (3/5)} \\
-&= \frac{5c}{2}\,n \left(1 - \frac{3}{5}\,n^{\log_5(3/5)}\right) \\
+T(n) &= cn \space \sum_{i=0}^{\log_5 n} \left(\frac{3}{5}\right)^i \\
+&= cn \cdot \frac{1 - (3/5)^{\log_5 n + 1}}{1 - (3/5)} \\
+&= \frac{5c}{2}\space n \left(1 - \frac{3}{5} \space n^{\log_5(3/5)}\right) \\
 &= \Theta(n)
 \end{align*}
 $$
@@ -267,9 +267,9 @@ Thus, we know that $T(n)$ is bounded from above by $cn \sum_{i=0}^{\log_2 n} (3/
 
 $$
 \begin{align*}
-T(n) & = c\,n \sum_{i=0}^{\log_2 n} \left(\frac{3}{4}\right)^i \\
-&= c\,n \cdot \frac{1 - (3/4)^{\log_2 n + 1}}{1 - (3/4)} \\
-&= 4c\,n \left(1 - \frac{3}{4}\,n^{\log_2(3/4)}\right) \\
+T(n) & = cn \sum_{i=0}^{\log_2 n} \left(\frac{3}{4}\right)^i \\
+&= cn \cdot \frac{1 - (3/4)^{\log_2 n + 1}}{1 - (3/4)} \\
+&= 4cn \left(1 - \frac{3}{4}\space n^{\log_2(3/4)}\right) \\
 &= \Theta(n)
 \end{align*}
 $$
