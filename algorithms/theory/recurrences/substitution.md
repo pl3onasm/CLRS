@@ -37,9 +37,9 @@ Then $T(2) = 2T(1) + 2$. Since $T(1)$ is finite, we can always choose $c$ large 
 
 $\color{mediumorchid}{\text{1.2 Inductive Step}}$
 
-Induction hypothesis (IH):
+Induction hypothesis $\color{mediumpurple}{\textit{(IH)}}$:
 
-&nbsp;&nbsp; Assume that the hypothesis holds for all values smaller than $n$, i.e., 
+&nbsp;&nbsp; Assume that the hypothesis holds for all values smaller than $n$, i.e.,  
 &nbsp;&nbsp; $T(k) \leq c k \space \log (k)$ for all $k < n$.
 
 Then:
@@ -47,7 +47,7 @@ Then:
 $$
 \begin{align*}
 T(n) & = 2T(n/2) + n \\
-& \leq 2 \left( c \frac{n}{2} \space \log \left( \frac{n}{2} \right) \right) + n \quad \text{(IH)} \\
+& \leq 2 \left( c \frac{n}{2} \space \log \left( \frac{n}{2} \right) \right) + n \quad \color{mediumpurple}\text{(IH)} \\
 & = c n \space \log \left( \frac{n}{2} \right) + n \\
 & = c n \left( \log (n) - \log (2) \right) + n \\
 & = c n \space \log (n) - c n + n \\
@@ -84,9 +84,9 @@ Then $T(4) = T(2) + T(1) + 16$. Since $T(2)$ and $T(1)$ are finite, there exists
 
 $\color{mediumorchid}{\text{2.2 Inductive Step}}$
 
-Induction hypothesis (IH):
+Induction hypothesis $\color{mediumpurple}{\textit{(IH)}}$:
 
-&nbsp;&nbsp; Assume that the hypothesis holds for all values smaller than $n$, i.e., 
+&nbsp;&nbsp; Assume that the hypothesis holds for all values smaller than $n$, i.e.,  
 &nbsp;&nbsp; $T(k) \leq c k^2$ for all $k < n$.
 
 Then:
@@ -94,7 +94,7 @@ Then:
 $$
 \begin{align*}
 T(n) & = T(n/2) + T(n/4) + n^2 \\
-& \leq c \left( \frac{n}{2} \right)^2 + c \left( \frac{n}{4} \right)^2 + n^2 \quad \text{(IH)} \\
+& \leq c \left( \frac{n}{2} \right)^2 + c \left( \frac{n}{4} \right)^2 + n^2 \quad \color{mediumpurple}\text{(IH)} \\
 & = c \frac{n^2}{4} + c \frac{n^2}{16} + n^2 \\
 & = \frac{4c n^2 + c n^2 + 16 n^2}{16} \\
 & = \frac{(5c + 16) n^2}{16}
@@ -130,9 +130,9 @@ Then $T(1)$ is finite, so we can always choose $c$ large enough so that $T(1) \l
 
 $\color{mediumorchid}{\text{3.2 Inductive Step}}$
 
-Induction hypothesis (IH):
+Induction hypothesis $\color{mediumpurple}{\textit{(IH)}}$:
 
-&nbsp;&nbsp; Assume that the hypothesis holds for all values smaller than $n$, i.e., 
+&nbsp;&nbsp; Assume that the hypothesis holds for all values smaller than $n$, i.e.,  
 &nbsp;&nbsp; $T(k) \leq c k^2$ for all $k < n$.
 
 Then:
@@ -140,7 +140,7 @@ Then:
 $$
 \begin{align*}
 T(n) & = T(n - 1) + n \\
-& \leq c (n - 1)^2 + n \quad \text{(IH)} \\
+& \leq c (n - 1)^2 + n \quad \color{mediumpurple}\text{(IH)} \\
 & = c (n^2 - 2n + 1) + n \\
 & = c n^2 - 2c n + c + n \\
 & = c n^2 + n (1 - 2c) + c
@@ -172,7 +172,7 @@ $\color{mediumorchid}{\text{4.1 First attempt}}$
 
 Suppose we try the induction hypothesis (IH):  
 
-&nbsp;&nbsp; Assume that the hypothesis holds for all values smaller than $n$, i.e., 
+&nbsp;&nbsp; Assume that the hypothesis holds for all values smaller than $n$, i.e.,  
 &nbsp;&nbsp; $T(k) \leq c k$ for all $k < n$.
 
 Substituting into the recurrence:
@@ -196,14 +196,16 @@ For small values such as $n = 3$, the recurrence yields $T(3) = 2T(1) + \Theta(3
 
 $\color{mediumorchid}{\text{4.2.2 Inductive Step}}$
 
-Induction hypothesis (IH):
-Assume that the strenghthened hypothesis holds for all values smaller than $n$, i.e., $T(k) \leq c k - d$ for all $k < n$.
+Induction hypothesis $\color{mediumpurple}{\textit{(IH)}}$:
+
+&nbsp;&nbsp; Assume that the strenghthened hypothesis holds for all values smaller than $n$, i.e.,  
+&nbsp;&nbsp; $T(k) \leq c k - d$ for all $k < n$.
 
 Then:
 
 $$
 \begin{align*}
-T(n) & \leq 2(c (n/3) - d) + \Theta(n) \quad \text{(IH)} \\
+T(n) & \leq 2(c (n/3) - d) + \Theta(n) \quad \color{mediumpurple}\text{(IH)} \\
 & = \frac{2cn}{3} - 2d + \Theta(n)
 \end{align*}
 $$
@@ -252,7 +254,7 @@ $$\color{saddlebrown}\boxed{\color{rosybrown}\space T(n) = T(n - 1) + T(n - 2) +
 
 with finite base values T(0) and T(1) > 0.
 
-We will prove a lower bound $T(n) = \Omega(\phi^n)$, where $\phi = \frac{1 + \sqrt{5}}{2} \approx 1.618$ is the golden ratio that satisfies $\phi^2 = \phi + 1$.
+We will prove a lower bound $T(n) = \Omega(\phi^n)$, where $\phi = \frac{1 + \sqrt{5}}{2} \approx 1.618$ is the golden ratio that satisfies $\phi^2 = \phi + 1$. From this equation, we also have $\phi^n = \phi^{n - 1} + \phi^{n - 2}$ for all $n \geq 2$. $\color{olive}(1)$
 
 $\color{mediumorchid}{\text{5.1 Base Case}}$
 
@@ -262,9 +264,9 @@ Then: $T(2) = T(1) + T(0) + 1$. Choose any constant $c > 0$ small enough so that
 
 $\color{mediumorchid}{\text{5.2 Inductive Step}}$
 
-Induction hypothesis (IH):
+Induction hypothesis $\color{mediumpurple}{\textit{(IH)}}$:
 
-&nbsp;&nbsp; Assume that the hypothesis holds for all arguments smaller than $n$, i.e.,
+&nbsp;&nbsp; Assume that the hypothesis holds for all arguments smaller than $n$, i.e.,  
 &nbsp;&nbsp; $T(k) \geq c \phi^k$ for all $k < n$.
 
 Then:
@@ -272,10 +274,10 @@ Then:
 $$
 \begin{align*}
 T(n) & = T(n - 1) + T(n - 2) + 1 \\
-& \geq c \phi^{n - 1} + c \phi^{n - 2} + 1 \quad \text{(IH)} \\ 
+& \geq c \phi^{n - 1} + c \phi^{n - 2} + 1 \quad \color{mediumpurple}\text{(IH)} \\
 & = c (\phi^{n - 1} + \phi^{n - 2}) + 1 \\
-& = c \phi^n + 1 \quad \text{(since } \phi^{n - 1} + \phi^{n - 2} = \phi^n \text{)}\\
-& = c \phi^n 
+& = c \phi^n + 1 \qquad\qquad\qquad \color{olive}(1)\\
+& = c \phi^n
 \end{align*}
 $$
 
