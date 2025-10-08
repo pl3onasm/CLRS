@@ -68,7 +68,7 @@ Since there are $\log(n + 1)$ levels in the tree, the total cost is:
 $$
 \begin{align*}
 T(n) & = cn \cdot (\log(n) + 1) \\
-& = cn \log(n) + cn \\
+& = cn \space \log(n) + cn \\
 & = \Theta(n \space \log(n))
 \end{align*}
 $$
