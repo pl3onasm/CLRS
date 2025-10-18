@@ -80,7 +80,7 @@ $$\color{mediumorchid}\boxed{\color{mediumpurple}\space T(n) = \Theta(n \space \
 <br/>
 
 $\color{lightslategray}{\textbf{Note}}$  
-The recursion tree method visualizes how the total work is distributed across the levels of recursion. For divide-and-conquer recurrences such as merge sort, every level contributes an equal amount of work, leading to the characteristic $\Theta(n \log n)$ running time.
+The recursion tree method visualizes how the total work is distributed across the levels of recursion. For divide-and-conquer recurrences such as merge sort, every level contributes an equal amount of work, leading to the characteristic $\Theta(n \space \log(n))$ running time.
 
 <br/>
 
@@ -208,8 +208,7 @@ $$\color{mediumorchid}\boxed{\color{mediumpurple}\space T(n) = \Theta(n) \space}
 <br/>
 
 $\color{lightslategray}{\textbf{Note}}$  
-In this recurrence, each level performs only a fraction of the work of the previous one because the branching factor (3) is smaller than the reduction factor (5).  
-The geometric decay of per-level cost causes the total work to be dominated by the top level, resulting in $\Theta(n)$ overall.
+In this recurrence, each level performs only a fraction of the work of the previous one because the branching factor (3) is smaller than the reduction factor (5). The geometric decay of per-level cost causes the total work to be dominated by the top level, resulting in $\Theta(n)$ overall.
 
 <br/>
 

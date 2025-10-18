@@ -31,7 +31,7 @@ The Akra–Bazzi method generalizes the Master Theorem by allowing:
 
 - Multiple subproblems with potentially different scaling factors $b_i$,
 
-- Perturbed subproblem sizes via $h_i(n)$, as long as they’re small compared to $n$,
+- Perturbed subproblem sizes via $h_i(n)$, as long as they are small compared to $n$,
 
 - More general driving functions $f(n)$, provided they are polynomially bounded.
 
@@ -77,7 +77,7 @@ $$
 T(n) &= \Theta\left( n^1 \left( 1 + \ln(n) \right) \right) \\
 &= \Theta(n \space \ln(n) + n) \\
 &= \Theta(n \space \ln(n)) \\
-&= \Theta(n \space \frac {\log(n)}{\ln(2)}) \\
+&= \Theta(n \space \frac {\log(n)}{\log(e)}) \\
 &= \Theta(n \space \log(n))
 \end{align*}
 $$
@@ -209,7 +209,7 @@ $$
 T(n) &= \Theta\left( n^1 \left( 1 + \ln(\log (n)) \right) \right) \\
 &= \Theta(n \space \ln (\log (n)) + n) \\
 &= \Theta(n \space \ln (\log (n))) \\
-&= \Theta\left(n \space \frac{\log(\log (n))}{\ln(2)}\right) \\
+&= \Theta\left(n \space \frac{\log(\log (n))}{\log(e)}\right) \\
 &= \Theta(n \space \log(\log (n)))
 \end{align*}
 $$
@@ -419,7 +419,7 @@ $$
 T(n) &= \Theta\left( n^{-1} \left( 1 + \ln(n) \right) \right) \\
 &= \Theta\left( \frac{1}{n} + \frac {\ln(n)}{n} \right) \\
 &= \Theta\left( \frac {\ln(n)}{n} \right)\\
-&= \Theta\left( \frac {\log(n)}{n \space \ln(2)} \right) \\
+&= \Theta\left( \frac {\log(n)}{n \space \log(e)} \right) \\
 &= \Theta\left( \frac {\log(n)}{n} \right)
 \end{align*}
 $$

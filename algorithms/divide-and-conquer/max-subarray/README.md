@@ -36,12 +36,12 @@ Implementation: [Linearithmic MSP](https://github.com/pl3onasm/AADS/blob/main/al
 
 $\Large{\color{darkseagreen}\text{Linear Solution}}$
 
-The algorithm can be implemented in linear time by iterating over the array and keeping track of a running sum and the maximum sum found so far along with the corresponding subarray bounds for these two sums (by storing their start and end indices). At the start of the algorithm, the running sum is initialized to zero, and the maximum sum is initialized to the smallest possible value.  
+To solve the problem in linear time, we can resort to Kadane's algorithm. The idea is to iterate over the array while keeping track of both a running sum and the maximum sum found so far, along with the corresponding subarray bounds for these two sums (by storing their start and end indices). At the start of the algorithm, the running sum is initialized to zero, and the maximum sum is initialized to the smallest possible value.  
 
 At each iteration, the running sum is updated by adding the current element to it only if the resulting sum is non-negative. If adding the current element would turn the running sum negative, then the running sum is reset to zero, and the lower bound of the running subarray is reset to the next element to start a new running subarray in order to get a fresh start at finding the maximum sum.
 
 As the algorithm iterates over the array, the running sum is continuously compared to the maximum sum found so far and if at any point the running sum is found to be greater, the maximum sum is updated to the running sum, and the maximum subarray bounds are updated to the running subarray bounds.
 
-The algorithm is implemented using a single loop that iterates over the array once, and the time complexity is therefore in $\Theta(n)$.
+The algorithm is implemented using a single loop that travels the array once, performing a constant amount of work at each iteration. The time complexity is therefore in $\Theta(n)$.
 
 Implementation: [Linear MSP](https://github.com/pl3onasm/AADS/blob/main/algorithms/divide-and-conquer/max-subarray/msp-3.c)

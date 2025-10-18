@@ -2,7 +2,7 @@ $\huge{\color{Cadetblue}\text{Recurrence relations}}$
 
 <br/>
 
-This folder provides an overview of the major methods for solving recurrence relations, an important technique in the analysis of algorithms. Each method is introduced conceptually and illustrated through detailed examples.
+This folder provides an overview of the major methods for solving recurrence relations, an important technique in the analysis of algorithms. Each method is introduced conceptually and illustrated through detailed examples. Please note that we adhere to the notation and conventions used in CLRS, so that ***log*** denotes the base-2 logarithm, while ***ln*** denotes the natural logarithm (base $e$).
 
 ---
 
@@ -35,5 +35,5 @@ $\Large{\color{darkseagreen}\text{Available methods}}$
 | [Iteration Method](iteration-method.md) | Expand or unroll the recurrence repeatedly until a pattern emerges, then sum the resulting terms directly. |
 | [Substitution Method](substitution.md) | Prove an asymptotic bound by guessing the form of the solution and showing it satisfies the recurrence via induction. |
 | [Recursion Tree Method](recursion-tree.md) | Visualize the recurrence as a tree of costs per level, then sum the work across all levels to find a closed-form expression. |
-| [Master Method](master-method.md) | Apply a formulaic theorem that provides asymptotic bounds for divide-and-conquer recurrences of the form \(T(n)=aT(n/b)+f(n)\). |
+| [Master Method](master-method.md) | Apply a formulaic theorem that provides asymptotic bounds for divide-and-conquer recurrences of the form $T(n)=aT(n/b)+f(n)$. |
 | [Akra–Bazzi Method](akra-bazzi.md) | A generalization of the Master Method that applies to unbalanced recurrences and irregular subproblem sizes. |
