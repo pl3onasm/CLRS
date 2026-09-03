@@ -78,12 +78,13 @@ $$
 
 Using the [master theorem](../../theory/recurrences/master-method.md), case 1, yields the solution $\Theta(n^{\log 3}) \approx \Theta(n^{1.585})$.
 
-Just as above, it's worth noting that the algorithm only depends on the size of the numbers in digits, and not on their actual value, it runs in polynomial time, and is therefore a truly polynomial-time algorithm for integer multiplication.
+Just as above, it is worth noting that the algorithm only depends on the size of the numbers in digits, and not on their actual value, and is therefore a truly polynomial-time algorithm for integer multiplication.
 
-Note the similarity between the Karatsuba algorithm and [Strassen's matrix multiplication algorithm](../strassen): both algorithms succeed in reducing the cost of each recursive step by swapping one multiplication for a few additions and subractions, which are linear operations. Whereas Strassen's algorithm reduces the cost of each recursive step to seven-eighths of the original cost, Karatsuba's algorithm reduces the cost of each recursive step to three-quarters of the original cost.
+Also note the similarity between the Karatsuba algorithm and [Strassen's matrix multiplication algorithm](../strassen): both algorithms succeed in reducing the cost of each recursive step by swapping one multiplication for a few additions and subractions, which are linear operations. Whereas Strassen's algorithm reduces the cost of each recursive step to seven-eighths of the original cost, Karatsuba's algorithm reduces the cost of each recursive step to three-quarters of the original cost.
 
 Just like before, the implementation uses char arrays to represent the numbers of arbitrary size. The same remarks as before apply here as well, regarding a more efficient representation using an array of computer words.
 
 Implementation: [Karatsuba multiplication](imp-2.c)
 
 For even faster integer multiplication, in $\mathcal{O}{(n \log{n} \log{\log{n}})}$ time, see the application in the folder for the [Fast Fourier Transform](../../fft).
+

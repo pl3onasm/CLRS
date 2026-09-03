@@ -54,7 +54,7 @@ root [100]
 
 <br />
 
-A visual interpretation of this output is shown in the figure below.
+The figure below provides a visual interpretation of this output. If the printed tree skeleton is rotated 90 degrees clockwise and then flipped horizontally, it corresponds exactly to the depicted Huffman tree.
 
 <p align="center" width="85%">
 <img src="images/hfc-test2.png"
