@@ -5,7 +5,7 @@ $\huge{\color{Cadetblue}\text{Suffix arrays}}$
 If, besides finding occurrences of a pattern in a text, we are also interested in finding things like the longest repeated substring, the number of distinct substrings, the longest common substring between two texts, or the longest palindromic substring in a text, we can use a data structure called a ${\color{mediumorchid}\text{suffix array}}$, denoted $SA[0:n-1]$. It is a permutation of the starting indices $0,1,\dots,n-1$ such that the corresponding suffixes of a given string $T[0:n-1]$ occur in lexicographic order. In other words,
 
 $$
-T[SA[0]:n-1] < T[SA[1]:n-1] < \dots < T[SA[n-1]:n-1].
+T[SA[0]:n-1] < T[SA[1]:n-1] < \dots < T[SA[n-1]:n-1]
 $$
 
 Thus, we do not store the suffixes themselves, but only the starting index of each suffix in the original string. For example, the suffix array for the string $T=$ `banana` is the second column in the table below.
@@ -57,19 +57,11 @@ If all distinct longest repeated substrings are required, equal substrings arisi
 
 $\Large{\color{rosybrown}\text{3. Number of distinct substrings}}$
 
-Another thing we can easily compute is the cardinality of the set containing all distinct substrings of the text. The suffix starting at $SA[i]$ has length $n-SA[i]$, so it contributes that many prefixes as candidate substrings. However, its first $LCP[i]$ prefixes already occur among lexicographically preceding suffixes and therefore do not contribute new distinct substrings. Hence the suffix contributes
-
-$$
-(n-SA[i])-LCP[i]
-$$
-
-new distinct substrings.
+Another thing we can easily compute is the cardinality of the set containing all distinct substrings of the text. The suffix starting at $SA[i]$ has length $n-SA[i]$, so it contributes that many prefixes as candidate substrings. However, its first $LCP[i]$ prefixes already occur among lexicographically preceding suffixes and therefore do not contribute new distinct substrings. Hence the suffix contributes $(n-SA[i])-LCP[i]$ new distinct substrings.
 
 Summing over all suffixes gives
 
 $$
-\sum_{i=0}^{n-1}(n-SA[i]-LCP[i])
-=
 {\color{cornflowerblue}\frac{n(n+1)}{2}-\sum_{i=0}^{n-1}LCP[i]}.
 $$
 
@@ -88,7 +80,7 @@ $\Large{\color{rosybrown}\text{4. Longest palindromic substring}}$
 Yet another application is finding the longest palindromic substring in $T$. For this, we concatenate the text with a separator character that does not occur in the text and with the reverse of the text:
 
 $$
-S=T\#T^R.
+S=T\$T^R.
 $$
 
 We then construct the suffix array and LCP array for $S$. The separator prevents a common prefix from crossing the boundary between $T$ and $T^R$.
@@ -100,7 +92,7 @@ The LCP of any two suffixes can be obtained from the suffix array and LCP array 
 For example, if $T=$ `banana`, then
 
 ```text
-banana#ananab
+banana$ananab
 ```
 
 is used. The longest palindromic substring is `anana`, with length 5.
