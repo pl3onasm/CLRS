@@ -1,4 +1,4 @@
-/* 
+/*
   file: sa.c
   author: David De Potter
   email: pl3onasm@gmail.com
@@ -18,68 +18,75 @@ typedef struct {
 } suffix;
 
 //===================================================================
-// Sorts suffixes by their ranks by using counting sort twice: 
+// Sorts suffixes by their ranks by using counting sort twice:
 // first on the right ranks and then on the left ranks
 void radixSort(suffix *suffixes, size_t n, size_t maxRank) {
-  
   size_t *count = safeCalloc(maxRank, sizeof(size_t));
   suffix *output = safeCalloc(n, sizeof(suffix));
 
     // SORT BY RIGHT RANKS
-    // count occurences of each rank
-  for (size_t i = 0; i < n; ++i) 
+    // count occurrences of each rank
+  for (size_t i = 0; i < n; ++i)
     count[suffixes[i].rightRank]++;
+
     // compute cumulative counts
-  for (size_t i = 1; i < maxRank; ++i) 
+  for (size_t i = 1; i < maxRank; ++i)
     count[i] += count[i - 1];
+
     // sort suffixes
   for (size_t i = n; i--; ) {
     output[count[suffixes[i].rightRank] - 1] = suffixes[i];
     count[suffixes[i].rightRank]--;
   }
-  
+
     // SORT BY LEFT RANKS
     // reset count
   memset(count, 0, maxRank * sizeof(size_t));
-    // count occurences of each rank
-  for (size_t i = 0; i < n; ++i) 
+
+    // count occurrences of each rank
+  for (size_t i = 0; i < n; ++i)
     count[output[i].leftRank]++;
+
     // compute cumulative counts
-  for (size_t i = 1; i < maxRank; ++i) 
+  for (size_t i = 1; i < maxRank; ++i)
     count[i] += count[i - 1];
+
     // sort suffixes
   for (size_t i = n; i--; ) {
     suffixes[count[output[i].leftRank] - 1] = output[i];
     count[output[i].leftRank]--;
   }
+
   free(count);
   free(output);
 }
 
 //===================================================================
 // Assigns ranks to suffixes and returns the maximum rank
-size_t makeRanks (suffix *suffixes, size_t *ranks, size_t n) {
+size_t makeRanks(suffix *suffixes, size_t *ranks, size_t n) {
   size_t rank = 1;
   ranks[suffixes[0].index] = rank;
+
   for (size_t i = 1; i < n; i++) {
-    if (suffixes[i - 1].leftRank != suffixes[i].leftRank  
-        || suffixes[i - 1].rightRank != suffixes[i].rightRank) 
+    if (suffixes[i - 1].leftRank != suffixes[i].leftRank
+        || suffixes[i - 1].rightRank != suffixes[i].rightRank)
       rank++;
+
     ranks[suffixes[i].index] = rank;
   }
+
   return rank;
 }
 
 //===================================================================
 // Builds a suffix array for text of length n in O(nlogn) time
 size_t *buildSuffixArray(string *text) {
-
   size_t n = strLen(text);
   size_t *sa = safeCalloc(n, sizeof(size_t));
   suffix *suffixes = safeCalloc(n, sizeof(suffix));
   size_t *ranks = safeCalloc(n, sizeof(size_t));
 
-    // initialize suffixes
+    // initialize suffixes by their first two characters
   for (size_t i = 0; i < n; i++) {
     suffixes[i].index = i;
     suffixes[i].leftRank = charAt(text, i);
@@ -88,9 +95,10 @@ size_t *buildSuffixArray(string *text) {
 
     // sort suffixes by their ranks
   radixSort(suffixes, n, 256);
-    // length of sorted suffixes
-  size_t len = 2; 
- 
+
+    // length of sorted suffix prefixes
+  size_t len = 2;
+
     // repeat until all suffixes are sorted
   while (len < n) {
       // assign ranks to suffixes and return maximum rank
@@ -99,137 +107,166 @@ size_t *buildSuffixArray(string *text) {
       // update left and right ranks
     for (size_t i = 0; i < n; i++) {
       suffixes[i].leftRank = ranks[i];
-      suffixes[i].rightRank = (i + len < n) ? ranks[i + len] : 0;	
+      suffixes[i].rightRank = (i + len < n) ? ranks[i + len] : 0;
       suffixes[i].index = i;
     }
+
       // sort suffixes according to new substring ranks
     radixSort(suffixes, n, maxRank + 1);
-      // the sorted suffixes are twice as long
+
+      // the sorted suffix prefixes are twice as long
     len *= 2;
   }
+
     // store the final indices of the sorted suffixes
-  for (size_t i = 0; i < n; i++) 
+  for (size_t i = 0; i < n; i++)
     sa[i] = suffixes[i].index;
+
   free(suffixes);
-  free(ranks); 
+  free(ranks);
+
   return sa;
 }
 
 //===================================================================
-// Builds a longest common prefix array for given text and its 
+// Builds a longest common prefix array for given text and its
 // suffix array in O(n) time
 size_t *buildLCPArray(string *text, size_t *sa) {
-  
   size_t n = strLen(text);
   size_t *lcp = safeCalloc(n, sizeof(size_t));
   size_t *ranks = safeCalloc(n, sizeof(size_t));
 
     // compute suffix ranks; this is the inverse of sa
     // ranks[i] = sorted index of suffix at text index i
-  for (size_t i = 0; i < n; i++) 
-    ranks[sa[i]] = i; 
+  for (size_t i = 0; i < n; i++)
+    ranks[sa[i]] = i;
 
-    // lcp of first suffix is 0 
-  lcp[0] = 0;         
+    // lcp of first suffix is 0
+  lcp[0] = 0;
+
     // length of longest common prefix
-  size_t len = 0;     
+  size_t len = 0;
+
     // iterate over all suffixes in text order
-  for (size_t i = 0; i < n; i++) { 
-    if (ranks[i] == 0) 
-      continue;       
+  for (size_t i = 0; i < n; i++) {
+    if (ranks[i] == 0)
+      continue;
+
       // get text index j of the lexicographically preceding suffix
-    size_t j = sa[ranks[i] - 1];      
+    size_t j = sa[ranks[i] - 1];
+
       // compute lcp of suffixes at text indices i and j
-    while (i + len < n && j + len < n 
-           && charAt(text, i + len) == charAt(text, j + len)) 
-      len++;  
+    while (i + len < n && j + len < n
+           && charAt(text, i + len) == charAt(text, j + len))
+      len++;
+
       // store lcp of suffix at sorted index ranks[i]
-    lcp[ranks[i]] = len; 
-      // lcp of next suffix is at least one less 
+    lcp[ranks[i]] = len;
+
+      // lcp of next suffix is at least one less
       // than current lcp if len > 0, otherwise it is 0
     if (len > 0)
-      len--;  
+      len--;
   }
+
   free(ranks);
+
   return lcp;
 }
 
 //===================================================================
-// Finds all occurences of pattern in text using binary search
-// Time complexity: O(mlogn) 
-void matcher(string *pattern, string *text, 
+// Finds all occurrences of pattern in text using binary search
+// Time complexity: O(m log n + k), where k is the number of matches
+void matcher(string *pattern, string *text,
              size_t *sa, size_t *lcp) {
-  
   size_t m = strLen(pattern), n = strLen(text);
-  size_t left = 0, right = n - 1, i, j, mid; 
+  size_t left = 0, right = n - 1, i, j, mid;
   bool foundShift = false;
 
-    // find occurence of pattern using binary search
+    // find occurrence of pattern using binary search
   while (left <= right) {
-    mid = left + (right - left)/2;  
-    i = sa[mid];        // index of suffix 
+    mid = left + (right - left) / 2;
+    i = sa[mid];        // index of suffix
     j = 0;              // index of pattern
+
       // compare pattern and suffix at middle index
-    while (i + j < n && j < m 
+    while (i + j < n && j < m
            && charAt(text, i + j) == charAt(pattern, j))
       j++;
+
       // pattern found?
     if (j == m) {
       foundShift = true;
       break;
     }
-      // is pattern lexicographically larger ?
-    if (j < m && charAt(text, i + j) < charAt(pattern, j)) 
-      left = mid + 1; 
+
+      // suffix ended or pattern is lexicographically larger
+    if (i + j == n || charAt(text, i + j) < charAt(pattern, j))
+      left = mid + 1;
+
       // pattern is lexicographically smaller
-    else right = mid - 1; 
+    else
+      right = mid - 1;
   }
-  if (! foundShift) {
+
+  if (!foundShift) {
     printf("No matches found.\n");
     return;
   }
- 
-    // find all other occurences of pattern in text
+
+    // find all other occurrences of pattern in text
   size_t start = mid, end = mid;
-    // find start of occurences
-  while (start > 0 && lcp[start] >= m) start--;
-    // find end of occurences
-  while (end < n - 1 && lcp[end + 1] >= m) end++;
+
+    // find start of occurrences
+  while (start > 0 && lcp[start] >= m)
+    start--;
+
+    // find end of occurrences
+  while (end < n - 1 && lcp[end + 1] >= m)
+    end++;
+
     // print all valid shifts
   printf("Pattern: ");
   showString(pattern);
   printf("Shifts (%zu): ", end - start + 1);
-  for (size_t i = start; i <= end; i++) 
+
+  for (size_t i = start; i <= end; i++)
     printf(i < end ? "%zu, " : "%zu\n", sa[i]);
 }
 
 //===================================================================
 // Finds all longest repeated substrings in text in O(n) time
 void getLrs(string *text, size_t *sa, size_t *lcp) {
-
     // find length of longest repeated substring
   size_t n = strLen(text), max = 0;
-  for (size_t i = 1; i < n; i++) 
-    if (lcp[i] > max) max = lcp[i];
-  
-  if (max == 0 || max == 1) {
+
+  for (size_t i = 1; i < n; i++)
+    if (lcp[i] > max)
+      max = lcp[i];
+
+  if (max == 0) {
     printf("No repeated substrings found.\n");
     return;
   }
 
     // find all longest repeated substrings
   size_t idx = 0, times;
+
   printf("Longest repeated substrings:\n");
+
   while (idx < n) {
     if (lcp[idx] == max) {
       times = 2;
-      while (idx + 1 < n && lcp[idx + 1] == max) { 
+
+      while (idx + 1 < n && lcp[idx + 1] == max) {
         times++;
         idx++;
       }
+
       printf("  %zu times: ", times);
       showSubstring(text, sa[idx], sa[idx] + max - 1, '\n');
     }
+
     idx++;
   }
 }
@@ -237,23 +274,102 @@ void getLrs(string *text, size_t *sa, size_t *lcp) {
 //===================================================================
 // Computes the total number of substrings in text without counting
 // duplicates in O(n) time
-void getNrSubs(string *text, size_t *sa, size_t  *lcp) {
-   
+void getNrSubs(string *text, size_t *sa, size_t *lcp) {
   size_t lcpSum = 0, n = strLen(text);
+
   for (size_t i = 1; i < n; ++i)
     lcpSum += lcp[i];
-  printf("Number of unique substrings: %zu\n", 
-          n * (n + 1) / 2 - lcpSum);
+
+  printf("Number of unique substrings: %zu\n",
+         n * (n + 1) / 2 - lcpSum);
 }
 
 //===================================================================
-// Computes the longest palindromic substring that occurs in text in  
-// O(nlogn) time
+// Returns the smaller of two size_t values
+size_t minSize(size_t a, size_t b) {
+  return a < b ? a : b;
+}
+
+//===================================================================
+// Builds a segment tree for range-minimum queries on the LCP array.
+// Construction takes O(n) time and each query takes O(logn) time.
+size_t *buildLCPMinTree(size_t *lcp, size_t n, size_t *base) {
+  *base = 1;
+
+  while (*base < n)
+    *base *= 2;
+
+  size_t *tree = safeCalloc(2 * (*base), sizeof(size_t));
+
+    // unused leaves must behave like infinity under minimum
+  for (size_t i = 0; i < 2 * (*base); i++)
+    tree[i] = (size_t)-1;
+
+    // store LCP values in the leaves
+  for (size_t i = 0; i < n; i++)
+    tree[*base + i] = lcp[i];
+
+    // compute internal minima
+  for (size_t i = *base; i-- > 1; )
+    tree[i] = minSize(tree[2 * i], tree[2 * i + 1]);
+
+  return tree;
+}
+
+//===================================================================
+// Returns min(values[left..right]) in O(logn) time
+size_t rangeMin(size_t *tree, size_t base,
+                size_t left, size_t right) {
+  size_t result = (size_t)-1;
+  left += base;
+  right += base + 1;
+
+  while (left < right) {
+    if (left & 1)
+      result = minSize(result, tree[left++]);
+
+    if (right & 1)
+      result = minSize(result, tree[--right]);
+
+    left /= 2;
+    right /= 2;
+  }
+
+  return result;
+}
+
+//===================================================================
+// Returns the LCP length of any two suffixes, using the fact that
+// their LCP equals the minimum LCP value between their positions
+// in the suffix array.
+size_t suffixLCP(size_t i, size_t j, size_t *ranks,
+                 size_t *tree, size_t base, size_t n) {
+  if (i == j)
+    return n - i;
+
+  size_t ri = ranks[i];
+  size_t rj = ranks[j];
+
+  if (ri > rj) {
+    size_t tmp = ri;
+    ri = rj;
+    rj = tmp;
+  }
+
+  return rangeMin(tree, base, ri + 1, rj);
+}
+
+//===================================================================
+// Computes the longest palindromic substring that occurs in text in
+// O(nlogn) time.
+//
+// No separator character is needed between text and reverse(text).
+// Instead, LCP values are explicitly bounded so that a match cannot
+// cross the midpoint between the two halves.
 void getLps(string *text) {
-  
   size_t n = strLen(text);
-  size_t *lps = safeCalloc(n, sizeof(size_t));
-    
+  size_t total = 2 * n;
+
     // concatenate text and its reverse
   string *str = copyString(text);
   string *rev = copyString(text);
@@ -263,32 +379,78 @@ void getLps(string *text) {
   size_t *sa = buildSuffixArray(str);
   size_t *lcp = buildLCPArray(str, sa);
 
+    // compute inverse suffix array
+  size_t *ranks = safeCalloc(total, sizeof(size_t));
+
+  for (size_t i = 0; i < total; i++)
+    ranks[sa[i]] = i;
+
+    // build RMQ structure for LCP queries between arbitrary suffixes
+  size_t base;
+  size_t *tree = buildLCPMinTree(lcp, total, &base);
+
     // find longest palindromic substring
-  size_t max = 0, k = 0;
-  for (size_t i = 1; i < 2*n; ++i) 
-    if (lcp[i] > max && sa[i] == 2 * n - sa[i - 1] - lcp[i]) {
-      max = lcp[i];
-      k = sa[i];
+  size_t max = 0, start = 0;
+
+  for (size_t c = 0; c < n; c++) {
+      // odd-length palindrome centered at c:
+      // compare T[c..] with reverse(T)[n-1-c..]
+    size_t i = c;
+    size_t j = 2 * n - 1 - c;
+    size_t len = suffixLCP(i, j, ranks, tree, base, total);
+
+      // prevent the common prefix from crossing either half boundary
+    size_t bound = minSize(n - c, c + 1);
+    len = minSize(len, bound);
+
+    size_t palLen = 2 * len - 1;
+
+    if (palLen > max) {
+      max = palLen;
+      start = c + 1 - len;
     }
 
+      // even-length palindrome centered between c-1 and c
+    if (c > 0) {
+      i = c;
+      j = 2 * n - c;
+      len = suffixLCP(i, j, ranks, tree, base, total);
+
+        // prevent the common prefix from crossing either half boundary
+      bound = minSize(n - c, c);
+      len = minSize(len, bound);
+
+      palLen = 2 * len;
+
+      if (palLen > max) {
+        max = palLen;
+        start = c - len;
+      }
+    }
+  }
+
   printf("Longest palindromic substring: ");
-  showSubstring(str, k, k + max - 1, '\n');
-  free(lps); freeString(str); freeString(rev);
-  free(sa); free(lcp);
+  showSubstring(text, start, start + max - 1, '\n');
+
+  freeString(str);
+  freeString(rev);
+  free(sa);
+  free(lcp);
+  free(ranks);
+  free(tree);
 }
 
 //===================================================================
 
 int main() {
-  
   READ_STRING(pattern, '\n');
   READ_STRING(text, EOF);
 
     // build suffix array and LCP array
-  size_t *sa = buildSuffixArray(text); 
-  size_t *lcp = buildLCPArray(text, sa); 
+  size_t *sa = buildSuffixArray(text);
+  size_t *lcp = buildLCPArray(text, sa);
 
-    // find all occurences of pattern in text
+    // find all occurrences of pattern in text
   matcher(pattern, text, sa, lcp);
 
     // compute longest repeated substring
@@ -299,10 +461,11 @@ int main() {
 
     // find longest palindromic substring
   getLps(text);
-  
+
   free(sa);
   free(lcp);
   freeString(pattern);
   freeString(text);
+
   return 0;
 }
