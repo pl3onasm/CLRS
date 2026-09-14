@@ -19,12 +19,11 @@ This is where the KMP algorithm comes in: it does not compute an exhaustive tran
 <br/>
 
 $$
-{\color{maroon}\boxed{
+{\color{saddlebrown}\boxed{
 \begin{aligned}
-{\color{peru}\pi(0)} &= 0,\\
-{\color{peru}\pi(q)} &= {\color{darkgoldenrod}\max}
-\lbrace k \space : \space 0 \leq k < q \land P_k \sqsupset P_q \rbrace,
-\qquad q > 0.
+{\color{peru}\pi(0)} &= {\color{darkgoldenrod} 0}\\
+{\color{peru}\pi(q)} &= {\color{darkgoldenrod}\max
+\lbrace k \space : \space 0 \leq k < q \land P_k \sqsupset P_q \rbrace}
 \end{aligned}
 }}
 $$

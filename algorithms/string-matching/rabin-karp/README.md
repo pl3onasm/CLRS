@@ -42,29 +42,19 @@ where:
 The precomputation of the hash values of $P$ and $T_m$ can be done in $\mathcal{O}(m)$ time by applying ${\color{darkkhaki}\text{Horner's rule}}$ to the above formula:
 
 $$
-h(S)
-=
-(((S[0]\cdot d+S[1])\cdot d+S[2])\cdot d
-+\dots+S[m-1])
-\bmod p
+h(S) = (((S[0]\cdot d+S[1])\cdot d+S[2])\cdot d +\dots+S[m-1]) \bmod p
 $$
 
 After that, the hash value of the $m$-sized text window at each new shift $s+1$ can be recomputed in constant time as follows:
 
 $$
-h(T[s+1:s+m])
-=
-\bigl(
-d\cdot(h(T[s:s+m-1])-T[s]\cdot k)
-+T[s+m]
-\bigr)
-\bmod p
+h(T[s+1:s+m]) = \bigl(d\cdot(h(T[s:s+m-1])-T[s]\cdot k)+T[s+m]\bigr) \bmod p
 $$
 
 where $k$ is precomputed as
 
 $$
-k=d^{m-1}\bmod p.
+k=d^{m-1}\bmod p
 $$
 
 The subtraction of $T[s]\cdot k$ is necessary to remove the contribution of the character that just left the window, and the addition of $T[s+m]$ adds the contribution of the new character that just entered the text window. The multiplication by $d$ shifts the remaining character contributions one position to the left in the polynomial representation. The hash values of $P$ and the new text window $T[s+1:s+m]$ can then be compared in constant time to check if the new shift is potentially valid. If the hash values match, then the algorithm proceeds to compare all the characters of $P$ with the text window $T[s+1:s+m]$ to verify if the match is indeed valid. Note that these hash values are reduced modulo $p$ at each step to keep them within a bounded range. If the resulting hash values are assumed to be approximately uniformly distributed modulo $p$, the probability of a collision is approximately $1/p$.

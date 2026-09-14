@@ -19,7 +19,6 @@ The ${\color{mediumorchid}\text{transition function }\delta}$ is defined in term
 <br/>
 
 $$
-
 {\color{darkslateblue}\boxed{\space \large
 \begin{align*}
 {\color{mediumorchid}\space \delta(q,a)}
@@ -28,7 +27,6 @@ $$
 \lbrace k \space:\space 0 \leq k \leq m \land P_k \sqsupset P_qa \rbrace
 \end{align*}
 \space}}
-
 $$
 
 <br/>
