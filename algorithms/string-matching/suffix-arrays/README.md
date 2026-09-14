@@ -59,16 +59,16 @@ $\Large{\color{rosybrown}\text{3. Number of distinct substrings}}$
 
 Another thing we can easily compute is the cardinality of the set containing all distinct substrings of the text. The suffix starting at $SA[i]$ has length $n-SA[i]$, so it contributes that many prefixes as candidate substrings. However, its first $LCP[i]$ prefixes already occur among lexicographically preceding suffixes and therefore do not contribute new distinct substrings. Hence the suffix contributes $(n-SA[i])-LCP[i]$ new distinct substrings.
 
-Summing over all suffixes gives
+Summing over all suffixes gives:
 
 $$
-{\color{cornflowerblue}\frac{n(n+1)}{2}-\sum_{i=0}^{n-1}LCP[i]}.
+{\color{cornflowerblue}\frac{n(n+1)}{2}-\sum_{i=0}^{n-1}LCP[i]}
 $$
 
 In the example above, the number of distinct substrings is
 
 $$
-\frac{6\cdot7}{2}-(0+1+3+0+0+2)=15.
+\frac{6\cdot7}{2}-(0+1+3+0+0+2)=15
 $$
 
 This is indeed the cardinality of the set: {`b`, `a`, `n`, `ba`, `an`, `na`, `ban`, `ana`, `nan`, `bana`, `anan`, `nana`, `banan`, `anana`, `banana`}.
@@ -80,7 +80,7 @@ $\Large{\color{rosybrown}\text{4. Longest palindromic substring}}$
 Yet another application is finding the longest palindromic substring in $T$. For this, we concatenate the text with a separator character that does not occur in the text and with the reverse of the text:
 
 $$
-S=T\$T^R.
+S=T\$T^R
 $$
 
 We then construct the suffix array and LCP array for $S$. The separator prevents a common prefix from crossing the boundary between $T$ and $T^R$.
@@ -112,7 +112,7 @@ until the considered prefix length is at least $n$.
 Initially, each suffix is ranked according to its first character. Suppose that, in some iteration, the suffixes have already been ranked according to their first $\ell$ characters. To rank them according to their first $2\ell$ characters, suffix $i$ is represented by the pair
 
 $$
-(rank[i],rank[i+\ell]),
+(rank[i],rank[i+\ell])
 $$
 
 where the first component is the rank of its first half and the second component is the rank of its second half. If $i+\ell\geq n$, a special sentinel rank smaller than every ordinary rank is used for the missing second half.

@@ -22,9 +22,8 @@ $$
 {\color{darkslateblue}\boxed{\space \large
 \begin{align*}
 {\color{mediumorchid}\space \delta(q,a)}
-&{\color{peru} \space = \sigma(P_qa)}\\
-&{\color{rosybrown} \space = \max
-\lbrace k \space:\space 0 \leq k \leq m \land P_k \sqsupset P_qa \rbrace}
+&{\color{peru} \space = \space \sigma(P_qa)}\\
+&{\color{rosybrown} \space = \max \lbrace k \space:\space 0 \leq k \leq m \land P_k \sqsupset P_qa \rbrace}
 \end{align*}
 \space}}
 $$
